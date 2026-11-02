@@ -1,9 +1,14 @@
+import { Routes, Route } from 'react-router-dom';
+import Home from './views/Home';
+
 import './App.css';
 
 const App = () => {
   return (
     <>
-      <h1>Manga Store</h1>
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
     </>
   );
 };
