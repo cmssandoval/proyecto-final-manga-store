@@ -1,0 +1,17 @@
+Perfil y Login - Manga Store
+
+1) Perfil de sesión iniciada
+- Email: pfm@gmail.com
+- Contraseña: 123
+- Estado: sesión iniciada al validar estas credenciales
+- Vista incluida en: frontend/src/views/Profile.jsx
+
+2) Login + Register
+- Modo Login: solicita email y contraseña
+- Modo Register: solicita nombre, email y contraseña
+- Tiene validación básica y mensajes de éxito/error
+- Se maneja con React state local
+
+3) Nota
+- Esta vista está pensada como una sección y puede ser usada como base para luego integrar auth real con backend.
+- No se toca el backend por ahora.

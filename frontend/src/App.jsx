@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './views/Home';
+import ProfileView from './views/Profile';
 
 import './App.css';
 
@@ -8,6 +9,7 @@ const App = () => {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/perfil" element={<ProfileView />} />
       </Routes>
     </>
   );
