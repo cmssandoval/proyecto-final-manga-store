@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 
 const DEMO_USER = {
-  name: 'Pia Mendez',
+  name: 'Rodrigo Rodriguez',
   email: 'pfm@gmail.com',
   password: '123',
   phone: '+52 555 123 4567',
