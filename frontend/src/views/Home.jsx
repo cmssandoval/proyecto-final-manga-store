@@ -1,6 +1,13 @@
+import { useState } from 'react';
+
 import HeaderMiniBanner from '../components/HeaderMiniBanner';
 import ProductCard from '../components/ProductCard';
 import SectionTitle from '../components/SectionTitle';
+
+import blackCloverImage from '../assets/img/Bclover32.jpg';
+import dorohedoroImage from '../assets/img/dorohedoro12.jpg';
+import nagatoroImage from '../assets/img/Nagatoro3.jpg';
+import kaseImage from '../assets/img/Kase4.jpg';
 
 const featuredProducts = [
   {
@@ -11,6 +18,7 @@ const featuredProducts = [
     short: 'BC',
     tag: 'Top',
     colors: ['#f9d7e4', '#cfeeff'],
+    image: blackCloverImage,
   },
   {
     series: 'Shonen',
@@ -20,6 +28,7 @@ const featuredProducts = [
     short: 'AH',
     tag: 'New',
     colors: ['#f7dff8', '#d8f4ff'],
+    image: dorohedoroImage,
   },
   {
     series: 'Comedia',
@@ -29,23 +38,32 @@ const featuredProducts = [
     short: 'JK',
     tag: 'Hot',
     colors: ['#f9d7d5', '#d9ebff'],
+    image: nagatoroImage,
   },
   {
     series: 'Yuri',
     title: 'Kase-San & Yamada',
-    volume: 'Vol. 9',
+    volume: 'Vol. 4',
     price: '$15.00',
     short: 'DS',
     tag: 'Gift',
     colors: ['#f9dfe9', '#dceeff'],
+    image: kaseImage,
   },
 ];
 
 const Home = () => {
+  const [cartCount, setCartCount] = useState(0);
+
+  const handleAddToCart = (productTitle) => {
+    setCartCount((current) => current + 1);
+    console.log(`${productTitle} añadido al carrito`);
+  };
+
   return (
     <div className="page">
       <div className="shell">
-        <HeaderMiniBanner />
+        <HeaderMiniBanner cartCount={cartCount} />
 
         <main className="main">
           <section className="hero">
@@ -101,7 +119,11 @@ const Home = () => {
             <SectionTitle eyebrow="Novedades" title="Títulos del mes" action="Ver más" />
             <div className="product-grid">
               {featuredProducts.map((product) => (
-                <ProductCard key={product.title} product={product} />
+                <ProductCard
+                  key={product.title}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                />
               ))}
             </div>
           </section>

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import BrandLogo from './BrandLogo';
 
-const HeaderMiniBanner = () => {
+const HeaderMiniBanner = ({ cartCount = 0 }) => {
   return (
     <header className="header-shell">
       <div className="header-top">
@@ -24,10 +24,10 @@ const HeaderMiniBanner = () => {
         </div>
 
         <div className="header-cart-wrap">
-          <button className="cart-button">
+          <button className="cart-button" type="button">
             <span className="cart-icon">🛒</span>
             Carrito
-            <span className="cart-count">2</span>
+            <span className="cart-count">{cartCount}</span>
           </button>
         </div>
       </div>
