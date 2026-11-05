@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 const DEMO_USER = {
   name: 'Rodrigo Rodriguez',
@@ -44,25 +45,6 @@ const ProfileView = () => {
     setMessage({
       type: 'error',
       text: 'Credenciales inválidas. Prueba con pfm@gmail.com / 123.',
-    });
-  };
-
-  const handleRegister = (event) => {
-    event.preventDefault();
-
-    if (!form.name || !form.email || !form.password) {
-      setMessage({
-        type: 'error',
-        text: 'Completa todos los campos para crear tu cuenta.',
-      });
-      return;
-    }
-
-    setMode('login');
-    setForm({ name: '', email: '', password: '' });
-    setMessage({
-      type: 'success',
-      text: 'Registro simulado con éxito. Ya puedes iniciar sesión.',
     });
   };
 
@@ -144,6 +126,9 @@ const ProfileView = () => {
                     {demoCredentials}
                   </div>
                 </div>
+                <div className='mt-3 rounded-full  px-4 py-2 text-sm font-semibold text-[#4d3b4c]'>
+                  <p>¿Aún no tienes una cuenta? <span className='underline'><NavLink to={'/register'} >Regístrate</NavLink></span></p>
+                </div>
               </>
             )}
           </div>
@@ -158,15 +143,6 @@ const ProfileView = () => {
                 }`}
               >
                 Login
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode('register')}
-                className={`flex-1 rounded-full px-4 py-2 text-sm font-bold uppercase tracking-[0.12em] transition ${
-                  mode === 'register' ? 'bg-white text-[#382b38] shadow-sm' : 'text-[#74667a]'
-                }`}
-              >
-                Register
               </button>
             </div>
 
@@ -184,7 +160,7 @@ const ProfileView = () => {
               </div>
             )}
 
-            {mode === 'login' ? (
+            {
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
                   <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-[#877683]">
@@ -221,58 +197,7 @@ const ProfileView = () => {
                   Iniciar sesión
                 </button>
               </form>
-            ) : (
-              <form onSubmit={handleRegister} className="space-y-4">
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-[#877683]">
-                    Nombre
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="Tu nombre"
-                    className="w-full rounded-2xl border border-[#efdfe8] bg-[#fffafc] px-4 py-3 text-sm text-[#382b38] placeholder:text-[#a38b9a] outline-none transition focus:border-[#bfe5ff] focus:ring-2 focus:ring-[#dff3ff]"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-[#877683]">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="tucorreo@email.com"
-                    className="w-full rounded-2xl border border-[#efdfe8] bg-[#fffafc] px-4 py-3 text-sm text-[#382b38] placeholder:text-[#a38b9a] outline-none transition focus:border-[#bfe5ff] focus:ring-2 focus:ring-[#dff3ff]"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-[#877683]">
-                    Contraseña
-                  </label>
-                  <input
-                    type="password"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="Crea una contraseña"
-                    className="w-full rounded-2xl border border-[#efdfe8] bg-[#fffafc] px-4 py-3 text-sm text-[#382b38] placeholder:text-[#a38b9a] outline-none transition focus:border-[#bfe5ff] focus:ring-2 focus:ring-[#dff3ff]"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full rounded-full bg-[#f7bfd0] px-4 py-3 text-sm font-black uppercase tracking-[0.16em] text-[#382b38] transition hover:bg-[#f2b0c9]"
-                >
-                  Crear cuenta
-                </button>
-              </form>
-            )}
+            }
           </div>
         </div>
       </div>
