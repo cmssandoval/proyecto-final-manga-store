@@ -2,8 +2,11 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import BrandLogo from './BrandLogo';
+import useCartContext from '../hooks/useCartContext';
 
-const HeaderMiniBanner = ({ cartCount = 0 }) => {
+const HeaderMiniBanner = () => {
+  const { cartCount } = useCartContext();
+
   return (
     <header className="header-shell">
       <div className="header-top">

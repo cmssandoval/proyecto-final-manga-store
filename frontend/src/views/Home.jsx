@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBox, faGift, faHeadset, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
-import HeaderMiniBanner from '../components/HeaderMiniBanner.jsx';
 import ProductCard from '../components/ProductCard.jsx';
 import SectionTitle from '../components/SectionTitle.jsx';
 import Footer from '../components/Footer.jsx';
 
 import useDataContext from '../hooks/useDataContext.js';
+import useCartContext from '../hooks/useCartContext.js';
 
 const serviceItems = [
   { icon: faBox, text: 'Envíos rápidos' },
@@ -17,7 +17,7 @@ const serviceItems = [
 
 const Home = () => {
   const { homeData: featuredProducts  } = useDataContext();
-  const [cartCount, setCartCount] = useState(0);
+  const { setCartCount } = useCartContext();
 
   const handleAddToCart = (productTitle) => {
     setCartCount((current) => current + 1);
@@ -28,7 +28,6 @@ const Home = () => {
   return (
     <div className="page">
       <div className="shell">
-        <HeaderMiniBanner cartCount={cartCount} />
 
         <main className="main">
           <section className="hero">

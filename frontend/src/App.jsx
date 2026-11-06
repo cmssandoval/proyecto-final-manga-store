@@ -5,18 +5,24 @@ import './App.css';
 import Home from './views/Home';
 import ProfileView from './views/Profile';
 import RegisterView from './views/Register';
-import DataProvider from './context/DataProvider';
+import MainLayout from './layouts/MainLayout';
+
+import AppProviders from './contexts/AppProviders';
 
 const App = () => {
   return (
     <>
-      <DataProvider>
+      <AppProviders>
+
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/perfil" element={<ProfileView />} />
-          <Route path="/register" element={<RegisterView />} />
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/perfil" element={<ProfileView />} />
+            <Route path="/register" element={<RegisterView />} />
+          </Route>
         </Routes>
-      </DataProvider>
+
+      </AppProviders>
     </>
   );
 };
