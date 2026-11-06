@@ -871,3 +871,45 @@ a {
     font-size: 0.74rem;
   }
 }
+
+a,
+button,
+input,
+svg {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a:focus,
+a:active,
+button:focus,
+button:active,
+input:focus,
+input:active {
+  outline: none;
+  box-shadow: none;
+}
+
+::selection {
+  background: rgba(244, 116, 168, 0.2);
+  color: #2d2433;
+}
+
+.search-icon,
+.cart-icon,
+.button-icon,
+.wish-icon,
+.service-icon,
+.input-icon {
+  color: inherit;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link:active,
+.footer a:hover,
+.footer a:focus,
+.footer a:active {
+  color: inherit !important;
+  text-decoration: none;
+  background: rgba(244, 206, 221, 0.28);
+}

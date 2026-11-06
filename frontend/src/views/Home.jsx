@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBox, faGift, faHeadset, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 import HeaderMiniBanner from '../components/HeaderMiniBanner';
 import ProductCard from '../components/ProductCard';
 import SectionTitle from '../components/SectionTitle';
+import Footer from '../components/Footer';
 
 import blackCloverImage from '../assets/img/Bclover32.jpg';
 import dorohedoroImage from '../assets/img/dorohedoro12.jpg';
@@ -52,11 +55,18 @@ const featuredProducts = [
   },
 ];
 
+const serviceItems = [
+  { icon: faBox, text: 'Envíos rápidos' },
+  { icon: faGift, text: 'Gift cards' },
+  { icon: faHeadset, text: 'Atención real' },
+];
+
 const Home = () => {
   const [cartCount, setCartCount] = useState(0);
 
   const handleAddToCart = (productTitle) => {
     setCartCount((current) => current + 1);
+    alert(`${productTitle} añadido al carrito`);
     console.log(`${productTitle} añadido al carrito`);
   };
 
@@ -116,7 +126,6 @@ const Home = () => {
           </section>
 
           <section className="section">
-            <SectionTitle eyebrow="Novedades" title="Títulos del mes" action="Ver más" />
             <div className="product-grid">
               {featuredProducts.map((product) => (
                 <ProductCard
@@ -129,40 +138,17 @@ const Home = () => {
           </section>
 
           <section className="info-grid">
-            <div className="service-box">
-              <p className="mini-label">Servicios</p>
-              <h3 className="service-title">Todo lo que tu colección necesita</h3>
-
-              <div className="service-list">
-                {([
-                  { icon: '📦', text: 'Envíos rápidos' },
-                  { icon: '🎁', text: 'Gift cards' },
-                  { icon: '💬', text: 'Atención real' },
-                ]).map(({ icon, text }) => (
-                  <div key={text} className="service-item">
-                    <div className="service-icon">{icon}</div>
-                    <p>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="newsletter">
-              <p className="mini-label alt">Newsletter</p>
-              <h3 className="service-title">Súmate a los drops</h3>
-              <p className="newsletter-copy">Recibe avisos de lanzamientos, promociones y nuevas colecciones.</p>
-
-              <div className="input-box">
+            <div className="newsletter">              <div className="input-box">
                 <input
                   type="email"
-                  placeholder="Tu correo"
                   className="input"
                 />
               </div>
-              <button className="button subscribe">Suscribirme</button>
             </div>
           </section>
         </main>
+
+        <Footer />
       </div>
     </div>
   );

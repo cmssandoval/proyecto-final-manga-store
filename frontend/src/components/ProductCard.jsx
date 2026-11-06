@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping, faHeart } from '@fortawesome/free-solid-svg-icons';
+
 const ProductCard = ({ product, onAddToCart }) => {
   const hasImage = Boolean(product.image);
   const cardStyle = {
@@ -42,12 +45,12 @@ const ProductCard = ({ product, onAddToCart }) => {
         </div>
 
         <button type="button" className="add-button" onClick={handleAddClick}>
-          <span className="button-icon">🛒</span>
+          <FontAwesomeIcon icon={faCartShopping} className="button-icon" />
           Añadir al carrito
         </button>
 
         <button type="button" className="wishlist-button" aria-label="Añadir a wishlist">
-          <span className="wish-icon">♡</span>
+          <FontAwesomeIcon icon={faHeart} className="wish-icon" />
           Añadir a Wishlist
         </button>
       </div>
