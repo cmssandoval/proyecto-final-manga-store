@@ -42,10 +42,10 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
 
       <div className="internal-container">
         <div>
-          <h1 className="title">Regístrate Gratis</h1>
-          {error && <p className="auth-form-error">{error}</p>}
+          <h1 className="title">Regístrate</h1>
         </div>
         <div className='auth-form-shell'>
+          {error && <p className="auth-form-error">{error}</p>}
           <form onSubmit={handleRegister} className="auth-form">
             <div className="field-group">
               <label htmlFor='register-name' className="field-label">Nombre</label>
@@ -103,7 +103,11 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
               {isLoading ? 'Registrando...' : 'Registrarse'}
             </button>
             <div className='bottom-text'>
-              <p>¿Ya tienes una cuenta? <span className='font-semibold underline'><NavLink to={'/login'} >Inicia Sesión</NavLink></span></p>
+              <p>¿Ya tienes una cuenta?<br />
+                <span className='font-semibold underline'>
+                  <NavLink to={'/login'} >Inicia Sesión</NavLink>
+                </span>
+              </p>
             </div>
           </form>
         </div>

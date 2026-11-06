@@ -44,7 +44,9 @@
 }
 
 .title {
-    /* font-size: 4rem; */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 3rem;
     text-align: center;
 }
 
@@ -59,7 +61,12 @@
 }
 
 .auth-form-error {
-    margin: 1rem 1rem 0;
+    margin: auto;
+    margin-top: 2rem;
+    margin-bottom: 0;
+    padding: 0.5rem;
+    padding-bottom: 0;
+    max-width: 18rem;
     font-weight: 500;
     color: red;
     text-align: center;
@@ -69,7 +76,7 @@
     padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 1rem;
     box-sizing: border-box;
     width: 20rem;
     max-width: 22rem;
@@ -82,6 +89,12 @@
     font-weight: 600;
     line-height: 1.2;
     letter-spacing: 0.01em;
+}
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .field-label {
@@ -99,4 +112,5 @@
 
 .bottom-text {
     margin-top: 1rem;
+    text-align: center;
 }
