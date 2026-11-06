@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import RegisterForm from "../components/RegisterForm";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import RegisterForm from '../components/RegisterForm.jsx';
 
 const RegisterView = () => {
 
