@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState } from 'react';
 import registerSchema from '../schemas/RegisterSchema.js';
-import HeaderMiniBanner from "./HeaderMiniBanner";
+import HeaderMiniBanner from './HeaderMiniBanner.jsx';
 
 const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
 

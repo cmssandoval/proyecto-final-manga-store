@@ -2,12 +2,12 @@ import { Routes, Route } from 'react-router-dom';
 
 import './App.css';
 
-import Home from './views/Home';
-import ProfileView from './views/Profile';
-import RegisterView from './views/Register';
-import MainLayout from './layouts/MainLayout';
+import Home from './views/Home.jsx';
+import ProfileView from './views/Profile.jsx';
+import RegisterView from './views/Register.jsx';
+import MainLayout from './layouts/MainLayout.jsx';
 
-import AppProviders from './contexts/AppProviders';
+import AppProviders from './contexts/AppProviders.jsx';
 
 const App = () => {
   return (

@@ -1,5 +1,5 @@
-import CartProvider from "./CartProvider";
-import DataProvider from "./DataProvider";
+import CartProvider from './CartProvider.jsx';
+import DataProvider from './DataProvider.jsx';
 
 const AppProviders = ({ children }) => {
   return (

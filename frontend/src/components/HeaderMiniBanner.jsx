@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import BrandLogo from './BrandLogo';
-import useCartContext from '../hooks/useCartContext';
+import useCartContext from '../hooks/useCartContext.js';
 
 const HeaderMiniBanner = () => {
   const { cartCount } = useCartContext();

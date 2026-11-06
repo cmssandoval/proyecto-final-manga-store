@@ -1,5 +1,5 @@
-import HeaderMiniBanner from "../components/HeaderMiniBanner";
-import { Outlet } from "react-router-dom";
+import HeaderMiniBanner from '../components/HeaderMiniBanner';
+import { Outlet } from 'react-router-dom';
 
 const MainLayout = () => {
   return (
