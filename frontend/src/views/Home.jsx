@@ -1,6 +1,16 @@
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBox, faGift, faHeadset, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+
 import HeaderMiniBanner from '../components/HeaderMiniBanner';
 import ProductCard from '../components/ProductCard';
 import SectionTitle from '../components/SectionTitle';
+import Footer from '../components/Footer';
+
+import blackCloverImage from '../assets/img/Bclover32.jpg';
+import dorohedoroImage from '../assets/img/dorohedoro12.jpg';
+import nagatoroImage from '../assets/img/Nagatoro3.jpg';
+import kaseImage from '../assets/img/Kase4.jpg';
 
 const featuredProducts = [
   {
@@ -11,6 +21,7 @@ const featuredProducts = [
     short: 'BC',
     tag: 'Top',
     colors: ['#f9d7e4', '#cfeeff'],
+    image: blackCloverImage,
   },
   {
     series: 'Shonen',
@@ -20,6 +31,7 @@ const featuredProducts = [
     short: 'AH',
     tag: 'New',
     colors: ['#f7dff8', '#d8f4ff'],
+    image: dorohedoroImage,
   },
   {
     series: 'Comedia',
@@ -29,23 +41,39 @@ const featuredProducts = [
     short: 'JK',
     tag: 'Hot',
     colors: ['#f9d7d5', '#d9ebff'],
+    image: nagatoroImage,
   },
   {
     series: 'Yuri',
     title: 'Kase-San & Yamada',
-    volume: 'Vol. 9',
+    volume: 'Vol. 4',
     price: '$15.00',
     short: 'DS',
     tag: 'Gift',
     colors: ['#f9dfe9', '#dceeff'],
+    image: kaseImage,
   },
 ];
 
+const serviceItems = [
+  { icon: faBox, text: 'Envíos rápidos' },
+  { icon: faGift, text: 'Gift cards' },
+  { icon: faHeadset, text: 'Atención real' },
+];
+
 const Home = () => {
+  const [cartCount, setCartCount] = useState(0);
+
+  const handleAddToCart = (productTitle) => {
+    setCartCount((current) => current + 1);
+    alert(`${productTitle} añadido al carrito`);
+    console.log(`${productTitle} añadido al carrito`);
+  };
+
   return (
     <div className="page">
       <div className="shell">
-        <HeaderMiniBanner />
+        <HeaderMiniBanner cartCount={cartCount} />
 
         <main className="main">
           <section className="hero">
@@ -98,49 +126,29 @@ const Home = () => {
           </section>
 
           <section className="section">
-            <SectionTitle eyebrow="Novedades" title="Títulos del mes" action="Ver más" />
             <div className="product-grid">
               {featuredProducts.map((product) => (
-                <ProductCard key={product.title} product={product} />
+                <ProductCard
+                  key={product.title}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                />
               ))}
             </div>
           </section>
 
           <section className="info-grid">
-            <div className="service-box">
-              <p className="mini-label">Servicios</p>
-              <h3 className="service-title">Todo lo que tu colección necesita</h3>
-
-              <div className="service-list">
-                {([
-                  { icon: '📦', text: 'Envíos rápidos' },
-                  { icon: '🎁', text: 'Gift cards' },
-                  { icon: '💬', text: 'Atención real' },
-                ]).map(({ icon, text }) => (
-                  <div key={text} className="service-item">
-                    <div className="service-icon">{icon}</div>
-                    <p>{text}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="newsletter">
-              <p className="mini-label alt">Newsletter</p>
-              <h3 className="service-title">Súmate a los drops</h3>
-              <p className="newsletter-copy">Recibe avisos de lanzamientos, promociones y nuevas colecciones.</p>
-
-              <div className="input-box">
+            <div className="newsletter">              <div className="input-box">
                 <input
                   type="email"
-                  placeholder="Tu correo"
                   className="input"
                 />
               </div>
-              <button className="button subscribe">Suscribirme</button>
             </div>
           </section>
         </main>
+
+        <Footer />
       </div>
     </div>
   );

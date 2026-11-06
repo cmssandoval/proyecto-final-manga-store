@@ -1,21 +1,30 @@
-const ProductCard = ({ product }) => {
-  const hasImage = Boolean(product.image);
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping, faHeart } from '@fortawesome/free-solid-svg-icons';
 
+const ProductCard = ({ product, onAddToCart }) => {
+  const hasImage = Boolean(product.image);
   const cardStyle = {
-    background: `linear-gradient(135deg, ${product.colors[0]}, ${product.colors[1]})`,
+    background: product.colors
+      ? `linear-gradient(135deg, ${product.colors[0]} 0%, ${product.colors[1] || product.colors[0]} 100%)`
+      : '#f7dfe7',
+  };
+
+  const handleAddClick = () => {
+    if (onAddToCart) {
+      onAddToCart(product.title);
+    }
   };
 
   return (
-    <article className="card">
+    <article className="card card-product">
       <div className="card-visual" style={cardStyle}>
         <div className="card-badges">
-          <span className="badge soft">Nuevo</span>
+          <span className="availability-badge">Disponible</span>
           <span className="badge accent">{product.tag}</span>
         </div>
 
         <div className="cover-wrap">
-          <div className="cover-glow" />
-          <div className={`cover-box ${hasImage ? 'with-image' : ''}`}>
+          <div className="cover-box">
             {hasImage ? (
               <img src={product.image} alt={product.title} className="cover-image" />
             ) : (
@@ -26,12 +35,24 @@ const ProductCard = ({ product }) => {
       </div>
 
       <div className="card-body">
-        <p className="series">{product.series}</p>
-        <h3 className="card-title">{product.title}</h3>
-        <div className="card-meta">
-          <span>{product.volume}</span>
-          <strong>{product.price}</strong>
+        <div className="card-copy-block">
+          <span className="series-tag">{product.series}</span>
+          <h3 className="card-title">{product.title}</h3>
         </div>
+
+        <div className="card-price-block">
+          <strong className="card-price">{product.price}</strong>
+        </div>
+
+        <button type="button" className="add-button" onClick={handleAddClick}>
+          <FontAwesomeIcon icon={faCartShopping} className="button-icon" />
+          Añadir al carrito
+        </button>
+
+        <button type="button" className="wishlist-button" aria-label="Añadir a wishlist">
+          <FontAwesomeIcon icon={faHeart} className="wish-icon" />
+          Añadir a Wishlist
+        </button>
       </div>
     </article>
   );

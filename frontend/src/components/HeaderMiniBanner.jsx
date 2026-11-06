@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import BrandLogo from './BrandLogo';
 
-const HeaderMiniBanner = () => {
+const HeaderMiniBanner = ({ cartCount = 0 }) => {
   return (
     <header className="header-shell">
       <div className="header-top">
@@ -11,10 +13,7 @@ const HeaderMiniBanner = () => {
 
         <div className="header-search-wrap">
           <label className="header-search">
-            <svg viewBox="0 0 24 24" className="search-icon" aria-hidden="true">
-              <circle cx="11" cy="11" r="6" />
-              <path d="M16 16L21 21" strokeLinecap="round" />
-            </svg>
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
             <input
               type="text"
               placeholder="Buscar manga, autor o edición"
@@ -24,10 +23,10 @@ const HeaderMiniBanner = () => {
         </div>
 
         <div className="header-cart-wrap">
-          <button className="cart-button">
-            <span className="cart-icon">🛒</span>
+          <button className="cart-button" type="button">
+            <FontAwesomeIcon icon={faCartShopping} className="cart-icon" />
             Carrito
-            <span className="cart-count">2</span>
+            <span className="cart-count">{cartCount}</span>
           </button>
         </div>
       </div>
