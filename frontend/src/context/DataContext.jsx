@@ -1,1 +1,0 @@
-//* Para el fetch y estado de datos de los mangas
