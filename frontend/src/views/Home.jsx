@@ -2,58 +2,12 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBox, faGift, faHeadset, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
-import HeaderMiniBanner from '../components/HeaderMiniBanner';
-import ProductCard from '../components/ProductCard';
-import SectionTitle from '../components/SectionTitle';
-import Footer from '../components/Footer';
+import HeaderMiniBanner from '../components/HeaderMiniBanner.jsx';
+import ProductCard from '../components/ProductCard.jsx';
+import SectionTitle from '../components/SectionTitle.jsx';
+import Footer from '../components/Footer.jsx';
 
-import blackCloverImage from '../assets/img/Bclover32.jpg';
-import dorohedoroImage from '../assets/img/dorohedoro12.jpg';
-import nagatoroImage from '../assets/img/Nagatoro3.jpg';
-import kaseImage from '../assets/img/Kase4.jpg';
-
-const featuredProducts = [
-  {
-    series: 'Shonen',
-    title: 'Black Clover',
-    volume: 'Vol. 12',
-    price: '$14.90',
-    short: 'BC',
-    tag: 'Top',
-    colors: ['#f9d7e4', '#cfeeff'],
-    image: blackCloverImage,
-  },
-  {
-    series: 'Shonen',
-    title: 'Dorohedoro',
-    volume: 'Vol. 7',
-    price: '$12.50',
-    short: 'AH',
-    tag: 'New',
-    colors: ['#f7dff8', '#d8f4ff'],
-    image: dorohedoroImage,
-  },
-  {
-    series: 'Comedia',
-    title: 'Nagatoro-san',
-    volume: 'Vol. 16',
-    price: '$16.20',
-    short: 'JK',
-    tag: 'Hot',
-    colors: ['#f9d7d5', '#d9ebff'],
-    image: nagatoroImage,
-  },
-  {
-    series: 'Yuri',
-    title: 'Kase-San & Yamada',
-    volume: 'Vol. 4',
-    price: '$15.00',
-    short: 'DS',
-    tag: 'Gift',
-    colors: ['#f9dfe9', '#dceeff'],
-    image: kaseImage,
-  },
-];
+import useDataContext from '../hooks/useDataContext.js';
 
 const serviceItems = [
   { icon: faBox, text: 'Envíos rápidos' },
@@ -62,6 +16,7 @@ const serviceItems = [
 ];
 
 const Home = () => {
+  const { homeData: featuredProducts  } = useDataContext();
   const [cartCount, setCartCount] = useState(0);
 
   const handleAddToCart = (productTitle) => {

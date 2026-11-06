@@ -1,1 +1,5 @@
-//* Para el fetch y estado de datos de los mangas
+import { createContext } from 'react';
+
+const DataContext = createContext();
+
+export default DataContext;
