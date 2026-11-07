@@ -1,36 +1,33 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import LoginForm from '../components/LoginForm.jsx';
+import useUserContext from '../hooks/useUserContext.js';
 
 const LoginView = () => {
-
   const [ isLoading, setIsLoading ] = useState(false);
   const [ apiError, setApiError ] = useState('');
-
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useUserContext();
 
   const handleLoginSubmit = async (userData) => {
     setIsLoading(true);
-    setApiError('')
+    setApiError('');
 
     try {
-      console.log('Enviando datos al backend:', userData);
-      
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulación de espera
-
-      // Reemplazar por modal bonito o sección de errores común
-      alert('Inicio de sesión exitoso!');
-      navigate('/profile'); 
-      
-    } catch (err) {
-      setApiError('El correo ya está registrado o hubo un error en el servidor');
+      await login(userData);
+      navigate(location.state?.from?.pathname || '/perfil', { replace: true });
+    } catch (error) {
+      setApiError(
+        error.response?.data?.message
+          || 'No se pudo iniciar sesión. Revisa tus credenciales e inténtalo nuevamente.',
+      );
     } finally {
       setIsLoading(false);
     }
-
   };
 
-  return(
+  return (
     <main className="auth-page" aria-label="Inicio de sesión">
       <div className="auth-page__shell">
         {apiError && <div className="auth-page__error" role="alert">{apiError}</div>}
