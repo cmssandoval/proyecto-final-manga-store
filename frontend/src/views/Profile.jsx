@@ -55,57 +55,57 @@ const ProfileView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_#fffdfd_0%,_#f9edf3_35%,_#eef8ff_100%)] px-4 py-8 text-[#2c2330] md:px-6">
-      <div className="mx-auto max-w-6xl rounded-[32px] border border-[#f0dfe9] bg-white/70 p-4 shadow-[0_26px_80px_rgba(183,135,166,0.14)] backdrop-blur-sm md:p-6">
-        <header className="mb-6 rounded-[24px] bg-gradient-to-r from-[#fff1f7] via-[#f8f7ff] to-[#edf8ff] px-5 py-6 shadow-inner">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <main className="profile-page">
+      <div className="profile-shell">
+        <header className="profile-hero">
+          <div className="profile-hero__content">
             <div>
-              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#9a7890]">Cuenta</p>
-              <h1 className="mt-2 text-3xl font-black tracking-tight text-[#31263b]">Perfil de usuario</h1>
+              <p className="profile-eyebrow">Cuenta</p>
+              <h1 className="profile-title">Perfil de usuario</h1>
             </div>
-            <div className="rounded-full border border-[#efd6e3] bg-white/80 px-4 py-2 text-sm font-semibold text-[#5a4a5d] shadow-sm">
-              {isLoggedIn ? 'Sesión iniciada' : 'Sesion cerrada'}
+            <div className="profile-status">
+              {isLoggedIn ? 'Sesión iniciada' : 'Sesión cerrada'}
             </div>
           </div>
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-[28px] border border-[#f1dfe8] bg-[#fffafc] p-5 shadow-[0_20px_40px_rgba(183,135,166,0.07)]">
+        <div className="profile-grid">
+          <section className="profile-panel profile-panel--summary">
             {isLoggedIn ? (
               <>
-                <div className="flex items-center gap-4 border-b border-[#f0dde7] pb-5">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#f8bfd2] via-[#f4e7af] to-[#cfeeff] text-lg font-black text-[#403246] shadow-md">
+                <div className="profile-user">
+                  <div className="profile-avatar">
                     {DEMO_USER.avatar}
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#8f7c8b]">Bienvenida</p>
-                    <h2 className="mt-1 text-2xl font-black text-[#32253c]">{DEMO_USER.name}</h2>
+                    <p className="profile-eyebrow">Bienvenida</p>
+                    <h2 className="profile-user__name">{DEMO_USER.name}</h2>
                   </div>
                 </div>
 
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  <div className="rounded-[22px] border border-[#f0dfe8] bg-white p-4 shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#8f7c8b]">Email</p>
-                    <p className="mt-2 text-base font-semibold text-[#2d2434]">{DEMO_USER.email}</p>
+                <div className="profile-details">
+                  <div className="profile-detail">
+                    <p className="profile-detail__label">Email</p>
+                    <p className="profile-detail__value">{DEMO_USER.email}</p>
                   </div>
-                  <div className="rounded-[22px] border border-[#f0dfe8] bg-white p-4 shadow-sm">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#8f7c8b]">Plan</p>
-                    <p className="mt-2 text-base font-semibold text-[#2d2434]">{DEMO_USER.plan}</p>
+                  <div className="profile-detail">
+                    <p className="profile-detail__label">Plan</p>
+                    <p className="profile-detail__value">{DEMO_USER.plan}</p>
                   </div>
-                  <div className="rounded-[22px] border border-[#f0dfe8] bg-white p-4 shadow-sm md:col-span-2">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#8f7c8b]">Teléfono</p>
-                    <p className="mt-2 text-base font-semibold text-[#2d2434]">{DEMO_USER.phone}</p>
+                  <div className="profile-detail profile-detail--wide">
+                    <p className="profile-detail__label">Teléfono</p>
+                    <p className="profile-detail__value">{DEMO_USER.phone}</p>
                   </div>
                 </div>
 
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <button className="rounded-full bg-[#f7bfd0] px-5 py-3 text-sm font-bold uppercase tracking-[0.12em] text-[#382b38] shadow-[0_12px_20px_rgba(247,191,208,0.38)] transition hover:-translate-y-0.5">
+                <div className="profile-actions">
+                  <button className="profile-button profile-button--primary">
                     Editar perfil
                   </button>
                   <button
                     type="button"
                     onClick={handleLogout}
-                    className="rounded-full border border-[#dfeefc] bg-[#edf8ff] px-5 py-3 text-sm font-bold uppercase tracking-[0.12em] text-[#324d68] transition hover:bg-[#e2f3ff]"
+                    className="profile-button profile-button--secondary"
                   >
                     Cerrar sesión
                   </button>
@@ -113,34 +113,32 @@ const ProfileView = () => {
               </>
             ) : (
               <>
-                <div className="mb-5">
-                  <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#9a7890]">Demo</p>
-                  <h2 className="mt-2 text-2xl font-black text-[#30253b]">Sesión no iniciada</h2>
+                <div className="profile-intro">
+                  <p className="profile-eyebrow">Demo</p>
+                  <h2 className="profile-section-title">Sesión no iniciada</h2>
                 </div>
 
-                <div className="rounded-[24px] border border-[#f0dfe6] bg-gradient-to-br from-[#fff7fb] to-[#f0f9ff] p-4 shadow-inner">
-                  <p className="text-sm text-[#5c4b5f]">
+                <div className="profile-demo">
+                  <p className="profile-demo__description">
                     Para probar la sesión de usuario usa estos datos:
                   </p>
-                  <div className="mt-3 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-[#4d3b4c] shadow-sm">
+                  <div className="profile-demo__credentials">
                     {demoCredentials}
                   </div>
                 </div>
-                <div className='mt-3 rounded-full  px-4 py-2 text-sm font-semibold text-[#4d3b4c]'>
-                  <p>¿Aún no tienes una cuenta? <span className='underline'><NavLink to={'/register'} >Regístrate</NavLink></span></p>
+                <div className="profile-register-prompt">
+                  <p>¿Aún no tienes una cuenta? <NavLink to="/register">Regístrate</NavLink></p>
                 </div>
               </>
             )}
-          </div>
+          </section>
 
-          <div className="rounded-[28px] border border-[#efdfe8] bg-[#fffdfd] p-5 shadow-[0_20px_40px_rgba(183,135,166,0.07)]">
-            <div className="mb-5 flex rounded-full border border-[#eed7e4] bg-[#f8f0f5] p-1">
+          <section className="profile-panel profile-panel--login">
+            <div className="profile-tabs">
               <button
                 type="button"
                 onClick={() => setMode('login')}
-                className={`flex-1 rounded-full px-4 py-2 text-sm font-bold uppercase tracking-[0.12em] transition ${
-                  mode === 'login' ? 'bg-white text-[#382b38] shadow-sm' : 'text-[#74667a]'
-                }`}
+                className={`profile-tab ${mode === 'login' ? 'profile-tab--active' : ''}`}
               >
                 Login
               </button>
@@ -148,60 +146,57 @@ const ProfileView = () => {
 
             {message.text && (
               <div
-                className={`mb-4 rounded-2xl border px-3 py-2 text-sm font-medium ${
-                  message.type === 'success'
-                    ? 'border-[#cfeeff] bg-[#eef9ff] text-[#2d5168]'
-                    : message.type === 'error'
-                      ? 'border-[#f7dfe4] bg-[#fff2f6] text-[#7d4959]'
-                      : 'border-[#f0e3d0] bg-[#fffaf0] text-[#6d5d3d]'
-                }`}
+                className={`profile-message profile-message--${message.type}`}
+                role="status"
               >
                 {message.text}
               </div>
             )}
 
             {
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-[#877683]">
+              <form onSubmit={handleLogin} className="profile-form">
+                <div className="profile-field">
+                  <label htmlFor="profile-email" className="profile-field__label">
                     Email
                   </label>
                   <input
+                    id="profile-email"
                     type="email"
                     name="email"
                     value={form.email}
                     onChange={handleChange}
                     placeholder="pfm@gmail.com"
-                    className="w-full rounded-2xl border border-[#efdfe8] bg-[#fffafc] px-4 py-3 text-sm text-[#382b38] placeholder:text-[#a38b9a] outline-none transition focus:border-[#bfe5ff] focus:ring-2 focus:ring-[#dff3ff]"
+                    className="profile-field__input"
                   />
                 </div>
 
-                <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-[0.2em] text-[#877683]">
+                <div className="profile-field">
+                  <label htmlFor="profile-password" className="profile-field__label">
                     Contraseña
                   </label>
                   <input
+                    id="profile-password"
                     type="password"
                     name="password"
                     value={form.password}
                     onChange={handleChange}
                     placeholder="123"
-                    className="w-full rounded-2xl border border-[#efdfe8] bg-[#fffafc] px-4 py-3 text-sm text-[#382b38] placeholder:text-[#a38b9a] outline-none transition focus:border-[#bfe5ff] focus:ring-2 focus:ring-[#dff3ff]"
+                    className="profile-field__input"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full rounded-full bg-[#cfeeff] px-4 py-3 text-sm font-black uppercase tracking-[0.16em] text-[#24384d] transition hover:bg-[#bfe8ff]"
+                  className="profile-button profile-button--submit"
                 >
                   Iniciar sesión
                 </button>
               </form>
             }
-          </div>
+          </section>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

@@ -31,10 +31,12 @@ const LoginView = () => {
   };
 
   return(
-    <>
-      {apiError && <div className="api-error">{apiError}</div>}
-      <LoginForm onSubmitSuccess={handleLoginSubmit} isLoading={isLoading} />
-    </>
+    <main className="auth-page" aria-label="Inicio de sesión">
+      <div className="auth-page__shell">
+        {apiError && <div className="auth-page__error" role="alert">{apiError}</div>}
+        <LoginForm onSubmitSuccess={handleLoginSubmit} isLoading={isLoading} />
+      </div>
+    </main>
   );
 };
 
