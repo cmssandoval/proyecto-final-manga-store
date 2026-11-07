@@ -20,7 +20,7 @@ const ProductCard = ({ product, onAddToCart, onViewProduct }) => {
     event.stopPropagation();
 
     if (onAddToCart) {
-      onAddToCart(product.title);
+      onAddToCart(product);
     }
   };
 

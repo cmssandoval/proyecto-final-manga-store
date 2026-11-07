@@ -1,37 +1,41 @@
-import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Cart from '../components/Cart.jsx';
+import useCartContext from '../hooks/useCartContext.js';
+import useUserContext from '../hooks/useUserContext.js';
 import '../styles/cart.css';
-import nagatoroImage from '../assets/img/Nagatoro3.jpg';
 
 const CartView = () => {
-  // Estado local temporal (luego se remplaza con la api)
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Manga Vol. 1', description : 'sin descripcion por mientras w' , price: 67.99, quantity: 1, image: nagatoroImage },
-    { id: 2, name: 'jeje 67', description : 'sin descripcion por mientras w' , price: 67.99, quantity: 1, image: nagatoroImage },
-  ]);
+  const navigate = useNavigate();
+  const { cartItems, removeFromCart, updateQuantity, createOrder } = useCartContext();
+  const { shippingAddress } = useUserContext();
 
-  const handleRemoveItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const handleUpdateQuantity = (id, newQuantity) => {
-    if (newQuantity <= 0) return handleRemoveItem(id);
-    setCartItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item))
-    );
+  const handleCheckout = (selectedAddress) => {
+    createOrder(selectedAddress);
+    navigate('/ordenes');
   };
 
   return (
-    <main className="cart-page">
+    <main className="cart-page" aria-labelledby="cart-title">
       <header className="cart-header">
-        <h1>Mi Carrito de Compras</h1>
+        <p className="cart-header__eyebrow">Tu selección</p>
+        <h1 className="cart-header__title" id="cart-title">Mi carrito</h1>
+        <p className="cart-header__description">
+          Revisa tus mangas y ajusta las cantidades antes de continuar.
+        </p>
       </header>
       <section className="cart-content">
         <Cart
           items={cartItems}
-          onRemoveItem={handleRemoveItem}
-          onUpdateQuantity={handleUpdateQuantity}
+          onRemoveItem={removeFromCart}
+          onUpdateQuantity={updateQuantity}
+          onCheckout={handleCheckout}
+          shippingAddress={shippingAddress}
         />
+        {cartItems.length > 0 && (
+          <Link to="/catalogo" className="cart-continue-link">
+            Seguir explorando el catálogo
+          </Link>
+        )}
       </section>
     </main>
   );
