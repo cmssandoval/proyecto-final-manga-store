@@ -1,4 +1,5 @@
 import HeaderMiniBanner from '../components/HeaderMiniBanner';
+import Footer from '../components/Footer';
 import { Outlet } from 'react-router-dom';
 
 const MainLayout = () => {
@@ -6,6 +7,7 @@ const MainLayout = () => {
     <>
       <HeaderMiniBanner />
       <Outlet />
+      <Footer />
     </>
   );
 };

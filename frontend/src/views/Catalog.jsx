@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faMagnifyingGlass, faSliders } from '@fortawesome/free-solid-svg-icons';
@@ -121,6 +121,22 @@ const Catalog = () => {
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('relevancia');
 
+  useEffect(() => {
+    document.title = 'Catálogo de manga | MoonShelf';
+
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      document.head.appendChild(metaDescription);
+    }
+
+    metaDescription.setAttribute(
+      'content',
+      'Explora el catálogo de manga de MoonShelf con shonen, romance, acción, comedia y colecciones premium.',
+    );
+  }, []);
+
   const handleViewProduct = (productId) => {
     navigate(`/catalogo/${productId}`, { state: { from: '/catalogo' } });
   };
@@ -155,75 +171,69 @@ const Catalog = () => {
   }, [search, selectedFilter, sortBy]);
 
   return (
-    <main className="min-h-screen bg-[#fff8fb] px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <section className="mb-6 rounded-[28px] border border-pink-100 bg-gradient-to-r from-pink-50 via-white to-sky-50 p-5 shadow-sm sm:p-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="mb-2 text-xs font-extrabold uppercase tracking-[0.2em] text-pink-500">Colección</p>
-              <h1 className="text-3xl font-black tracking-[-0.06em] text-slate-800 sm:text-4xl">Catálogo de mangas</h1>
-            </div>
+    <main className="catalog-page" aria-labelledby="catalog-title">
+      <div className="catalog-shell">
+        <section className="catalog-hero">
+          <div className="catalog-hero__content">
+            <p className="catalog-hero__eyebrow">Colección</p>
+            <h1 id="catalog-title" className="catalog-hero__title">Catálogo de mangas</h1>
+          </div>
 
-            <div className="flex w-full max-w-xl items-center gap-3 rounded-full border border-pink-200 bg-white px-4 py-3 shadow-sm">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="text-sm text-slate-500" />
-              <input
-                type="search"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Buscar por título o género"
-                className="w-full border-0 bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
-                aria-label="Buscar manga"
-              />
-            </div>
+          <div className="catalog-search">
+            <FontAwesomeIcon icon={faMagnifyingGlass} className="catalog-search__icon" />
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Buscar por título o género"
+              className="catalog-search__input"
+              aria-label="Buscar manga"
+            />
           </div>
         </section>
 
-        <section className="mb-8 rounded-[24px] border border-pink-100 bg-white p-4 shadow-sm">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-wrap gap-2">
-              {filterOptions.map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  onClick={() => setSelectedFilter(option)}
-                  className={[
-                    'rounded-full border px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] transition',
-                    selectedFilter === option
-                      ? 'border-pink-300 bg-pink-500 text-white shadow-sm'
-                      : 'border-pink-100 bg-pink-50 text-slate-600 hover:border-pink-200',
-                  ].join(' ')}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-3 py-2">
-              <FontAwesomeIcon icon={faSliders} className="text-sm text-slate-500" />
-              <label htmlFor="sort" className="sr-only">Ordenar</label>
-              <select
-                id="sort"
-                value={sortBy}
-                onChange={(event) => setSortBy(event.target.value)}
-                className="border-0 bg-transparent text-sm font-medium text-slate-700 outline-none"
+        <section className="catalog-filters" aria-label="Filtros del catálogo">
+          <div className="catalog-filters__group">
+            {filterOptions.map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setSelectedFilter(option)}
+                className={[
+                  'catalog-filter',
+                  selectedFilter === option ? 'catalog-filter--active' : '',
+                ].join(' ')}
               >
-                <option value="relevancia">Relevancia</option>
-                <option value="titulo">Título</option>
-                <option value="precio-asc">Precio: menor</option>
-                <option value="precio-desc">Precio: mayor</option>
-              </select>
-            </div>
+                {option}
+              </button>
+            ))}
+          </div>
+
+          <div className="catalog-sort">
+            <FontAwesomeIcon icon={faSliders} className="catalog-sort__icon" />
+            <label htmlFor="catalog-sort" className="sr-only">Ordenar</label>
+            <select
+              id="catalog-sort"
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value)}
+              className="catalog-sort__select"
+            >
+              <option value="relevancia">Relevancia</option>
+              <option value="titulo">Título</option>
+              <option value="precio-asc">Precio: menor</option>
+              <option value="precio-desc">Precio: mayor</option>
+            </select>
           </div>
         </section>
 
-        <section className="mb-4 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm font-medium text-slate-600">
-            <FontAwesomeIcon icon={faFilter} className="text-pink-500" />
+        <section className="catalog-results" aria-live="polite">
+          <div className="catalog-results__summary">
+            <FontAwesomeIcon icon={faFilter} className="catalog-results__icon" />
             <span>{filteredItems.length} resultados</span>
           </div>
         </section>
 
-        <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <section className="catalog-grid">
           {filteredItems.map((product) => (
             <ProductCard
               key={product.id}

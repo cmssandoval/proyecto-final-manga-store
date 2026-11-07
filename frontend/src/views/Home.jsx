@@ -1,10 +1,9 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBox, faGift, faHeadset, faEnvelope, faArrowRight, faStar, faShieldHeart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 import ProductCard from '../components/ProductCard.jsx';
-import Footer from '../components/Footer.jsx';
 
 import useDataContext from '../hooks/useDataContext.js';
 import useCartContext from '../hooks/useCartContext.js';
@@ -41,6 +40,22 @@ const Home = () => {
   const navigate = useNavigate();
   const { homeData: featuredProducts } = useDataContext();
   const { setCartCount } = useCartContext();
+
+  useEffect(() => {
+    document.title = 'MoonShelf | Tienda de manga premium';
+
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      document.head.appendChild(metaDescription);
+    }
+
+    metaDescription.setAttribute(
+      'content',
+      'MoonShelf ofrece manga premium, colecciones exclusivas y lanzamientos para fans de shonen, romance y acción.',
+    );
+  }, []);
 
   const homeHighlights = useMemo(
     () => featuredProducts.slice(0, 4),
@@ -233,8 +248,6 @@ const Home = () => {
             </div>
           </section>
         </main>
-
-        <Footer />
       </div>
     </div>
   );
