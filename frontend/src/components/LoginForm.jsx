@@ -2,7 +2,7 @@ import { useState } from 'react';
 import loginSchema from '../schemas/LoginSchema.js';
 import { NavLink } from 'react-router-dom';
 
-import '../styles/AuthForm.css';
+import '../styles/auth-form.css';
 
 const LoginForm = ({ onSubmitSuccess, isLoading }) => {
 
