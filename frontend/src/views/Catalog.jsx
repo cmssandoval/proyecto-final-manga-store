@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faMagnifyingGlass, faSliders } from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +9,10 @@ import blackCloverImage from '../assets/img/Bclover32.jpg';
 import dorohedoroImage from '../assets/img/dorohedoro12.jpg';
 import nagatoroImage from '../assets/img/Nagatoro3.jpg';
 import kaseImage from '../assets/img/Kase4.jpg';
+import nanaImage from '../assets/img/Nana1.jpg';
+import jjkImage from '../assets/img/jjk.jpg';
+import opmimg from '../assets/img/opm8.jpg';
+import yn4img from '../assets/img/yn4.jpg';
 
 const catalogItems = [
   {
@@ -68,7 +73,7 @@ const catalogItems = [
     volume: 'Vol. 18',
     short: 'JK',
     colors: ['#f4d4ef', '#dfeaff'],
-    image: blackCloverImage,
+    image: jjkImage,
   },
   {
     id: 6,
@@ -77,38 +82,38 @@ const catalogItems = [
     price: '$17.80',
     tag: 'Top',
     genre: 'accion',
-    volume: 'Vol. 9',
+    volume: 'Vol. 8',
     short: 'OP',
     colors: ['#dfeaff', '#f9d7e4'],
-    image: dorohedoroImage,
+    image: opmimg,
   },
   {
     id: 7,
-    title: 'My Hero Academia',
-    series: 'Heroico',
-    price: '$19.10',
+    title: 'Chainsmoker Cat',
+    series: 'Comedia',
+    price: '$10.10',
     tag: 'Hot',
-    genre: 'fantasia',
-    volume: 'Vol. 28',
-    short: 'MH',
+    genre: 'comedia',
+    volume: 'Vol. 4',
+    short: 'CC',
     colors: ['#e7f0ff', '#f9dfe9'],
-    image: nagatoroImage,
+    image: yn4img,
   },
   {
     id: 8,
-    title: 'Spy x Family',
-    series: 'Comedia',
+    title: 'Nana',
+    series: 'Drama',
     price: '$13.60',
     tag: 'Nuevo',
-    genre: 'comedia',
-    volume: 'Vol. 11',
-    short: 'SX',
+    genre: 'drama',
+    volume: 'Vol. 1',
+    short: 'NA',
     colors: ['#f5eadf', '#dff2ff'],
-    image: kaseImage,
+    image: nanaImage,
   },
 ];
 
-const filterOptions = ['todos', 'shonen', 'romance', 'accion', 'fantasia', 'comedia'];
+const filterOptions = ['todos', 'shonen', 'romance', 'accion', 'fantasia', 'comedia', 'drama'];
 
 const Catalog = () => {
   const [selectedFilter, setSelectedFilter] = useState('todos');
@@ -119,11 +124,12 @@ const Catalog = () => {
     const normalizedSearch = search.trim().toLowerCase();
 
     const items = catalogItems.filter((item) => {
-      const matchesFilter = selectedFilter === 'todos' ? true : item.genre === selectedFilter;
+      const itemGenre = String(item.genre || '').toLowerCase();
+      const matchesFilter = selectedFilter === 'todos' ? true : itemGenre === String(selectedFilter).toLowerCase();
       const matchesSearch =
         !normalizedSearch ||
-        item.title.toLowerCase().includes(normalizedSearch) ||
-        item.series.toLowerCase().includes(normalizedSearch);
+        String(item.title || '').toLowerCase().includes(normalizedSearch) ||
+        String(item.series || '').toLowerCase().includes(normalizedSearch);
 
       return matchesFilter && matchesSearch;
     });
@@ -214,7 +220,9 @@ const Catalog = () => {
 
         <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {filteredItems.map((product) => (
-            <ProductCard key={product.id} product={product} onAddToCart={() => {}} />
+            <Link key={product.id} to={`/catalogo/${product.id}`} className="block">
+              <ProductCard product={product} onAddToCart={() => {}} />
+            </Link>
           ))}
         </section>
       </div>

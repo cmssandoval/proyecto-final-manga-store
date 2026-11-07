@@ -9,7 +9,10 @@ const ProductCard = ({ product, onAddToCart }) => {
       : '#f7dfe7',
   };
 
-  const handleAddClick = () => {
+  const handleAddClick = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (onAddToCart) {
       onAddToCart(product.title);
     }
