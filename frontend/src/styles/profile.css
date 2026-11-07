@@ -1,0 +1,217 @@
+.profile-page {
+  min-height: 100vh;
+  padding: 1.5rem 1rem 2.75rem;
+  background: radial-gradient(circle at top, #fffafc 0%, #f7edf4 22%, #eef7ff 100%);
+  color: #2d2433;
+}
+
+.profile-shell {
+  max-width: 78rem;
+  margin: 0 auto;
+  border: 1px solid #f0dfe8;
+  border-radius: 2rem;
+  background: rgba(251, 247, 249, 0.82);
+  padding: clamp(1rem, 3vw, 1.5rem);
+  box-shadow: 0 25px 80px rgba(167, 128, 157, 0.14);
+  backdrop-filter: blur(10px);
+}
+
+.profile-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #f2dfe7;
+  border-radius: 1.8rem;
+  background: linear-gradient(135deg, #fff6fa 0%, #f2f8ff 100%);
+  padding: 1.5rem;
+  box-shadow: 0 12px 24px rgba(186, 138, 167, 0.08);
+}
+
+.profile-eyebrow {
+  margin: 0;
+  color: #8a7590;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.profile-title,
+.profile-section-title,
+.profile-user__name {
+  margin: 0.5rem 0 0;
+  color: #2f2434;
+  letter-spacing: -0.05em;
+}
+
+.profile-title {
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1.05;
+}
+
+.profile-section-title,
+.profile-user__name {
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.profile-status {
+  margin: 0;
+  border: 1px solid #efd6e3;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.6rem 1rem;
+  color: #5a4a5d;
+  font-size: 0.85rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(167, 128, 157, 0.08);
+}
+
+.profile-panel {
+  min-width: 0;
+  border: 1px solid #f1dfe8;
+  border-radius: 1.75rem;
+  background: #fffdfd;
+  padding: clamp(1.1rem, 3vw, 1.5rem);
+  box-shadow: 0 16px 36px rgba(183, 135, 166, 0.07);
+}
+
+.profile-user {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid #f0dde7;
+  padding-bottom: 1.25rem;
+}
+
+.profile-avatar {
+  display: grid;
+  flex: 0 0 4rem;
+  width: 4rem;
+  height: 4rem;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f8bfd2, #f4e7af 55%, #cfeeff);
+  color: #403246;
+  font-size: 1.1rem;
+  font-weight: 900;
+  object-fit: cover;
+  box-shadow: 0 8px 18px rgba(183, 135, 166, 0.18);
+}
+
+.profile-user__name {
+  margin-top: 0.35rem;
+  font-weight: 800;
+}
+
+.profile-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  border: 1px solid #eed7e4;
+  border-radius: 9999px;
+  background: #f8f0f5;
+  padding: 0.25rem;
+}
+
+.profile-tab {
+  flex: 1 0 auto;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  padding: 0.7rem 1rem;
+  color: #74667a;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.profile-tab--active {
+  background: #ffffff;
+  color: #382b38;
+  box-shadow: 0 2px 8px rgba(167, 128, 157, 0.12);
+}
+
+.profile-tab:focus-visible,
+.profile-tab-panel:focus-visible {
+  outline: 3px solid #bfe5ff;
+  outline-offset: 2px;
+}
+
+.profile-tab-panel {
+  min-height: 13rem;
+  padding: 0.5rem 0.25rem;
+}
+
+.profile-details {
+  display: grid;
+  gap: 0.85rem;
+  margin: 1.25rem 0 0;
+}
+
+.profile-detail {
+  min-width: 0;
+  border: 1px solid #f0dfe8;
+  border-radius: 1.2rem;
+  background: #ffffff;
+  padding: 1rem;
+}
+
+.profile-detail__label {
+  margin: 0;
+  color: #8f7c8b;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.profile-detail__value {
+  margin: 0.5rem 0 0;
+  color: #2d2434;
+  font-size: 0.95rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.profile-empty-state {
+  display: grid;
+  min-height: 10rem;
+  align-content: center;
+  justify-items: center;
+  gap: 0.75rem;
+  border: 1px dashed #e8d5e0;
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, #fff9fc 0%, #f6fbff 100%);
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.profile-empty-state p {
+  max-width: 32rem;
+  margin: 0;
+  color: #6f6171;
+}
+
+.profile-empty-state .profile-section-title {
+  margin: 0;
+}
+
+@media (min-width: 600px) {
+  .profile-hero {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .profile-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
