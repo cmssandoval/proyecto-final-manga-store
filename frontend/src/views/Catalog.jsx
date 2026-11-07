@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faMagnifyingGlass, faSliders } from '@fortawesome/free-solid-svg-icons';
 
@@ -116,9 +116,14 @@ const catalogItems = [
 const filterOptions = ['todos', 'shonen', 'romance', 'accion', 'fantasia', 'comedia', 'drama'];
 
 const Catalog = () => {
+  const navigate = useNavigate();
   const [selectedFilter, setSelectedFilter] = useState('todos');
   const [search, setSearch] = useState('');
   const [sortBy, setSortBy] = useState('relevancia');
+
+  const handleViewProduct = (productId) => {
+    navigate(`/catalogo/${productId}`, { state: { from: '/catalogo' } });
+  };
 
   const filteredItems = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -220,9 +225,12 @@ const Catalog = () => {
 
         <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {filteredItems.map((product) => (
-            <Link key={product.id} to={`/catalogo/${product.id}`} className="block">
-              <ProductCard product={product} onAddToCart={() => {}} />
-            </Link>
+            <ProductCard
+              key={product.id}
+              product={product}
+              onViewProduct={handleViewProduct}
+              onAddToCart={() => {}}
+            />
           ))}
         </section>
       </div>

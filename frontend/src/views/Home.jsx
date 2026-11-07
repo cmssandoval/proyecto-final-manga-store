@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBox, faGift, faHeadset, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 import ProductCard from '../components/ProductCard.jsx';
 import SectionTitle from '../components/SectionTitle.jsx';
@@ -16,6 +17,7 @@ const serviceItems = [
 ];
 
 const Home = () => {
+  const navigate = useNavigate();
   const { homeData: featuredProducts  } = useDataContext();
   const { setCartCount } = useCartContext();
 
@@ -23,6 +25,10 @@ const Home = () => {
     setCartCount((current) => current + 1);
     alert(`${productTitle} añadido al carrito`);
     console.log(`${productTitle} añadido al carrito`);
+  };
+
+  const handleViewProduct = (productId) => {
+    navigate(`/catalogo/${productId}`, { state: { from: '/' } });
   };
 
   return (
@@ -86,6 +92,7 @@ const Home = () => {
                   key={product.title}
                   product={product}
                   onAddToCart={handleAddToCart}
+                  onViewProduct={handleViewProduct}
                 />
               ))}
             </div>
