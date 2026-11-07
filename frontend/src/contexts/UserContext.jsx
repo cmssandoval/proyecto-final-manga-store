@@ -1,1 +1,5 @@
-//* Para el fetch y estado de datos del usuario
+import { createContext } from 'react';
+
+const UserContext = createContext();
+
+export default UserContext;
