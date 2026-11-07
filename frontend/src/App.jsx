@@ -8,6 +8,7 @@ import ProfileView from './views/Profile.jsx';
 import RegisterView from './views/Register.jsx';
 import LoginView from './views/Login.jsx';
 import MainLayout from './layouts/MainLayout.jsx';
+import ProductDetail from './views/ProductDetail.jsx';
 
 import AppProviders from './contexts/AppProviders.jsx';
 
@@ -20,6 +21,7 @@ const App = () => {
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/catalogo" element={<Catalog />} />
+            <Route path="/catalogo/:id" element={<ProductDetail />} />
             <Route path="/perfil" element={<ProfileView />} />
             <Route path="/register" element={<RegisterView />} />
             <Route path="/login" element={<LoginView />} />
