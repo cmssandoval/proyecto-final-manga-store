@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import registerSchema from '../schemas/RegisterSchema.js';
-import HeaderMiniBanner from './HeaderMiniBanner.jsx';
+import { NavLink } from 'react-router-dom';
+
+import '../styles/AuthForm.css';
 
 const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
 
-  const [ formData, setFormData ] = useState({
+  const [formData, setFormData] = useState({
     name: '', email: '', password: '', confirmPassword: '',
   });
-  const [ error, setError ] = useState('');
+  const [error, setError] = useState('');
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setFormData((prev) => ({...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleRegister = (event) => {
@@ -20,7 +22,7 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
     setError('');
 
     const zodParseResult = registerSchema.safeParse(formData);
-    if ( !zodParseResult.success ) {
+    if (!zodParseResult.success) {
       setError(zodParseResult.error.issues[0].message);
       return;
     }
@@ -34,18 +36,21 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
   };
 
   return (
-    <div className="register-page">
-      <div className="register-shell">
-        <HeaderMiniBanner />
-        <div className="register-card">
-          <h1 className="register-title">Register</h1>
+    <section className="main-container">
+      <div className="glow glow-right" />
+      <div className="glow glow-left" />
 
-          {error && <p className="register-error">{error}</p>}
-
-          <form onSubmit={handleRegister} className="register-form">
+      <div className="internal-container">
+        <div>
+          <h1 className="title">Regístrate</h1>
+        </div>
+        <div className='auth-form-shell'>
+          {error && <p className="auth-form-error">{error}</p>}
+          <form onSubmit={handleRegister} className="auth-form">
             <div className="field-group">
-              <label className="field-label">Nombre</label>
+              <label htmlFor='register-name' className="field-label">Nombre</label>
               <input
+                id='register-name'
                 type="text"
                 name="name"
                 value={formData.name}
@@ -56,8 +61,9 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
             </div>
 
             <div className="field-group">
-              <label className="field-label">Email</label>
+              <label htmlFor='register-email' className="field-label">Email</label>
               <input
+                id='register-email'
                 type="email"
                 name="email"
                 value={formData.email}
@@ -68,8 +74,9 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
             </div>
 
             <div className="field-group">
-              <label className="field-label">Contraseña</label>
+              <label htmlFor='register-password' className="field-label">Contraseña</label>
               <input
+                id='register-password'
                 type="password"
                 name="password"
                 value={formData.password}
@@ -80,8 +87,9 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
             </div>
 
             <div className="field-group">
-              <label className="field-label">Confirme su contraseña</label>
+              <label htmlFor='register-confirm-password' className="field-label">Confirme su contraseña</label>
               <input
+                id='register-confirm-password'
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
@@ -91,13 +99,21 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
               />
             </div>
 
-            <button type="submit" disabled={isLoading} className="submit-button">
-              {isLoading ? 'Registrando...' : 'Crear cuenta'}
+            <button type="submit" disabled={isLoading} className="button primary">
+              {isLoading ? 'Registrando...' : 'Registrarse'}
             </button>
+            <div className='bottom-text'>
+              <p>¿Ya tienes una cuenta?<br />
+                <span className='font-semibold underline'>
+                  <NavLink to={'/login'} >Inicia Sesión</NavLink>
+                </span>
+              </p>
+            </div>
           </form>
         </div>
+
       </div>
-    </div>
+    </section>
   );
 };
 
