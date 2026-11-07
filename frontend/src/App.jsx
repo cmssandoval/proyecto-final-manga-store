@@ -10,6 +10,7 @@ import LoginView from './views/Login.jsx';
 import MainLayout from './layouts/MainLayout.jsx';
 import ProductDetail from './views/ProductDetail.jsx';
 import Cart from './views/CartView.jsx';
+import PurchaseOrders from './views/PurchaseOrders.jsx';
 
 import AppProviders from './contexts/AppProviders.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/register" element={<RegisterView />} />
             <Route path="/login" element={<LoginView />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="/ordenes" element={<PurchaseOrders />} />
           </Route>
         </Routes>
       </AppProviders>

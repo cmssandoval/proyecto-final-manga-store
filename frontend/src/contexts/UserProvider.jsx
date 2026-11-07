@@ -6,6 +6,9 @@ import userDataResponse from '../data/userData.js';
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [shippingAddress, setShippingAddress] = useState(
+    () => localStorage.getItem('shippingAddress') || '',
+  );
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [loading, setLoading] = useState(true);
 
@@ -69,12 +72,25 @@ const UserProvider = ({ children }) => {
     navigate('/');
   };
 
+  const updateShippingAddress = (address) => {
+    const normalizedAddress = address.trim();
+
+    if (!normalizedAddress) {
+      throw new Error('La dirección de envío no puede estar vacía.');
+    }
+
+    localStorage.setItem('shippingAddress', normalizedAddress);
+    setShippingAddress(normalizedAddress);
+  };
+
   return (
     <UserContext.Provider value={{
       user,
       token,
+      shippingAddress,
       login,
       logout,
+      updateShippingAddress,
       loading
     }}>
       {!loading && children}

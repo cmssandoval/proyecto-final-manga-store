@@ -1,14 +1,7 @@
-import { useState } from 'react';
-import Cart from '../components/Cart.jsx';
 import '../styles/cart.css';
 import nagatoroImage from '../assets/img/Nagatoro3.jpg';
 
 const CartView = () => {
-  // Estado local temporal (luego se remplaza con la api)
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Manga Vol. 1', description : 'sin descripcion por mientras w' , price: 67.99, quantity: 1, image: nagatoroImage },
-    { id: 2, name: 'jeje 67', description : 'sin descripcion por mientras w' , price: 67.99, quantity: 1, image: nagatoroImage },
-  ]);
 
   const handleRemoveItem = (id) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));

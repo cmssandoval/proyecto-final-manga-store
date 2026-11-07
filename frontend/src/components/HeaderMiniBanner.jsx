@@ -28,17 +28,18 @@ const HeaderMiniBanner = () => {
         </div>
 
         <div className="header-cart-wrap">
-          <button className="cart-button" type="button">
+          <Link className="cart-button" to="/cart" aria-label={`Ver carrito, ${cartCount} productos`}>
             <FontAwesomeIcon icon={faCartShopping} className="cart-icon" />
             Carrito
             <span className="cart-count">{cartCount}</span>
-          </button>
+          </Link>
         </div>
       </div>
 
       <nav className="header-nav">
         <Link to="/" className="nav-link">Inicio</Link>
         <Link to="/catalogo" className="nav-link">Catálogo</Link>
+        <Link to="/ordenes" className="nav-link">Mis Órdenes</Link>
         {user ? (
           <>
             <Link to="/perfil" className="nav-link">Mi Cuenta</Link>

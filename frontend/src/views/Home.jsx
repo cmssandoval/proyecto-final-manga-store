@@ -39,7 +39,7 @@ const reviewItems = [
 const Home = () => {
   const navigate = useNavigate();
   const { homeData: featuredProducts } = useDataContext();
-  const { setCartCount } = useCartContext();
+  const { addToCart } = useCartContext();
 
   useEffect(() => {
     document.title = 'MoonShelf | Tienda de manga premium';
@@ -62,9 +62,9 @@ const Home = () => {
     [featuredProducts],
   );
 
-  const handleAddToCart = (productTitle) => {
-    setCartCount((current) => current + 1);
-    window.alert(`${productTitle} añadido al carrito`);
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    window.alert(`${product.title} añadido al carrito`);
   };
 
   const handleViewProduct = (productId) => {

@@ -10,7 +10,7 @@ const ProductDetail = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { setCartCount } = useCartContext();
+  const { addToCart } = useCartContext();
 
   const product = useMemo(
     () => catalogItems.find((item) => String(item.id) === String(id)),
@@ -27,7 +27,7 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    setCartCount((current) => current + 1);
+    addToCart(product);
     window.alert(`${product.title} añadido al carrito`);
   };
 
