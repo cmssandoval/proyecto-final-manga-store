@@ -2,25 +2,31 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserContext from './UserContext.jsx';
 import axiosClient from '../api/axiosClient.js';
+import userDataResponse from '../data/userData.js';
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token') || null);
   const [loading, setLoading] = useState(true);
 
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const verifyUser = async () => {
-      if ( !token ) {
-        setLoading(false);
-        return;
-      }
+      //* Verifiación comentada para visualizar usuario
+      //* en dev, no borrar.
+      // if (!token) {
+      //   setUser(null);
+      //   setLoading(false);
+      //   return;
+      // }
 
       try {
-        //* Simulación con data local, luego reemplazar por axios fetch
-        const response = await axiosClient('/auth/me');
-        setUser(response.data.user);
+        const response = await userDataResponse;
+
+        //* Request real, no borrar.
+        // const response = await axiosClient.get('/users/me');
+        setUser(response.data.user ?? response.data);
       } catch (error) {
         console.error('Token inválido o expirado', error);
         setUser(null);
@@ -34,33 +40,33 @@ const UserProvider = ({ children }) => {
     verifyUser();
   }, [token]);
 
-  const login = async ( user, password ) => {
+  const login = async ({ email, password }) => {
+    const response = await axiosClient.post('/login', { email, password });
+    const userToken = response.data.token;
+
+    if (!userToken) {
+      throw new Error('La respuesta de autenticación no incluyó un token.');
+    }
+
+    localStorage.setItem('token', userToken);
+
     try {
-      const response = await axiosClient.post(
-        '/auth/login',
-        { email, password },
-      );
-      const { user: userData, token: userToken } = response;
+      const userResponse = await axiosClient.get('/users/me');
+      const userData = userResponse.data.user ?? userResponse.data;
       setToken(userToken);
       setUser(userData);
-      localStorage.setItem('token', userToken);
+      return userData;
     } catch (error) {
-      console.error('Error en el login', error);
+      localStorage.removeItem('token');
+      throw error;
     }
   };
 
   const logout = () => {
-    try {
-      axiosClient.post('/logout')
-      alert('Sesión cerrada correctamente');
-    } catch (error) {
-      alert('Error en el servidor al cerrar sesión');
-    } finally {
-      setUser(null);
-      setToken(null);
-      localStorage.removeItem('token');
-      navigate('/');
-    }
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('token');
+    navigate('/');
   };
 
   return (
