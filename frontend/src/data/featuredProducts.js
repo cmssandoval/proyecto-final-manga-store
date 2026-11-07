@@ -5,6 +5,7 @@ import kaseImage from '../assets/img/Kase4.jpg';
 
 const featuredProducts = [
   {
+    id: 1,
     series: 'Shonen',
     title: 'Black Clover',
     volume: 'Vol. 12',
@@ -15,6 +16,7 @@ const featuredProducts = [
     image: blackCloverImage,
   },
   {
+    id: 2,
     series: 'Shonen',
     title: 'Dorohedoro',
     volume: 'Vol. 7',
@@ -25,6 +27,7 @@ const featuredProducts = [
     image: dorohedoroImage,
   },
   {
+    id: 3,
     series: 'Comedia',
     title: 'Nagatoro-san',
     volume: 'Vol. 16',
@@ -35,6 +38,7 @@ const featuredProducts = [
     image: nagatoroImage,
   },
   {
+    id: 4,
     series: 'Yuri',
     title: 'Kase-San & Yamada',
     volume: 'Vol. 4',
