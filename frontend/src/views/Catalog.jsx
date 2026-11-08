@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faMagnifyingGlass, faSliders } from '@fortawesome/free-solid-svg-icons';
 
@@ -10,7 +9,6 @@ import useCartContext from '../hooks/useCartContext.js';
 const filterOptions = ['todos', 'shonen', 'romance', 'accion', 'fantasia', 'comedia', 'drama'];
 
 const Catalog = () => {
-  const navigate = useNavigate();
   const { addToCart } = useCartContext();
   const [selectedFilter, setSelectedFilter] = useState('todos');
   const [search, setSearch] = useState('');
@@ -31,10 +29,6 @@ const Catalog = () => {
       'Explora el catálogo de manga de MoonShelf con shonen, romance, acción, comedia y colecciones premium.',
     );
   }, []);
-
-  const handleViewProduct = (productId) => {
-    navigate(`/catalogo/${productId}`, { state: { from: '/catalogo' } });
-  };
 
   const handleAddToCart = (product) => {
     addToCart(product);
@@ -138,7 +132,6 @@ const Catalog = () => {
             <ProductCard
               key={product.id}
               product={product}
-              onViewProduct={handleViewProduct}
               onAddToCart={handleAddToCart}
             />
           ))}

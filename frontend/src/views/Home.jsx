@@ -67,10 +67,6 @@ const Home = () => {
     window.alert(`${product.title} añadido al carrito`);
   };
 
-  const handleViewProduct = (productId) => {
-    navigate(`/catalogo/${productId}`, { state: { from: '/' } });
-  };
-
   return (
     <div className="home-page">
       <div className="home-shell">
@@ -177,7 +173,6 @@ const Home = () => {
                   key={product.id}
                   product={product}
                   onAddToCart={handleAddToCart}
-                  onViewProduct={handleViewProduct}
                 />
               ))}
             </div>
