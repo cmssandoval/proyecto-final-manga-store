@@ -18,7 +18,7 @@ const ProductCard = ({ product, onAddToCart }) => {
       <Link
         className="product-card__details-link"
         to={`/catalogo/${product.id}`}
-        state={{ from: location.pathname }}
+        state={{ from: `${location.pathname}${location.search}` }}
       >
         <div className="product-card__visual" style={cardStyle}>
           <div className="product-card__badges">
