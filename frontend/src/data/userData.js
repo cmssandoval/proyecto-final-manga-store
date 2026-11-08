@@ -1,9 +1,9 @@
 const userDataResponse = {
     data: {
         user: {
-            display_name: 'username',
+            display_name: 'Test User',
             full_name: 'Nombre Apellido',
-            email: 'nombreapellido@gmail.com',
+            email: 'testuser@gmail.com',
         }
     }
 }

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import CartContext from './CartContext.jsx';
 
+// import axiosClient from '../api/axiosClient.js';
+
 const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -52,7 +54,7 @@ const CartProvider = ({ children }) => {
     )));
   };
 
-  const createOrder = (shippingAddress) => {
+  const createOrder = async (shippingAddress) => {
     const address = shippingAddress.trim();
 
     if (!address) {
@@ -62,6 +64,13 @@ const CartProvider = ({ children }) => {
     if (cartItems.length === 0) {
       throw new Error('No puedes crear una orden con el carrito vacío.');
     }
+
+    // * Llamada a la API, descomentar una vez evaluado el frontend.
+    // const response = await axiosClient.post('/orders', {
+    //   shippingAddress: address,
+    //   items: cartItems,
+    //   total: cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
+    // });
 
     const order = {
       id: `ORD-${Date.now()}`,

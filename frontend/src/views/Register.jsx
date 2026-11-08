@@ -1,40 +1,39 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RegisterForm from '../components/RegisterForm.jsx';
+import useUserContext from '../hooks/useUserContext.js';
 
 const RegisterView = () => {
-
   const [ isLoading, setIsLoading ] = useState(false);
   const [ apiError, setApiError ] = useState('');
 
   const navigate = useNavigate();
+  const { register } = useUserContext();
 
   const handleRegisterSubmit = async (userData) => {
     setIsLoading(true);
-    setApiError('')
+    setApiError('');
 
     try {
-      console.log('Enviando datos al backend:', userData);
-      
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulación de espera
-
-      // Reemplazar por modal bonito o sección de errores común
+      await register(userData);
       alert('¡Registro exitoso!');
-      navigate('/login'); 
-      
-    } catch (err) {
-      setApiError('El correo ya está registrado o hubo un error en el servidor');
+      navigate('/login');
+    } catch {
+      setApiError('No se pudo completar el registro. Inténtalo nuevamente.');
     } finally {
       setIsLoading(false);
     }
-
   };
 
-  return(
+  return (
     <main className="auth-page" aria-label="Registro de cuenta">
       <div className="auth-page__shell">
         {apiError && <div className="auth-page__error" role="alert">{apiError}</div>}
-        <RegisterForm onSubmitSuccess={handleRegisterSubmit} isLoading={isLoading} />
+        <RegisterForm
+          onSubmitSuccess={handleRegisterSubmit}
+          onFormChange={() => setApiError('')}
+          isLoading={isLoading}
+        />
       </div>
     </main>
   );
