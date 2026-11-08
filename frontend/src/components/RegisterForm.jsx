@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import '../styles/auth-form.css';
 
-const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
+const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
 
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', confirmPassword: '',
@@ -14,6 +14,8 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setError('');
+    onFormChange();
   };
 
   const handleRegister = (event) => {
@@ -28,11 +30,6 @@ const RegisterForm = ({ onSubmitSuccess, isLoading }) => {
     }
 
     onSubmitSuccess(formData);
-
-    //? Considerar redireccionamiento programático desde register view,
-    //? al hacer eso se desmonta el componente y formData da igual
-    //? ya que se limpiaría por si solo en caso de volver a montarse.
-    //* setForm({ name: '', email: '', password: '' }); *//
   };
 
   return (

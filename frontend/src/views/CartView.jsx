@@ -9,8 +9,8 @@ const CartView = () => {
   const { cartItems, removeFromCart, updateQuantity, createOrder } = useCartContext();
   const { shippingAddress } = useUserContext();
 
-  const handleCheckout = (selectedAddress) => {
-    createOrder(selectedAddress);
+  const handleCheckout = async (selectedAddress) => {
+    await createOrder(selectedAddress);
     navigate('/ordenes');
   };
 

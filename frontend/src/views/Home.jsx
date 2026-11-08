@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBox, faGift, faHeadset, faEnvelope, faArrowRight, faStar, faShieldHeart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -7,21 +7,15 @@ import ProductCard from '../components/ProductCard.jsx';
 
 import useDataContext from '../hooks/useDataContext.js';
 import useCartContext from '../hooks/useCartContext.js';
+import catalogItems from '../data/catalogItems.js';
+import { getCatalogCategories } from '../data/catalogCategories.js';
+import '../styles/home.css';
 
 const trustItems = [
   { icon: faTruckFast, label: 'Envío rápido' },
   { icon: faShieldHeart, label: 'Pago seguro' },
   { icon: faGift, label: 'Gift cards' },
   { icon: faHeadset, label: 'Atención real' },
-];
-
-const categoryItems = [
-  { name: 'Shonen', count: '24 títulos' },
-  { name: 'Romance', count: '18 títulos' },
-  { name: 'Acción', count: '31 títulos' },
-  { name: 'Deluxe', count: '12 ediciones' },
-  { name: 'Dark fantasy', count: '9 títulos' },
-  { name: 'Cómics', count: '15 títulos' },
 ];
 
 const collectionItems = [
@@ -40,6 +34,7 @@ const Home = () => {
   const navigate = useNavigate();
   const { homeData: featuredProducts } = useDataContext();
   const { addToCart } = useCartContext();
+  const categoryItems = getCatalogCategories(catalogItems);
 
   useEffect(() => {
     document.title = 'MoonShelf | Tienda de manga premium';
@@ -57,18 +52,9 @@ const Home = () => {
     );
   }, []);
 
-  const homeHighlights = useMemo(
-    () => featuredProducts.slice(0, 4),
-    [featuredProducts],
-  );
-
   const handleAddToCart = (product) => {
     addToCart(product);
     window.alert(`${product.title} añadido al carrito`);
-  };
-
-  const handleViewProduct = (productId) => {
-    navigate(`/catalogo/${productId}`, { state: { from: '/' } });
   };
 
   return (
@@ -155,9 +141,14 @@ const Home = () => {
 
             <div className="home-categories__grid">
               {categoryItems.map((category) => (
-                <button type="button" key={category.name} className="home-category" onClick={() => navigate('/catalogo')}>
+                <button
+                  type="button"
+                  key={category.id}
+                  className="home-category"
+                  onClick={() => navigate(`/catalogo?genre=${encodeURIComponent(category.id)}`)}
+                >
                   <span className="home-category__name">{category.name}</span>
-                  <span className="home-category__count">{category.count}</span>
+                  <span className="home-category__count">{category.count} títulos</span>
                 </button>
               ))}
             </div>
@@ -172,12 +163,11 @@ const Home = () => {
             </div>
 
             <div className="home-featured__grid">
-              {homeHighlights.map((product) => (
+              {featuredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
                   onAddToCart={handleAddToCart}
-                  onViewProduct={handleViewProduct}
                 />
               ))}
             </div>

@@ -27,15 +27,19 @@ const Cart = ({
 
   const openCheckout = () => {
     setAddressOption(shippingAddress ? 'default' : 'other');
-    setCheckoutError(
-      shippingAddress
-        ? ''
-        : 'No tienes una dirección de envío guardada. Ingresa otra dirección para continuar.',
-    );
+    setAlternateAddress('');
+    setCheckoutError('');
     setIsCheckoutOpen(true);
   };
 
-  const handleConfirmCheckout = (event) => {
+  const closeCheckout = () => {
+    setIsCheckoutOpen(false);
+    setAddressOption(shippingAddress ? 'default' : 'other');
+    setAlternateAddress('');
+    setCheckoutError('');
+  };
+
+  const handleConfirmCheckout = async (event) => {
     event.preventDefault();
     const address = addressOption === 'default' ? shippingAddress : alternateAddress.trim();
 
@@ -49,7 +53,9 @@ const Cart = ({
     }
 
     try {
-      onCheckout(address);
+      await onCheckout(address);
+      closeCheckout();
+      window.alert('¡Pedido confirmado!');
     } catch (error) {
       setCheckoutError(error.message || 'No se pudo completar la compra. Inténtalo nuevamente.');
     }
@@ -118,7 +124,7 @@ const Cart = ({
             className="cart-checkout-button"
             onClick={openCheckout}
           >
-            Pagar
+            Continuar compra
           </button>
         </div>
       </div>
@@ -134,12 +140,12 @@ const Cart = ({
             <button
               type="button"
               className="checkout-modal__close"
-              onClick={() => setIsCheckoutOpen(false)}
+              onClick={closeCheckout}
               aria-label="Cerrar selección de dirección"
             >
               ×
             </button>
-            <p className="checkout-modal__eyebrow">Antes de pagar</p>
+            <p className="checkout-modal__eyebrow">Confirmar pedido</p>
             <h2 className="checkout-modal__title" id="checkout-modal-title">
               ¿A dónde enviamos tu pedido?
             </h2>
@@ -206,7 +212,7 @@ const Cart = ({
                 </label>
               )}
 
-              {checkoutError && shippingAddress && (
+              {checkoutError && (
                 <p className="checkout-modal__error" role="alert">{checkoutError}</p>
               )}
 
@@ -214,12 +220,12 @@ const Cart = ({
                 <button
                   type="button"
                   className="checkout-modal__cancel"
-                  onClick={() => setIsCheckoutOpen(false)}
+                  onClick={closeCheckout}
                 >
                   Cancelar
                 </button>
                 <button type="submit" className="cart-checkout-button">
-                  Confirmar compra
+                  Confirmar pedido
                 </button>
               </div>
             </form>

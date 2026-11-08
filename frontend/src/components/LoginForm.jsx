@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import '../styles/auth-form.css';
 
-const LoginForm = ({ onSubmitSuccess, isLoading }) => {
+const LoginForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
 
   const [formData, setFormData] = useState({
     email: '', password: '',
@@ -14,6 +14,8 @@ const LoginForm = ({ onSubmitSuccess, isLoading }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setError('');
+    onFormChange();
   };
 
   const handleLogin = (event) => {

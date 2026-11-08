@@ -1,7 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 
-import './App.css';
-
 import Home from './views/Home.jsx';
 import Catalog from './views/Catalog.jsx';
 import ProfileView from './views/Profile.jsx';

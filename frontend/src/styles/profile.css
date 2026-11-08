@@ -52,6 +52,10 @@
   line-height: 1.05;
 }
 
+.profile-section-title {
+  margin: 0 0 1rem 0.5rem;
+}
+
 .profile-section-title,
 .profile-user__name {
   font-size: clamp(1.35rem, 2.5vw, 1.75rem);
@@ -149,6 +153,12 @@
 .profile-tab-panel {
   min-height: 13rem;
   padding: 0.5rem 0.25rem;
+}
+
+.wishlist-tab__grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
 .profile-details {
