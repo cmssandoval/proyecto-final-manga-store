@@ -9,6 +9,7 @@ import useDataContext from '../hooks/useDataContext.js';
 import useCartContext from '../hooks/useCartContext.js';
 import catalogItems from '../data/catalogItems.js';
 import { getCatalogCategories } from '../data/catalogCategories.js';
+import '../styles/home.css';
 
 const trustItems = [
   { icon: faTruckFast, label: 'Envío rápido' },
