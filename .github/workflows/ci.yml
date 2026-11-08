@@ -64,7 +64,7 @@ jobs:
         run: npm run lint
 
       - name: Tests
-        run: npm test -- --watchAll=false --coverage
+        run: npm test -- --coverage
         env:
           CI: true
 
