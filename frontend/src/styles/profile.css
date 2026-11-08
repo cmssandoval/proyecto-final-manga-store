@@ -52,6 +52,10 @@
   line-height: 1.05;
 }
 
+.profile-section-title {
+  margin: 0 0 1rem 0.5rem;
+}
+
 .profile-section-title,
 .profile-user__name {
   font-size: clamp(1.35rem, 2.5vw, 1.75rem);

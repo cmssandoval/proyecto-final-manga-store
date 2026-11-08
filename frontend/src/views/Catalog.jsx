@@ -94,7 +94,6 @@ const Catalog = () => {
       <div className="catalog-shell">
         <section className="catalog-filters" aria-label="Filtros del catálogo">
           <div className="catalog-filters__heading">
-            <p className="catalog-filters__eyebrow">Colección</p>
             <h1 id="catalog-title" className="catalog-filters__title">Catálogo de mangas</h1>
           </div>
 

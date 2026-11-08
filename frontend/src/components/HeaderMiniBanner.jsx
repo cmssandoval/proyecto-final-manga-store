@@ -159,9 +159,9 @@ const HeaderMiniBanner = () => {
       <nav className="header-nav">
         <Link to="/" className="nav-link">Inicio</Link>
         <Link to="/catalogo" className="nav-link">Catálogo</Link>
-        <Link to="/ordenes" className="nav-link">Mis Órdenes</Link>
         {user ? (
           <>
+            <Link to="/ordenes" className="nav-link">Mis Órdenes</Link>
             <Link to="/perfil" className="nav-link">Mi Cuenta</Link>
             <button
               type="button"
@@ -174,8 +174,9 @@ const HeaderMiniBanner = () => {
         ) : (
           <Link to="/login" className="nav-link">Iniciar Sesión</Link>
         )}
-        <Link to="/catalogo" className="nav-link desktop-only">Colecciones</Link>
-        <Link to="/" className="nav-link desktop-only">Contacto</Link>
+        
+        { //? Colecciones personales del usuario? Corregir enlace y crear vista.
+          /* <Link to="/catalogo" className="nav-link desktop-only">Colecciones</Link> */}
       </nav>
     </header>
   );
