@@ -5,12 +5,15 @@ import { faArrowLeft, faCartShopping, faHeart } from '@fortawesome/free-solid-sv
 
 import catalogItems from '../data/catalogItems';
 import useCartContext from '../hooks/useCartContext.js';
+import useWishlistContext from '../hooks/useWishlistContext.js';
+import '../styles/product-detail.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { setCartCount } = useCartContext();
+  const { addToCart } = useCartContext();
+  const { isWishlisted, toggleWishlist } = useWishlistContext();
 
   const product = useMemo(
     () => catalogItems.find((item) => String(item.id) === String(id)),
@@ -27,7 +30,7 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    setCartCount((current) => current + 1);
+    addToCart(product);
     window.alert(`${product.title} añadido al carrito`);
   };
 
@@ -120,9 +123,11 @@ const ProductDetail = () => {
               <button
                 type="button"
                 className="product-detail-card__cta product-detail-card__cta--secondary"
+                aria-pressed={isWishlisted(product.id)}
+                onClick={() => toggleWishlist(product.id)}
               >
                 <FontAwesomeIcon icon={faHeart} />
-                Wishlist
+                {isWishlisted(product.id) ? 'Quitar de Wishlist' : 'Añadir a Wishlist'}
               </button>
             </div>
           </div>

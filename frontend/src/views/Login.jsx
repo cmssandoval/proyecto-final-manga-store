@@ -6,6 +6,7 @@ import useUserContext from '../hooks/useUserContext.js';
 const LoginView = () => {
   const [ isLoading, setIsLoading ] = useState(false);
   const [ apiError, setApiError ] = useState('');
+  
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useUserContext();
@@ -16,6 +17,7 @@ const LoginView = () => {
 
     try {
       await login(userData);
+      alert('¡Inicio de sesión exitoso!');
       navigate(location.state?.from?.pathname || '/perfil', { replace: true });
     } catch (error) {
       setApiError(
@@ -31,7 +33,11 @@ const LoginView = () => {
     <main className="auth-page" aria-label="Inicio de sesión">
       <div className="auth-page__shell">
         {apiError && <div className="auth-page__error" role="alert">{apiError}</div>}
-        <LoginForm onSubmitSuccess={handleLoginSubmit} isLoading={isLoading} />
+        <LoginForm
+          onSubmitSuccess={handleLoginSubmit}
+          onFormChange={() => setApiError('')}
+          isLoading={isLoading}
+        />
       </div>
     </main>
   );

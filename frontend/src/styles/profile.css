@@ -52,6 +52,10 @@
   line-height: 1.05;
 }
 
+.profile-section-title {
+  margin: 0 0 1rem 0.5rem;
+}
+
 .profile-section-title,
 .profile-user__name {
   font-size: clamp(1.35rem, 2.5vw, 1.75rem);
@@ -151,6 +155,12 @@
   padding: 0.5rem 0.25rem;
 }
 
+.wishlist-tab__grid {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
 .profile-details {
   display: grid;
   gap: 0.85rem;
@@ -203,6 +213,57 @@
 
 .profile-empty-state .profile-section-title {
   margin: 0;
+}
+
+.profile-address-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-top: 1.5rem;
+  border: 1px solid #f0dfe8;
+  border-radius: 1.2rem;
+  background: #ffffff;
+  padding: 1rem;
+}
+
+.profile-address-form__label {
+  color: #2d2434;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.profile-address-form__hint,
+.profile-address-form__message {
+  margin: 0;
+  color: #6f6171;
+  font-size: 0.85rem;
+}
+
+.profile-address-form__input {
+  width: 100%;
+  resize: vertical;
+  border: 1px solid #e8d5e0;
+  border-radius: 0.8rem;
+  background: #fffdfd;
+  padding: 0.8rem;
+  color: #2d2434;
+}
+
+.profile-address-form__input:focus-visible {
+  outline: 3px solid #bfe5ff;
+  outline-offset: 2px;
+}
+
+.profile-address-form__button {
+  border: 0;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #f6bfd4 0%, #e7dfff 100%);
+  padding: 0.7rem 1rem;
+  color: #31263a;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 @media (min-width: 600px) {
