@@ -13,7 +13,9 @@ const databaseError = {
     },
 };
 
-export const getDatabaseError = (code) => {
+const getDatabaseError = (code) => {
     return databaseError[code] || {
         code: 500, message: "Internal server error" };
 };
+
+export default getDatabaseError;

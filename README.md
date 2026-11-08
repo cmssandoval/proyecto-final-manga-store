@@ -2,6 +2,20 @@
 
 Marketplace de manga creado como proyecto final de Desafío Latam. Incluye una interfaz web para explorar un catálogo, consultar productos y gestionar el carrito, junto con un backend en desarrollo.
 
+## Tabla de Contenidos
+
+- [MoonShelf — Tienda de manga](#moonshelf--tienda-de-manga)
+- [Tabla de Contenidos](#tabla-de-contenidos)
+- [Funcionalidades](#funcionalidades)
+- [Demo](#demo-frontend)
+- [Vistas de la Aplicación](#vistas-de-la-aplicación)
+- [Tecnologías y dependencias](#tecnologías-y-dependencias)
+- [Requisitos](#requisitos)
+- [Instalación y ejecución](#instalación-y-ejecución)
+- [Pruebas y validaciones](#pruebas-y-validaciones)
+- [Documentación del proyecto](#documentación-del-proyecto)
+- [Estado de la Licencia](#estado-de-la-licencia)
+
 ## Funcionalidades
 
 - Inicio y catálogo con búsqueda, filtros por género y ordenamiento.
@@ -13,6 +27,39 @@ Marketplace de manga creado como proyecto final de Desafío Latam. Incluye una i
 > El catálogo del frontend utiliza datos locales a modo de demo. La API aún está en una etapa de desarrollo inicial y no está implementada.
 
 > Para la sesión de usuario no hay validaciones respecto al usuario de prueba. Puedes introducir cualquier correo y contraseña (8 o más caracteres) válidos para iniciar sesión.
+
+## Demo (frontend)
+
+### [**> Visita la demo aquí <**](https://proyecto-final-manga-store.vercel.app/)
+
+## Vistas de la aplicación
+
+### Home
+
+<img src="./docs/screenshots/home.png" alt="Home View" width="800">
+<img src="./docs/screenshots/home-2.png" alt="Home View 2" width="800">
+<img src="./docs/screenshots/home-3.png" alt="Home View 3" width="800">
+<img src="./docs/screenshots/footer.png" alt="Footer in Home" width="800">
+
+### Catalogo, Detalle de Producto y Barra de Búsqueda
+
+<img src="./docs/screenshots/catalog.png" alt="Catalog View" width="800">
+<img src="./docs/screenshots/product-detail.png" alt="Product Detail" width="800">
+<img src="./docs/screenshots/search-bar.png" alt="Search Bar" width="800">
+
+### Cart, Checkout y Ordenes de Compra
+
+<img src="./docs/screenshots/cart.png" alt="Cart" width="800">
+<img src="./docs/screenshots/checkout.png" alt="Checkout" width="800">
+<img src="./docs/screenshots/purchase-orders.png" alt="Purchase Orders" width="800">
+<img src="./docs/screenshots/purchase-orders-before-login.png" alt="Purchase Orders - Without Login" width="800">
+
+### Login, Register, Perfil y Wishlist
+
+<img src="./docs/screenshots/login.png" alt="Login" width="800">
+<img src="./docs/screenshots/register.png" alt="Register" width="800">
+<img src="./docs/screenshots/profile.png" alt="Profile" width="800">
+<img src="./docs/screenshots/profile-wishlist.png" alt="Profile Wishlist" width="800">
 
 ## Tecnologías y dependencias
 
