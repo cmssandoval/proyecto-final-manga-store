@@ -6,6 +6,7 @@ import { faArrowLeft, faCartShopping, faHeart } from '@fortawesome/free-solid-sv
 import catalogItems from '../data/catalogItems';
 import useCartContext from '../hooks/useCartContext.js';
 import useWishlistContext from '../hooks/useWishlistContext.js';
+import '../styles/product-detail.css';
 
 const ProductDetail = () => {
   const { id } = useParams();
