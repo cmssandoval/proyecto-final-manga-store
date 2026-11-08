@@ -1,0 +1,87 @@
+.not-found-page {
+  display: grid;
+  width: min(100% - 2rem, 76rem);
+  min-height: 55vh;
+  margin: 0 auto;
+  padding: 3.5rem 0 5rem;
+  place-items: center;
+}
+
+.not-found-card {
+  position: relative;
+  width: min(100%, 42rem);
+  overflow: hidden;
+  border: 1px solid rgba(221, 179, 197, 0.7);
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(231, 223, 255, 0.42), transparent 13rem),
+    rgba(255, 255, 255, 0.9);
+  padding: clamp(2rem, 6vw, 3.5rem) clamp(1.25rem, 5vw, 3rem);
+  text-align: center;
+  box-shadow: 0 16px 36px rgba(195, 149, 177, 0.12);
+}
+
+.not-found-card__eyebrow {
+  display: inline-flex;
+  margin: 0 0 0.8rem;
+  border: 1px solid rgba(221, 179, 197, 0.55);
+  border-radius: 9999px;
+  background: #fff7fa;
+  padding: 0.4rem 0.75rem;
+  color: #a45b7e;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.not-found-card__title {
+  margin: 0;
+  color: #2d2433;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1.1;
+}
+
+.not-found-card__description {
+  max-width: 32rem;
+  margin: 0.85rem auto 0;
+  color: #776a7b;
+  line-height: 1.6;
+}
+
+.not-found-card__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  margin-top: 1.75rem;
+  border: 1px solid rgba(221, 179, 197, 0.48);
+  border-radius: 0.9rem;
+  background: linear-gradient(135deg, #f6bfd4 0%, #e7dfff 100%);
+  padding: 0.8rem 1.25rem;
+  color: #31263a;
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(195, 149, 177, 0.14);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.not-found-card__link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(195, 149, 177, 0.2);
+}
+
+.not-found-card__link:focus-visible {
+  outline: 3px solid #bfe5ff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  .not-found-page {
+    width: min(100% - 1.25rem, 76rem);
+    padding-top: 2.5rem;
+  }
+}

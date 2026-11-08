@@ -11,6 +11,7 @@ import MainLayout from './layouts/MainLayout.jsx';
 import ProductDetail from './views/ProductDetail.jsx';
 import Cart from './views/CartView.jsx';
 import PurchaseOrders from './views/PurchaseOrders.jsx';
+import NotFound from './views/NotFound.jsx';
 
 import AppProviders from './contexts/AppProviders.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -21,16 +22,20 @@ const App = () => {
       <AppProviders>
         <Routes>
           <Route element={<MainLayout />}>
+
             <Route path="/" element={<Home />} />
             <Route path="/catalogo" element={<Catalog />} />
             <Route path="/catalogo/:id" element={<ProductDetail />} />
+            <Route path="/login" element={<LoginView />} />
+            <Route path="/register" element={<RegisterView />} />
+            <Route path="/ordenes" element={<PurchaseOrders />} />
+            <Route path="/cart" element={<Cart />} />
+            
             <Route element={<ProtectedRoute />}>
               <Route path="/perfil" element={<ProfileView />} />
             </Route>
-            <Route path="/register" element={<RegisterView />} />
-            <Route path="/login" element={<LoginView />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/ordenes" element={<PurchaseOrders />} />
+
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </AppProviders>
