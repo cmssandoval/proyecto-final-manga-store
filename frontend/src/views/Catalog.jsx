@@ -7,6 +7,7 @@ import ProductCard from '../components/ProductCard';
 import catalogItems from '../data/catalogItems';
 import { getCatalogCategories } from '../data/catalogCategories.js';
 import useCartContext from '../hooks/useCartContext.js';
+import '../styles/catalog.css';
 
 const categories = getCatalogCategories(catalogItems);
 const filterOptions = [
