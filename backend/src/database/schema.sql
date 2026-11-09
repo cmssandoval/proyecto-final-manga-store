@@ -163,3 +163,21 @@ CREATE INDEX purchase_order_items_manga_id_idx ON purchase_order_items (manga_id
 CREATE INDEX presales_customer_id_idx ON presales (customer_id);
 CREATE INDEX presales_items_presale_id_idx ON presales_items (presale_id);
 CREATE INDEX presales_items_manga_id_idx ON presales_items (manga_id);
+
+CREATE OR REPLACE FUNCTION actualizar_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_actualizar_updated_at
+BEFORE UPDATE ON purchase_orders
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_updated_at();
+
+CREATE TRIGGER trigger_actualizar_updated_at
+BEFORE UPDATE ON presales
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_updated_at();
