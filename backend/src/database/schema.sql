@@ -1,11 +1,14 @@
+SET client_encoding = 'UTF8';
+
 DROP TABLE IF EXISTS purchase_order_items;
 DROP TABLE IF EXISTS presales_items;
 DROP TABLE IF EXISTS presales;
 DROP TABLE IF EXISTS purchase_orders;
-DROP TABLE IF EXISTS suppliers;
 DROP TABLE IF EXISTS wishlist;
+DROP TABLE IF EXISTS manga_demographic_category;
 DROP TABLE IF EXISTS manga_category;
 DROP TABLE IF EXISTS mangas;
+DROP TABLE IF EXISTS demographic_categories;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS users;
 
@@ -24,6 +27,7 @@ CREATE TABLE mangas (
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) NOT NULL,
     description VARCHAR NOT NULL,
+    volume VARCHAR(50) NOT NULL,
     author VARCHAR(150) NOT NULL,
     editorial VARCHAR(150) NOT NULL,
     image_link VARCHAR(2048) NOT NULL,
@@ -45,6 +49,12 @@ CREATE TABLE categories (
     CONSTRAINT categories_name_unique UNIQUE (name)
 );
 
+CREATE TABLE demographic_categories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    CONSTRAINT demographic_categories_name_unique UNIQUE (name)
+);
+
 CREATE TABLE wishlist (
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     manga_id UUID NOT NULL REFERENCES mangas(id) ON DELETE CASCADE,
@@ -57,16 +67,16 @@ CREATE TABLE manga_category (
     PRIMARY KEY (manga_id, category_id)
 );
 
-CREATE TABLE suppliers (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name VARCHAR(150) NOT NULL
+CREATE TABLE manga_demographic_category (
+    manga_id UUID NOT NULL REFERENCES mangas(id) ON DELETE CASCADE,
+    demographic_category_id UUID NOT NULL REFERENCES demographic_categories(id) ON DELETE CASCADE,
+    PRIMARY KEY (manga_id, demographic_category_id)
 );
 
 CREATE TABLE purchase_orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_number VARCHAR(50) NOT NULL,
     buyer_id UUID REFERENCES users(id) ON DELETE SET NULL,
-    supplier_id UUID NOT NULL REFERENCES suppliers(id),
     status VARCHAR(30) NOT NULL,
     currency VARCHAR(3) NOT NULL,
     net_amount NUMERIC(12, 2) NOT NULL,
@@ -144,41 +154,12 @@ CREATE TABLE presales_items (
 
 CREATE INDEX wishlist_manga_id_idx ON wishlist (manga_id);
 CREATE INDEX manga_category_category_id_idx ON manga_category (category_id);
+CREATE INDEX manga_demographic_category_demographic_category_id_idx
+    ON manga_demographic_category (demographic_category_id);
 CREATE INDEX mangas_user_id_idx ON mangas (user_id);
 CREATE INDEX purchase_orders_buyer_id_idx ON purchase_orders (buyer_id);
-CREATE INDEX purchase_orders_supplier_id_idx ON purchase_orders (supplier_id);
 CREATE INDEX purchase_order_items_order_id_idx ON purchase_order_items (purchase_order_id);
 CREATE INDEX purchase_order_items_manga_id_idx ON purchase_order_items (manga_id);
 CREATE INDEX presales_customer_id_idx ON presales (customer_id);
 CREATE INDEX presales_items_presale_id_idx ON presales_items (presale_id);
 CREATE INDEX presales_items_manga_id_idx ON presales_items (manga_id);
-
--- Ejemplos de consulta para insertar datos
--- User
--- INSERT INTO users (email, full_name, display_name, password) VALUES
--- ('a@b.cd', 'Full Name', 'Display Name', 'password hash');
-
--- Manga
--- INSERT INTO mangas (
---     name, slug, description, author, editorial, image_link, sku,
---     origin, release_date, price, stock, user_id
--- ) VALUES (
---     'Manga Name', 'manga-slug', 'Description of the manga', 'Author Name',
---     'Editorial Name', 'https://example.com/image.jpg', 'SKU12345',
---     'Origin Country', '2024-01-01', 1000, 10, '00000000-0000-0000-0000-000000000000'
--- );
-
--- Category
--- INSERT INTO categories (name) VALUES ('Category Name');
-
--- Manga category
--- INSERT INTO manga_category (manga_id, category_id) VALUES (
---     '00000000-0000-0000-0000-000000000000',
---     '00000000-0000-0000-0000-000000000000'
--- );
-
--- Wishlist
--- INSERT INTO wishlist (user_id, manga_id) VALUES (
---     '00000000-0000-0000-0000-000000000000',
---     '00000000-0000-0000-0000-000000000000'
--- );
