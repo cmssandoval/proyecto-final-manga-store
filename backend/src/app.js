@@ -1,3 +1,5 @@
+import 'dotenv/config';
+import './config/env.js';
 import express from 'express';
 import cors from 'cors';
 import errorHandler from './middlewares/error-handler.middleware.js';
