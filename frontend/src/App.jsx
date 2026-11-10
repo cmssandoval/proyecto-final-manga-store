@@ -20,15 +20,19 @@ const App = () => {
       <AppProviders>
         <Routes>
           <Route element={<MainLayout />}>
-
             <Route path="/" element={<Home />} />
             <Route path="/catalogo" element={<Catalog />} />
             <Route path="/catalogo/:id" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
+
+          <Route element= {<GuestRoute />}>
             <Route path="/login" element={<LoginView />} />
             <Route path="/register" element={<RegisterView />} />
-            <Route path="/ordenes" element={<PurchaseOrders />} />
-            <Route path="/cart" element={<Cart />} />
-            
+          </Route>
+
+           <Route path="/ordenes" element={<PurchaseOrders />} />
+
+                      
             <Route element={<ProtectedRoute />}>
               <Route path="/perfil" element={<ProfileView />} />
             </Route>
