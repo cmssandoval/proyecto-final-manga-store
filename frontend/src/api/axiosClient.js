@@ -15,16 +15,16 @@ axiosClient.interceptors.request.use(
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },
-  (error) => { return Promise.reject(error); }
+  (error) => Promise.reject(error)
 );
 
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error.response?.status;
-    if (( status === 401 || status === 419 )) {
+
+    if ( status === 401 ) {
       localStorage.removeItem('token');
-      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
