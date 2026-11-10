@@ -1,6 +1,6 @@
 # MoonShelf — Tienda de manga
 
-Marketplace de manga creado como proyecto final de Desafío Latam. Incluye una interfaz web para explorar un catálogo, consultar productos y gestionar el carrito, junto con un backend en desarrollo.
+Marketplace de mangas creado como proyecto final de Desafío Latam. Incluye una interfaz web para explorar un catálogo, consultar productos y gestionar el carrito, junto con un backend en desarrollo.
 
 ## Tabla de Contenidos
 
@@ -63,14 +63,39 @@ Marketplace de manga creado como proyecto final de Desafío Latam. Incluye una i
 
 ## Tecnologías y dependencias
 
-- **Frontend:** React, Vite, React Router, Tailwind CSS, Axios y Zod.
-- **Backend:** Node.js, Express, PostgreSQL (`pg`), JWT, Argon2 y Zod.
-- **Pruebas del backend:** Jest y Supertest.
+- **Frontend:**
+    - React + Vite
+    - React Router
+    - Tailwind CSS
+    - Axios
+    - Zod
+    - JWT Decode
+    - Font Awesome
+
+- **Backend:**
+    - Node.js
+    - Express
+    - PostgreSQL (`pg` y `pg-format`)
+    - JWT
+    - Argon2
+    - Zod
+    - CORS
+    - DotEnv
+
+- **Pruebas del frontend:**
+    - Vitest
+
+- **Pruebas del backend:** 
+    - Jest
+    - Supertest
 
 ## Requisitos
 
-- Node.js y npm.
-- PostgreSQL para conectar el backend a una base de datos.
+Tener instalada la versión más reciente de los siguientes programas:
+
+- Node.js
+- npm
+- PostgreSQL
 
 ## Instalación y ejecución
 
@@ -88,6 +113,33 @@ cd frontend
 npm install
 ```
 
+### PostgreSQL
+
+Usaremos `postgres` como usuario para configurar la base de datos, deberás ingresar su contraseña. También puedes usar otro usuario si así lo prefieres. Para esta sección, abre una terminal en la raíz del proyecto y sigue los pasos a continuación.
+
+Crea la base de datos:
+
+```PowerShell
+createdb -U postgres moonshelf
+```
+
+Crea las relaciones de la base de datos ejecutando [`schema.sql`](./backend/src/database/schema.sql):
+
+```PowerShell
+psql -U postgres -d moonshelf -v ON_ERROR_STOP=1 -1 -f ./backend/src/database/schema.sql
+```
+
+Inserta datos de prueba a la base de datos ejecutando [`mock-data.sql`](./backend/src/database/mock-data.sql):
+
+```PowerShell
+psql -U postgres -d moonshelf -v ON_ERROR_STOP=1 -1 -f ./backend/src/database/mock-data.sql
+```
+
+> - Puedes ver ejemplos de inserción en [`insertion-example.sql`](./backend/src/database/insertion-example.sql)
+> - También puedes usar ejemplos de selección en [`select-utilities.sql`](./backend/src/database/select-utilities.sql)
+> - Se utiliza `SET client_encoding = 'UTF8';` al inicio de cada script para normalizar el formato de los datos insertados desde de la terminal de manera simple.
+> - Recuerda que ejecutar [`schema.sql`](./backend/src/database/schema.sql) reinicia las relaciones, deberías ejecutarlo una única vez y repetir su ejecución solo para limpieza, no lo hagas si quieres persistir datos ingresados posteriormente.
+
 ### Backend
 
 Crea `backend/.env` con la configuración correspondiente a tu entorno:
@@ -97,10 +149,12 @@ PORT=5000
 JWT_SECRET=reemplaza-por-un-secreto-local
 PGHOST=localhost
 PGPORT=5432
-PGDATABASE=manga_store
+PGDATABASE=moonshelf
 PGUSER=postgres
-PGPASSWORD=reemplaza-por-tu-clave
+PGPASSWORD=postgres
 ```
+
+> Recomendamos crear un usuario dedicado (ejemplo: moonshelf) con una contraseña segura y con los permisos mínimos necesarios solo para a esta base de datos y sus tablas, así disminuyes las brechas de seguridad.
 
 Inicia el servidor desde `backend/`:
 
@@ -109,8 +163,6 @@ npm run dev
 ```
 
 La API estará disponible en `http://localhost:5000`. Puedes comprobar su estado en `http://localhost:5000/`.
-
-> Aún no disponemos un script SQL para la creación de las relaciones en la base de datos PostgreSQL debido a la etapa de desarrollo del backend, este script será incluido al repostorio una vez sea definido y probado.
 
 ### Frontend
 
@@ -147,8 +199,8 @@ npm run lint
 
 ## Documentación del proyecto
 
+- [Diseño de la base de datos](./docs/database-schema.jpg)
 - [Contrato de datos de la API](./docs/5_Contrato_Datos_API.md)
-- [Diseño de la base de datos](./docs/4_Diseño_Base_de_Datos.jpg)
 - [Diseño de interfaz](./docs/1_Diseño_Interfaz_Gráfica.pdf)
 - [Navegación y vistas](./docs/2_Navegación%20_Vistas.png)
 - [Listado de dependencias](./docs/3_Listado_Dependencias.md)
