@@ -18,16 +18,4 @@ axiosClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-axiosClient.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const status = error.response?.status;
-
-    if ( status === 401 ) {
-      localStorage.removeItem('token');
-    }
-    return Promise.reject(error);
-  }
-);
-
 export default axiosClient;

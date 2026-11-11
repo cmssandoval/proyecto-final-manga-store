@@ -1,83 +1,94 @@
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import UserContext from './UserContext.jsx';
-import userDataResponse from '../data/userData.js';
-
-// import axiosClient from '../api/axiosClient.js';
+import axiosClient from '../api/axiosClient.js';
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [shippingAddress, setShippingAddress] = useState(
-    () => localStorage.getItem('shippingAddress') || '',
+    () => localStorage.getItem('shippingAddress'  || '')
   );
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [token, setToken] = useState(
+    () => localStorage.getItem('token')
+  );
   const [loading, setLoading] = useState(true);
-
   const navigate = useNavigate();
-  // const location = useLocation();
 
-  // useEffect(() => {
-  //   const verifyUser = async () => {
-  //     setLoading(true);
-
-  //     try {
-  //       const response = await axiosClient.get('/users/me');
-  //       setUser(response.data.user ?? response.data);
-  //     } catch (error) {
-  //       console.error('Token inválido o expirado', error);
-  //       setUser(null);
-  //       setToken(null);
-  //       localStorage.removeItem('token');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   verifyUser();
-  // }, [location.pathname, token]);
-
-  //* Este useEffect es solo para efectos de la revisión
-  useEffect(() => {
-    setUser(null);
-    setToken(null);
+  const clearSession = useCallback(() => {
     localStorage.removeItem('token');
-    setLoading(false);
+    setToken(null);
+    setUser(null);
   }, []);
 
-  const login = async (credentials) => {
-    //* Llamada a la API, descomentar una vez evaluado el frontend.
-    // const response = await axiosClient.post('/login', credentials);
-    // const userToken = response.data.token;
-    // const userResponse = await axiosClient.get('/users/me');
+  const fetchUser = async () => {
+    const { data } = await axiosClient.get('/users/me');    
+    return data?.user ?? null;
+  };
 
-    const userData = {
-      ...userDataResponse.data.user,
-      email: credentials.email,
+  useEffect(() => {
+    const id = axiosClient.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const sentToken = Boolean(error.config?.headers?.Authorization);
+        if (error.response?.status === 401 && sentToken) clearSession();
+        return Promise.reject(error);
+      },
+    );
+    return () => {
+      axiosClient.interceptors.response.eject(id);
+    }
+  }, [clearSession]);
+
+  useEffect(() => {
+    const initializeSession = async () => {
+      try {
+        const storedToken = localStorage.getItem('token');
+
+        if (storedToken) {
+          const fetchedUser = await fetchUser();
+          setUser(fetchedUser);
+        }
+      } catch (error) {
+        clearSession();
+      } finally {
+        setLoading(false);
+      }
     };
-    setToken(null);
-    localStorage.removeItem('token');
-    setUser(userData);
-    return userData;
+
+    initializeSession();
+  }, [clearSession]);
+
+  const login = async (credentials) => {
+    const { data } = await axiosClient.post('/users/login', credentials);
+    localStorage.setItem('token', data.token);
+    setToken(data.token)
+  
+    try {
+      const fetchedUser = await fetchUser();
+      setUser(fetchedUser);
+      return fetchedUser;
+    } catch (error) {
+      clearSession();
+      throw error;
+    }
   };
 
   const register = async ({ name, email, password }) => {
-    // * Llamada a la API, descomentar una vez evaluado el frontend.
-    // const response = await axiosClient.post('/register', {
-    //   full_name: name,
-    //   display_name: name,
-    //   email,
-    //   password,
-    // });
-
-    return {
-      name,
-      email,
-    };
+    try {
+      await axiosClient.post('/users/register', {
+        email,
+        full_name: name,
+        display_name: name.trim(),
+        password,
+      });
+      return '¡Usuario creado correctamente!';
+    } catch (error) {
+      throw error;
+    }
   };
 
   const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('token');
+    clearSession();
     navigate('/');
   };
 
