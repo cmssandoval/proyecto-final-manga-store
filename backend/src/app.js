@@ -10,8 +10,8 @@ const app = express();
 app.use(helmetHandler);
 app.use(corsHandler);
 app.use(express.json());
-app.use('/mangas', mangaRoutes);
-app.use('/users', userRoutes);
+app.use('/api/mangas', mangaRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
     return res.json({
