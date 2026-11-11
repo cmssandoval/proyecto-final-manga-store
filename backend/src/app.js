@@ -1,12 +1,12 @@
 import express from 'express';
-import cors from 'cors';
+import corsHandler from '../src/middlewares/cors-handler.middleware.js';
 import errorHandler from './middlewares/error-handler.middleware.js';
 import mangaRoutes from './routes/manga.routes.js';
 import userRoutes from './routes/user.routes.js';
 
 const app = express();
 
-app.use(cors());
+app.use(corsHandler);
 app.use(express.json());
 app.use('/mangas', mangaRoutes);
 app.use('/users', userRoutes);
