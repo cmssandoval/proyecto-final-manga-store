@@ -22,7 +22,8 @@ const LoginView = () => {
     } catch (error) {
       setApiError(
         error.response?.data?.message
-          || 'No se pudo iniciar sesión. Revisa tus credenciales e inténtalo nuevamente.',
+          || error.message
+          || 'No se pudo iniciar sesión. Revisa tus credenciales e inténtalo nuevamente.'
       );
     } finally {
       setIsLoading(false);
