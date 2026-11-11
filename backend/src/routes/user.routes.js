@@ -8,12 +8,8 @@ import authHandler from '../middlewares/auth-handler.middleware.js';
 
 const router = Router();
 
-//* Renombrar las rutas siguiendo el contrato de datos,
-//* lo mismo en las peticiones del frontend, el cliente muestra
-//* información en español, pero la api maneja todos los nombres
-//* en inglés.
-router.post('/registro', registerUser);
+router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.get('/perfil', authHandler, getProfile);
+router.get('/me', authHandler, getProfile);
 
 export default router;

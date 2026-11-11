@@ -62,7 +62,8 @@ const UserProvider = ({ children }) => {
   const register = async ({ name, email, password }) => {
     // * Llamada a la API, descomentar una vez evaluado el frontend.
     // const response = await axiosClient.post('/register', {
-    //   name,
+    //   full_name: name,
+    //   display_name: name,
     //   email,
     //   password,
     // });
