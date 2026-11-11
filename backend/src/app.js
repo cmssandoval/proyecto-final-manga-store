@@ -1,15 +1,17 @@
 import express from 'express';
-import cors from 'cors';
+import helmetHandler from '../src/middlewares/helmet-handler.middleware.js';
+import corsHandler from '../src/middlewares/cors-handler.middleware.js';
 import errorHandler from './middlewares/error-handler.middleware.js';
 import mangaRoutes from './routes/manga.routes.js';
 import userRoutes from './routes/user.routes.js';
 
 const app = express();
 
-app.use(cors());
+app.use(helmetHandler);
+app.use(corsHandler);
 app.use(express.json());
-app.use('/mangas', mangaRoutes);
-app.use('/users', userRoutes);
+app.use('/api/mangas', mangaRoutes);
+app.use('/api/users', userRoutes);
 
 app.get('/', (req, res) => {
     return res.json({

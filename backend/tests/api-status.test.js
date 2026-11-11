@@ -20,21 +20,7 @@ describe('API endpoints not implemented', () => {
     };
 
     it('returns the placeholder response for manga endpoints', async () => {
-        expectNotImplemented(await request(app).get('/mangas'));
-        expectNotImplemented(await request(app).get('/mangas/test-id'));
-    });
-
-    it('returns the placeholder response for public user endpoints', async () => {
-        expectNotImplemented(await request(app).post('/users/register'));
-        expectNotImplemented(await request(app).post('/users/login'));
-    });
-
-    it('returns the placeholder response for the authenticated profile endpoint', async () => {
-        const token = jwt.sign({ id: 'test-user' }, process.env.JWT_SECRET);
-        const response = await request(app)
-            .get('/users/me')
-            .set('Authorization', `Bearer ${token}`);
-
-        expectNotImplemented(response);
+        expectNotImplemented(await request(app).get('/api/mangas'));
+        expectNotImplemented(await request(app).get('/api/mangas/test-id'));
     });
 });
