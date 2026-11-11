@@ -13,6 +13,7 @@ import NotFound from './views/NotFound.jsx';
 
 import AppProviders from './contexts/AppProviders.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import GuestRoute from './components/GuestRoute.jsx';
 
 const App = () => {
   return (
@@ -25,14 +26,13 @@ const App = () => {
             <Route path="/catalogo/:id" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
 
-          <Route element= {<GuestRoute />}>
-            <Route path="/login" element={<LoginView />} />
-            <Route path="/register" element={<RegisterView />} />
-          </Route>
+            <Route element={<GuestRoute />}>
+              <Route path="/login" element={<LoginView />} />
+              <Route path="/register" element={<RegisterView />} />
+            </Route>
 
-           <Route path="/ordenes" element={<PurchaseOrders />} />
+            <Route path="/ordenes" element={<PurchaseOrders />} />
 
-                      
             <Route element={<ProtectedRoute />}>
               <Route path="/perfil" element={<ProfileView />} />
             </Route>

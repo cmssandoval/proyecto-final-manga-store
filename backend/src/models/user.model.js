@@ -5,7 +5,11 @@ class User {
     static async create( userData ) {
         const { full_name, display_name, email, password } = userData;
         const passwordHash = await argon2.hash( password );
-        const query = 'INSERT INTO users (full_name, display_name, email, password) VALUES ($1, $2, $3) RETURNING *';
+        const query = `
+            INSERT INTO users (full_name, display_name, email, password)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id, email, full_name, display_name, image_link
+        `;
         const values = [full_name, display_name, email, passwordHash];
         const result = await pool.query( query, values );
         return result.rows[0];

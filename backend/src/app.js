@@ -2,14 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import errorHandler from './middlewares/error-handler.middleware.js';
 // import mangaRoutes from './routes/manga.routes.js';
-// import userRoutes from './routes/user.routes.js';   
+// import userRoutes from './routes/user.routes.js';
     
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-// app.use('/api/mangas', mangaRoutes);
-// app.use('/api/users', userRoutes);
+// app.use('/mangas', mangaRoutes);
+// app.use('/users', userRoutes);
 
 app.get('/', (req, res) => {
     return res.json({
