@@ -1,5 +1,4 @@
 import Manga from '../models/manga.model.js';
-import { v4 as uuidv4 } from 'uuid'; // Útil para generar los UUIDs si no los manda el cliente
 
 // Los controladores conectan las solicitudes HTTP con las operaciones del modelo
 // y convierten sus resultados en respuestas HTTP.
@@ -27,8 +26,7 @@ export const getMangaById = async (req, res) => {
 export const createManga = async (req, res) => {
     try {
         // Los datos enviados por el cliente llegan en req.body.
-        const newMangaData = { id: uuidv4(), ...req.body };
-        const newManga = await Manga.create(newMangaData);
+        const newManga = await Manga.create(req.body);
         // 201 indica que el recurso se creó correctamente.
         return res.status(201).json({ manga: newManga });
     } catch (error) {

@@ -54,13 +54,13 @@ class Manga {
 
     // Inserta los campos recibidos y devuelve la fila creada.
     static async create(data) {
-        const { id, name, slug, description, volume, author, editorial, image_link, sku, origin, release_date, price, stock } = data;
+        const { name, slug, description, volume, author, editorial, image_link, sku, origin, release_date, price, stock } = data;
         const query = `
-            INSERT INTO mangas (id, name, slug, description, volume, author, editorial, image_link, sku, origin, release_date, price, stock)
-            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            INSERT INTO mangas (name, slug, description, volume, author, editorial, image_link, sku, origin, release_date, price, stock)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
             RETURNING *;
         `;
-        const values = [id, name, slug, description, volume, author, editorial, image_link, sku, origin, release_date, price, stock];
+        const values = [name, slug, description, volume, author, editorial, image_link, sku, origin, release_date, price, stock];
         const result = await pool.query(query, values);
         return result.rows[0];
     }
@@ -71,7 +71,7 @@ class Manga {
         const query = `
             UPDATE mangas 
             SET name = $1, slug = $2, description = $3, volume = $4, author = $5, editorial = $6, 
-                image_link = $7, sku = $8, origin = $9, release_date = $10, price = $11, stock = $12, updated_at = NOW()
+                image_link = $7, sku = $8, origin = $9, release_date = $10, price = $11, stock = $12
             WHERE id = $13
             RETURNING *;
         `;
