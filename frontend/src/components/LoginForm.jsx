@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import '../styles/auth-form.css';
 
-const LoginForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
+const LoginForm = ({ onSubmitSuccess, apiError, onFormChange, isLoading }) => {
 
   const [formData, setFormData] = useState({
     email: '', password: '',
@@ -41,8 +41,11 @@ const LoginForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
         <div>
           <h1 className="title">Inicia sesión</h1>
         </div>
+        <div>
+          {(!error && apiError) && <div className="auth-page__error" role="alert">{apiError}</div>}
+          {(!apiError && error) && <div className="auth-page__error">{error}</div>}
+        </div>
         <div className='auth-form-shell'>
-          {error && <p className="auth-form-error">{error}</p>}
           <form onSubmit={handleLogin} className="auth-form">
 
             <div className="field-group">

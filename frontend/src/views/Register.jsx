@@ -28,10 +28,10 @@ const RegisterView = () => {
   return (
     <main className="auth-page" aria-label="Registro de cuenta">
       <div className="auth-page__shell">
-        {apiError && <div className="auth-page__error" role="alert">{apiError}</div>}
         <RegisterForm
           onSubmitSuccess={handleRegisterSubmit}
           onFormChange={() => setApiError('')}
+          apiError={apiError}
           isLoading={isLoading}
         />
       </div>
