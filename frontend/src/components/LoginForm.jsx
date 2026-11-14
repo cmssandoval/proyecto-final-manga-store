@@ -51,6 +51,7 @@ const LoginForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='login-email'
                 type="email"
                 name="email"
+                autoComplete='email'
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="tucorreo@email.com"
@@ -64,6 +65,7 @@ const LoginForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='login-password'
                 type="password"
                 name="password"
+                autoComplete='current-password'
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Ingresa tu contraseña"

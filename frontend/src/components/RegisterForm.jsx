@@ -50,6 +50,7 @@ const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='register-name'
                 type="text"
                 name="name"
+                autoComplete='name'
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Tu nombre"
@@ -63,6 +64,7 @@ const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='register-email'
                 type="email"
                 name="email"
+                autoComplete='email'
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="tucorreo@email.com"
@@ -76,6 +78,7 @@ const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='register-password'
                 type="password"
                 name="password"
+                autoComplete='new-password'
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Crea una contraseña"
@@ -89,6 +92,7 @@ const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='register-confirm-password'
                 type="password"
                 name="confirmPassword"
+                autoComplete='new-password'
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirme su contraseña"
