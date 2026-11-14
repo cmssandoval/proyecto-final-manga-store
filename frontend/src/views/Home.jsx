@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBox, faGift, faHeadset, faEnvelope, faArrowRight, faStar, faShieldHeart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
+import { faEnvelope, faArrowRight, faStar } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 
 import ProductCard from '../components/ProductCard.jsx';
@@ -8,27 +8,9 @@ import ProductCard from '../components/ProductCard.jsx';
 import useDataContext from '../hooks/useDataContext.js';
 import useCartContext from '../hooks/useCartContext.js';
 import catalogItems from '../data/catalogItems.js';
+import { trustItems, collectionItems, reviewItems } from '../data/homeViewItems.js'
 import { getCatalogCategories } from '../data/catalogCategories.js';
 import '../styles/home.css';
-
-const trustItems = [
-  { icon: faTruckFast, label: 'Envío rápido' },
-  { icon: faShieldHeart, label: 'Pago seguro' },
-  { icon: faGift, label: 'Gift cards' },
-  { icon: faHeadset, label: 'Atención real' },
-];
-
-const collectionItems = [
-  { title: 'Starter Pack', description: 'Para empezar tu próxima obsesión.', accent: 'Pink' },
-  { title: 'Top romance', description: 'Momentos tiernos y muy intensos.', accent: 'Sky' },
-  { title: 'Acción extrema', description: 'Lucha, tensión y adrenalina pura.', accent: 'Lavender' },
-];
-
-const reviewItems = [
-  { name: 'Ana R.', text: 'Llegó rápido y la edición es impecable. Me encantó la calidad de la portada.', rating: 5 },
-  { name: 'Luis M.', text: 'Muy buena atención y los mangas están exactamente como anuncian.', rating: 5 },
-  { name: 'Pau V.', text: 'La colección de romance es excelente. Mi favorito es Nagatoro-san.', rating: 4 },
-];
 
 const Home = () => {
   const navigate = useNavigate();
