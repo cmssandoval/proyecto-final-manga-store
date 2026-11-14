@@ -1,34 +1,28 @@
 import { Link } from 'react-router-dom';
-
-const footerLinks = [
-  { label: 'Inicio', to: '/' },
-  { label: 'Catálogo', to: '/' },
-  { label: 'Colecciones', to: '/' },
-  { label: 'Mi cuenta', to: '/perfil' },
-];
-
-const infoLinks = [
-  { label: 'Envíos', to: '/' },
-  { label: 'Devoluciones', to: '/' },
-  { label: 'Garantía', to: '/' },
-  { label: 'Contacto', to: '/' },
-];
-
-const socials = ['Instagram', 'X', 'TikTok'];
+import { footerLinks, infoLinks, socials } from '../data/footerData.js';
+import { useState } from 'react';
 
 const Footer = () => {
+  const [ email, setEmail ] = useState('');
+
+  const handleFormSubmit = ( event ) => {
+    event.preventDefault();
+    if ( !email ) return;
+    setEmail('');
+    alert('¡Gracias por suscribirte a nuestro newsletter!');
+  }
   return (
-    <footer className="mt-12 border-t border-pink-100 bg-gradient-to-br from-pink-50 via-white to-sky-50">
+    <footer className="mt-12 border-t border-pink-100 bg-linear-to-br from-pink-50 via-white to-sky-50">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-[1.4fr_0.8fr_0.8fr_1.2fr]">
           <div>
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-pink-200 via-pink-100 to-sky-100 text-base font-black text-slate-800 shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-pink-200 via-pink-100 to-sky-100 text-base font-black text-slate-800 shadow-sm">
                 M
               </div>
               <div>
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-slate-500">Manga</p>
-                <p className="text-lg font-black tracking-[-0.05em] text-slate-800">MoonShelf</p>
+                <p className="text-lg font-black tracking-tighter text-slate-800">MoonShelf</p>
               </div>
             </div>
 
@@ -82,19 +76,23 @@ const Footer = () => {
               Recibe avisos de lanzamientos, promociones y nuevas colecciones.
             </p>
 
-            <form className="flex flex-col gap-3 sm:flex-row">
+            <form onSubmit={handleFormSubmit} className="flex flex-col gap-3 sm:flex-row">
               <label htmlFor="email-footer" className="sr-only">
                 Correo electrónico
               </label>
               <input
                 id="email-footer"
                 type="email"
+                autoComplete='email'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Tu correo"
                 className="w-full rounded-full border border-pink-200 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-0 transition placeholder:text-slate-400 focus:border-pink-300"
               />
               <button
                 type="submit"
-                className="rounded-full bg-gradient-to-r from-pink-500 to-pink-400 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:brightness-105"
+                disabled={!email}
+                className="rounded-full bg-linear-to-r from-pink-500 to-pink-400 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:brightness-105"
               >
                 Unirme
               </button>
