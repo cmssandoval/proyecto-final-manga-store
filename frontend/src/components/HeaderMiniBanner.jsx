@@ -3,15 +3,15 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import BrandLogo from './BrandLogo';
-import catalogItems from '../data/catalogItems.js';
-import { getCatalogGenreLabel } from '../data/catalogCategories.js';
 import useCartContext from '../hooks/useCartContext.js';
+import useDataContext from '../hooks/useDataContext.js';
 import useUserContext from '../hooks/useUserContext.js';
 
 const normalizeSearchText = (value) => String(value || '').toLowerCase();
 
 const HeaderMiniBanner = () => {
   const { cartCount } = useCartContext();
+  const { mangas } = useDataContext();
   const { user, logout } = useUserContext();
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,13 +25,15 @@ const HeaderMiniBanner = () => {
       return [];
     }
 
-    return catalogItems
-      .filter((product) =>
-        [product.title, product.series, product.author, product.genre, getCatalogGenreLabel(product.genre)]
-          .some((value) => normalizeSearchText(value).includes(query)),
-      )
+    return mangas
+      .filter((product) => [
+        product.name,
+        product.author,
+        ...(product.categories || []),
+        ...(product.demographic_categories || []),
+      ].some((value) => normalizeSearchText(value).includes(query)))
       .slice(0, 5);
-  }, [search]);
+  }, [mangas, search]);
 
   useEffect(() => {
     setSearch(
@@ -122,21 +124,21 @@ const HeaderMiniBanner = () => {
                 <li key={product.id}>
                   <Link
                     className="header-search-suggestion"
-                    to={`/catalogo/${product.id}`}
+                    to={`/catalogo/${product.slug}`}
                     state={{ from: `${location.pathname}${location.search}` }}
                     onClick={() => setSuggestionsOpen(false)}
                   >
                     <span className="header-search-suggestion__cover">
-                      {product.image ? (
-                        <img src={product.image} alt="" />
+                      {product.image_link ? (
+                        <img src={product.image_link} alt="" />
                       ) : (
-                        <span>{product.short}</span>
+                        <span>{product.name?.[0] || 'M'}</span>
                       )}
                     </span>
                     <span className="header-search-suggestion__details">
-                      <strong>{product.title}</strong>
+                      <strong>{product.name}</strong>
                       <span>{product.author}</span>
-                      <span>{getCatalogGenreLabel(product.genre)}</span>
+                      <span>{product.categories?.[0] || product.demographic_categories?.[0]}</span>
                     </span>
                   </Link>
                 </li>

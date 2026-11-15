@@ -59,8 +59,17 @@
 
 .catalog-filters__group {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.6rem;
+}
+
+.catalog-filters__group-label {
+  color: #7b6c7d;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .catalog-filter {

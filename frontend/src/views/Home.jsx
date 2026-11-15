@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope, faArrowRight, faStar } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -7,16 +7,49 @@ import ProductCard from '../components/ProductCard.jsx';
 
 import useDataContext from '../hooks/useDataContext.js';
 import useCartContext from '../hooks/useCartContext.js';
-import catalogItems from '../data/catalogItems.js';
-import { trustItems, collectionItems, reviewItems } from '../data/homeViewItems.js'
-import { getCatalogCategories } from '../data/catalogCategories.js';
+import formatClp from '../utils/formatClp.js';
+import { trustItems, reviewItems } from '../data/homeViewItems.js';
 import '../styles/home.css';
 
 const Home = () => {
   const navigate = useNavigate();
-  const { homeData: featuredProducts } = useDataContext();
+  const { mangas, categories, demographicCategories } = useDataContext();
   const { addToCart } = useCartContext();
-  const categoryItems = getCatalogCategories(catalogItems);
+  const popularCategories = useMemo(() => [
+    ...categories.map((category) => ({
+      ...category,
+      filterParam: 'category',
+      filterLabel: 'Tema',
+      count: mangas.filter((manga) => manga.categories?.includes(category.name)).length,
+    })),
+    ...demographicCategories.map((category) => ({
+      ...category,
+      filterParam: 'demographic',
+      filterLabel: 'Demografía',
+      count: mangas.filter((manga) => manga.demographic_categories?.includes(category.name)).length,
+    })),
+  ]
+    .filter((category) => category.count > 0)
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+    .slice(0, 5), [categories, demographicCategories, mangas]);
+  const featuredProducts = useMemo(() => mangas
+    .map((manga) => ({
+      manga,
+      categoryOverlap: popularCategories.reduce((count, category) => {
+        const mangaCategories = category.filterParam === 'category'
+          ? manga.categories
+          : manga.demographic_categories;
+        return count + (mangaCategories?.includes(category.name) ? 1 : 0);
+      }, 0),
+    }))
+    .sort((a, b) => (
+      b.categoryOverlap - a.categoryOverlap
+      || Number(b.manga.price) - Number(a.manga.price)
+      || a.manga.name.localeCompare(b.manga.name)
+    ))
+    .slice(0, 5)
+    .map(({ manga }) => manga), [mangas, popularCategories]);
+  const heroManga = featuredProducts[0];
 
   useEffect(() => {
     document.title = 'MoonShelf | Tienda de manga premium';
@@ -35,8 +68,12 @@ const Home = () => {
   }, []);
 
   const handleAddToCart = (product) => {
-    addToCart(product);
-    window.alert(`${product.title} añadido al carrito`);
+    if (!addToCart(product)) {
+      window.alert(`No hay más stock disponible de ${product.name}`);
+      return;
+    }
+
+    window.alert(`${product.name || product.title} añadido al carrito`);
   };
 
   return (
@@ -66,33 +103,45 @@ const Home = () => {
               </div>
 
               <div className="home-hero__feature-panel">
-                <div className="home-hero__feature-card">
-                  <div className="home-hero__feature-header">
-                    <span className="home-hero__pill">Best seller</span>
-                    <span className="home-hero__price">$22.90</span>
-                  </div>
+                {heroManga && (
+                  <div className="home-hero__feature-card">
+                    <div className="home-hero__feature-header">
+                      <span className="home-hero__pill">Del catálogo</span>
+                      <span className="home-hero__price">{formatClp(heroManga.price)}</span>
+                    </div>
 
-                  <div className="home-hero__feature-cover">
-                    <div className="home-hero__cover-box">
-                      <span className="home-hero__cover-letter">M</span>
-                    </div>
-                  </div>
+                    <h2 className="home-hero__feature-title">{heroManga.name}</h2>
 
-                  <div className="home-hero__stats">
-                    <div className="home-hero__stat">
-                      <span>Páginas</span>
-                      <strong>220</strong>
+                    <div className="home-hero__feature-cover">
+                      <div className="home-hero__cover-box">
+                        {heroManga.image_link ? (
+                          <img
+                            src={heroManga.image_link}
+                            alt={heroManga.name}
+                            className="home-hero__cover-image"
+                          />
+                        ) : (
+                          <span className="home-hero__cover-letter">{heroManga.name?.[0] || 'M'}</span>
+                        )}
+                      </div>
                     </div>
-                    <div className="home-hero__stat">
-                      <span>Edición</span>
-                      <strong>Deluxe</strong>
-                    </div>
-                    <div className="home-hero__stat">
-                      <span>Rating</span>
-                      <strong>4.9</strong>
+
+                    <div className="home-hero__stats">
+                      <div className="home-hero__stat">
+                        <span>Volumen</span>
+                        <strong>{heroManga.volume || '—'}</strong>
+                      </div>
+                      <div className="home-hero__stat">
+                        <span>Editorial</span>
+                        <strong>{heroManga.editorial || '—'}</strong>
+                      </div>
+                      <div className="home-hero__stat">
+                        <span>Stock</span>
+                        <strong>{heroManga.stock ?? '—'}</strong>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </section>
@@ -114,7 +163,9 @@ const Home = () => {
             <div className="home-section__header">
               <div>
                 <p className="home-section__eyebrow">Explora</p>
-                <h2 id="home-categories-title" className="home-section__title">Categorías favoritas</h2>
+                <h2 id="home-categories-title" className="home-section__title">
+                  Temas y demografías más populares
+                </h2>
               </div>
               <button type="button" className="home-section__link" onClick={() => navigate('/catalogo')}>
                 Ver todo <FontAwesomeIcon icon={faArrowRight} />
@@ -122,15 +173,19 @@ const Home = () => {
             </div>
 
             <div className="home-categories__grid">
-              {categoryItems.map((category) => (
+              {popularCategories.map((category) => (
                 <button
                   type="button"
-                  key={category.id}
+                  key={`${category.filterParam}-${category.id}`}
                   className="home-category"
-                  onClick={() => navigate(`/catalogo?genre=${encodeURIComponent(category.id)}`)}
+                  onClick={() => {
+                    navigate(`/catalogo?${category.filterParam}=${encodeURIComponent(category.name)}`);
+                  }}
                 >
                   <span className="home-category__name">{category.name}</span>
-                  <span className="home-category__count">{category.count} títulos</span>
+                  <span className="home-category__count">
+                    {category.count} títulos · {category.filterLabel}
+                  </span>
                 </button>
               ))}
             </div>
@@ -139,8 +194,8 @@ const Home = () => {
           <section className="home-featured" aria-labelledby="home-featured-title">
             <div className="home-section__header">
               <div>
-                <p className="home-section__eyebrow">Top ventas</p>
-                <h2 id="home-featured-title" className="home-section__title">Los más vendidos</h2>
+                <p className="home-section__eyebrow">Según sus categorías</p>
+                <h2 id="home-featured-title" className="home-section__title">Mangas más populares</h2>
               </div>
             </div>
 
@@ -151,30 +206,6 @@ const Home = () => {
                   product={product}
                   onAddToCart={handleAddToCart}
                 />
-              ))}
-            </div>
-          </section>
-
-          <section className="home-collections" aria-labelledby="home-collections-title">
-            <div className="home-section__header">
-              <div>
-                <p className="home-section__eyebrow">Colecciones</p>
-                <h2 id="home-collections-title" className="home-section__title">Recomendaciones del mes</h2>
-              </div>
-            </div>
-
-            <div className="home-collections__grid">
-              {collectionItems.map((collection) => (
-                <article key={collection.title} className="home-collection">
-                  <span className={`home-collection__accent home-collection__accent--${collection.accent.toLowerCase()}`}>
-                    {collection.accent}
-                  </span>
-                  <h3 className="home-collection__title">{collection.title}</h3>
-                  <p className="home-collection__description">{collection.description}</p>
-                  <button type="button" className="home-collection__button" onClick={() => navigate('/catalogo')}>
-                    Ver colección
-                  </button>
-                </article>
               ))}
             </div>
           </section>

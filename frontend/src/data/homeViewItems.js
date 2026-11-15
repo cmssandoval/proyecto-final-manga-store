@@ -7,12 +7,6 @@ export const trustItems = [
   { icon: faHeadset, label: 'Atención real' },
 ];
 
-export const collectionItems = [
-  { title: 'Starter Pack', description: 'Para empezar tu próxima obsesión.', accent: 'Pink' },
-  { title: 'Top romance', description: 'Momentos tiernos y muy intensos.', accent: 'Sky' },
-  { title: 'Acción extrema', description: 'Lucha, tensión y adrenalina pura.', accent: 'Lavender' },
-];
-
 export const reviewItems = [
   { name: 'Ana R.', text: 'Llegó rápido y la edición es impecable. Me encantó la calidad de la portada.', rating: 5 },
   { name: 'Luis M.', text: 'Muy buena atención y los mangas están exactamente como anuncian.', rating: 5 },
