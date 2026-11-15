@@ -115,7 +115,7 @@ class User {
     }
 
     static async verifyUserCredentials({ email, password }) {
-        const user = await this.findByEmail(email);
+        const user = await this.findUserByEmail(email);
 
         if (!user) {
             const error = new Error('Invalid credentials');

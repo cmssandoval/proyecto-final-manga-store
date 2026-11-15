@@ -7,6 +7,18 @@ export const getMangas = async (_req, res) => {
 };
 
 /** @type {import('express').RequestHandler} */
+export const getCategories = async (_req, res) => {
+    const categories = await Manga.findAllCategories();
+    return res.json({ categories });
+};
+
+/** @type {import('express').RequestHandler} */
+export const getDemographicCategories = async (_req, res) => {
+    const categories = await Manga.findAllDemographicCategories();
+    return res.json({ categories });
+};
+
+/** @type {import('express').RequestHandler} */
 export const getMangaById = async (req, res) => {
     const manga = await Manga.findById(req.params.id);
     if (!manga) return res.status(404).json({ message: 'Manga not found' });

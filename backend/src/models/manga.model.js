@@ -43,6 +43,28 @@ class Manga {
         return result.rows;
     }
 
+    static async findAllCategories() {
+        try {
+            const result = await pool.query('SELECT * FROM categories ORDER BY categories.name');
+            return result.rows;
+        } catch {
+            const error = new Error('Error. Categories not found');
+            error.status = 404;
+            throw error;
+        }
+    }
+
+    static async findAllDemographicCategories() {
+        try {
+            const result = await pool.query('SELECT * FROM demographic_categories ORDER BY demographic_categories.name');
+            return result.rows;
+        } catch {
+            const error = new Error('Error. Demographic Categories not found');
+            error.status = 404;
+            throw error;
+        }
+    }
+
     static async findById(id) {
         const result = await pool.query(`${mangaQuery} WHERE mangas.id = $1`, [id]);
         return result.rows[0];
