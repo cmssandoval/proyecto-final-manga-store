@@ -77,12 +77,13 @@ const CartProvider = ({ children }) => {
   };
 
   const createOrder = async (shippingAddress) => {
-    const address = shippingAddress.trim();
     const currentItems = cartItemsRef.current;
 
-    if (!address) {
+    if (typeof shippingAddress !== 'string' || !shippingAddress.trim()) {
       throw new Error('Agrega una dirección de envío antes de confirmar la compra.');
     }
+
+    const address = shippingAddress.trim();
 
     if (currentItems.length === 0) {
       throw new Error('No puedes crear una orden con el carrito vacío.');

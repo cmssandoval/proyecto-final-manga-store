@@ -6,7 +6,7 @@ import axiosClient from '../api/axiosClient.js';
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [shippingAddress, setShippingAddress] = useState(
-    () => localStorage.getItem('shippingAddress'  || '')
+    () => localStorage.getItem('shippingAddress')
   );
   const [token, setToken] = useState(
     () => localStorage.getItem('token')
@@ -158,7 +158,7 @@ const UserProvider = ({ children }) => {
           const fetchedUser = await fetchUser();
           setUser(fetchedUser);
         }
-      } catch (error) {
+      } catch {
         clearSession();
       } finally {
         setLoading(false);
@@ -192,8 +192,8 @@ const UserProvider = ({ children }) => {
         password,
       });
       return '¡Usuario creado correctamente!';
-    } catch (error) {
-      throw error;
+    } catch {
+      throw new Error('Error del servidor. Inténtelo de nuevo más tarde.');
     }
   };
 

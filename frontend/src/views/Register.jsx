@@ -18,8 +18,9 @@ const RegisterView = () => {
       const response = await register(userData);
       alert(response);
       navigate('/login');
-    } catch {
-      setApiError('No se pudo completar el registro. Inténtalo nuevamente.');
+    } catch (error) {
+      const message = error.message || 'No se pudo completar el registro. Inténtalo nuevamente.'
+      setApiError(message);
     } finally {
       setIsLoading(false);
     }

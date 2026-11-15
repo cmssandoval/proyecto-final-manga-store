@@ -3,7 +3,7 @@ import useUserContext from '../../hooks/useUserContext.js';
 
 const PersonalDataTab = ({ user }) => {
   const { shippingAddress, updateShippingAddress } = useUserContext();
-  const [addressInput, setAddressInput] = useState(shippingAddress);
+  const [addressInput, setAddressInput] = useState(shippingAddress ?? '');
   const [saveMessage, setSaveMessage] = useState('');
 
   const personalData = [

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
@@ -15,8 +15,11 @@ const HeaderMiniBanner = () => {
   const { user, logout } = useUserContext();
   const location = useLocation();
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
+  const [searchDraft, setSearchDraft] = useState('');
   const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const search = location.pathname === '/catalogo'
+    ? new URLSearchParams(location.search).get('q') ?? ''
+    : searchDraft;
 
   const suggestions = useMemo(() => {
     const query = normalizeSearchText(search.trim());
@@ -34,14 +37,6 @@ const HeaderMiniBanner = () => {
       ].some((value) => normalizeSearchText(value).includes(query)))
       .slice(0, 5);
   }, [mangas, search]);
-
-  useEffect(() => {
-    setSearch(
-      location.pathname === '/catalogo'
-        ? new URLSearchParams(location.search).get('q') || ''
-        : '',
-    );
-  }, [location.pathname, location.search]);
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -66,7 +61,6 @@ const HeaderMiniBanner = () => {
 
   const handleSearchChange = (event) => {
     const query = event.target.value;
-    setSearch(query);
     setSuggestionsOpen(Boolean(query.trim()));
 
     if (location.pathname === '/catalogo') {
@@ -83,6 +77,8 @@ const HeaderMiniBanner = () => {
         { pathname: location.pathname, search: queryString ? `?${queryString}` : '' },
         { replace: true },
       );
+    } else {
+      setSearchDraft(query);
     }
   };
 
