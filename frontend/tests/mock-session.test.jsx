@@ -1,20 +1,23 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
-import AppProviders from '../src/contexts/AppProviders.jsx';
+import CartContext from '../src/contexts/CartContext.jsx';
+import DataContext from '../src/contexts/DataContext.jsx';
 import UserContext from '../src/contexts/UserContext.jsx';
 import HeaderMiniBanner from '../src/components/HeaderMiniBanner.jsx';
 
-describe('Autenticación en el Header', () => {
+describe('Header authentication', () => {
   
-  test('Debe mostrar el enlace de "Iniciar Sesión" cuando el usuario no está autenticado', () => {
+  it('shows the sign-in link when the user is not authenticated', () => {
     render(
       <MemoryRouter>
-        <AppProviders>
-          <UserContext.Provider value={{ user: null }}>
-            <HeaderMiniBanner />
-          </UserContext.Provider>
-        </AppProviders>
+        <CartContext.Provider value={{ cartCount: 0 }}>
+          <DataContext.Provider value={{ mangas: [] }}>
+            <UserContext.Provider value={{ user: null }}>
+              <HeaderMiniBanner />
+            </UserContext.Provider>
+          </DataContext.Provider>
+        </CartContext.Provider>
       </MemoryRouter>
     );
 

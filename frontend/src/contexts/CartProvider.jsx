@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import CartContext from './CartContext.jsx';
 
 // import axiosClient from '../api/axiosClient.js';
@@ -6,6 +6,12 @@ import CartContext from './CartContext.jsx';
 const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [orders, setOrders] = useState([]);
+  const cartItemsRef = useRef([]);
+
+  const commitCartItems = (nextItems) => {
+    cartItemsRef.current = nextItems;
+    setCartItems(nextItems);
+  };
 
   const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
 
@@ -13,9 +19,14 @@ const CartProvider = ({ children }) => {
     const rawPrice = String(product?.price ?? '').replace(/[^\d.-]/g, '');
     const price = rawPrice ? Number(rawPrice) : Number.NaN;
     const name = product?.title || product?.name;
+    const stock = Number(product?.stock);
 
-    if (product?.id == null || !name || !Number.isFinite(price)) {
-      throw new Error('No se puede añadir al carrito un producto sin id, nombre o precio válido');
+    if (product?.id == null || !name || !Number.isFinite(price) || !Number.isInteger(stock) || stock < 0) {
+      throw new Error('No se puede añadir al carrito un producto con datos inválidos');
+    }
+
+    if (stock === 0) {
+      return false;
     }
 
     const cartItem = {
@@ -23,24 +34,30 @@ const CartProvider = ({ children }) => {
       name,
       description: product.description || product.volume || '',
       price,
-      image: product.image,
+      stock,
+      image: product.image_link || product.image,
     };
 
-    setCartItems((currentItems) => {
-      const existingItem = currentItems.find((item) => item.id === cartItem.id);
+    const currentItems = cartItemsRef.current;
+    const existingItem = currentItems.find((item) => item.id === cartItem.id);
+    if (existingItem && existingItem.quantity >= stock) {
+      return false;
+    }
 
-      if (!existingItem) {
-        return [...currentItems, { ...cartItem, quantity: 1 }];
-      }
+    const nextItems = existingItem
+      ? currentItems.map((item) => (
+        item.id === cartItem.id
+          ? { ...item, quantity: item.quantity + 1, stock: cartItem.stock }
+          : item
+      ))
+      : [...currentItems, { ...cartItem, quantity: 1 }];
 
-      return currentItems.map((item) => (
-        item.id === cartItem.id ? { ...item, quantity: item.quantity + 1 } : item
-      ));
-    });
+    commitCartItems(nextItems);
+    return true;
   };
 
   const removeFromCart = (productId) => {
-    setCartItems((currentItems) => currentItems.filter((item) => item.id !== productId));
+    commitCartItems(cartItemsRef.current.filter((item) => item.id !== productId));
   };
 
   const updateQuantity = (productId, quantity) => {
@@ -49,19 +66,26 @@ const CartProvider = ({ children }) => {
       return;
     }
 
-    setCartItems((currentItems) => currentItems.map((item) => (
+    const cartItem = cartItemsRef.current.find((item) => item.id === productId);
+    if (!cartItem || quantity > cartItem.stock) {
+      return;
+    }
+
+    commitCartItems(cartItemsRef.current.map((item) => (
       item.id === productId ? { ...item, quantity } : item
     )));
   };
 
   const createOrder = async (shippingAddress) => {
-    const address = shippingAddress.trim();
+    const currentItems = cartItemsRef.current;
 
-    if (!address) {
+    if (typeof shippingAddress !== 'string' || !shippingAddress.trim()) {
       throw new Error('Agrega una dirección de envío antes de confirmar la compra.');
     }
 
-    if (cartItems.length === 0) {
+    const address = shippingAddress.trim();
+
+    if (currentItems.length === 0) {
       throw new Error('No puedes crear una orden con el carrito vacío.');
     }
 
@@ -76,13 +100,13 @@ const CartProvider = ({ children }) => {
       id: `ORD-${Date.now()}`,
       createdAt: new Date().toISOString(),
       shippingAddress: address,
-      items: cartItems.map((item) => ({ ...item })),
-      total: cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
+      items: currentItems.map((item) => ({ ...item })),
+      total: currentItems.reduce((total, item) => total + item.price * item.quantity, 0),
       status: 'Confirmada',
     };
 
     setOrders((currentOrders) => [order, ...currentOrders]);
-    setCartItems([]);
+    commitCartItems([]);
 
     return order;
   };

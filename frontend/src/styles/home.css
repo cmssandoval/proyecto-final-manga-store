@@ -176,6 +176,13 @@
   color: #554553;
 }
 
+.home-hero__feature-title {
+  margin: 0 0 0.9rem;
+  color: #382a3c;
+  font-size: 1.15rem;
+  text-align: center;
+}
+
 .home-hero__feature-cover {
   display: flex;
   align-items: center;
@@ -206,6 +213,12 @@
   font-weight: 900;
   letter-spacing: -0.08em;
   color: #35273d;
+}
+
+.home-hero__cover-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .home-hero__stats {
@@ -294,7 +307,6 @@
 
 .home-categories,
 .home-featured,
-.home-collections,
 .home-reviews {
   margin-top: 2.5rem;
 }
@@ -343,67 +355,6 @@
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.home-collections__grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.home-collection {
-  border: 1px solid #f2dfe7;
-  border-radius: 1.5rem;
-  background: rgba(255, 255, 255, 0.75);
-  padding: 1.2rem;
-}
-
-.home-collection__accent {
-  display: inline-flex;
-  padding: 0.35rem 0.7rem;
-  border-radius: 9999px;
-  font-size: 0.66rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.home-collection__accent--pink {
-  background: #fdeaf1;
-  color: #d96e95;
-}
-
-.home-collection__accent--sky {
-  background: #eaf7ff;
-  color: #3d8acb;
-}
-
-.home-collection__accent--lavender {
-  background: #f3edff;
-  color: #765ecb;
-}
-
-.home-collection__title {
-  margin: 1rem 0 0.6rem;
-  font-size: 1.35rem;
-  color: #2d2433;
-}
-
-.home-collection__description {
-  margin: 0;
-  color: #5d4f61;
-  line-height: 1.7;
-}
-
-.home-collection__button {
-  margin-top: 1rem;
-  border: 1px solid #f1d3e0;
-  border-radius: 9999px;
-  background: #fff7fa;
-  color: #4d3f4a;
-  padding: 0.7rem 1rem;
-  font-weight: 800;
-  cursor: pointer;
-}
-
 .home-reviews__grid {
   display: grid;
   gap: 1rem;
@@ -435,6 +386,8 @@
   font-weight: 800;
   color: #2d2433;
 }
+
+
 
 .home-section__eyebrow--light,
 .home-section__title--light {

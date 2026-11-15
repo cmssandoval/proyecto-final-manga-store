@@ -4,25 +4,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter, faSliders } from '@fortawesome/free-solid-svg-icons';
 
 import ProductCard from '../components/ProductCard';
-import catalogItems from '../data/catalogItems';
-import { getCatalogCategories } from '../data/catalogCategories.js';
 import useCartContext from '../hooks/useCartContext.js';
+import useDataContext from '../hooks/useDataContext.js';
 import '../styles/catalog.css';
 
-const categories = getCatalogCategories(catalogItems);
-const filterOptions = [
-  { id: 'todos', name: 'Todos' },
-  ...categories,
-];
-
 const Catalog = () => {
+  const { mangas, categories, demographicCategories } = useDataContext();
   const { addToCart } = useCartContext();
   const [searchParams, setSearchParams] = useSearchParams();
+
   const search = searchParams.get('q') || '';
-  const requestedFilter = searchParams.get('genre') || 'todos';
-  const selectedFilter = filterOptions.some(({ id }) => id === requestedFilter)
-    ? requestedFilter
-    : 'todos';
+  const selectedCategory = searchParams.get('category') || '';
+  const selectedDemographic = searchParams.get('demographic') || '';
   const [sortBy, setSortBy] = useState('relevancia');
 
   useEffect(() => {
@@ -42,8 +35,12 @@ const Catalog = () => {
   }, []);
 
   const handleAddToCart = (product) => {
-    addToCart(product);
-    window.alert(`${product.title} añadido al carrito`);
+    if (!addToCart(product)) {
+      window.alert(`No hay más stock disponible de ${product.name}`);
+      return;
+    }
+
+    window.alert(`${product.name} añadido al carrito`);
   };
 
   const updateQueryParam = (key, value) => {
@@ -61,33 +58,54 @@ const Catalog = () => {
   const filteredItems = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
 
-    const items = catalogItems.filter((item) => {
-      const itemGenre = String(item.genre || '').toLowerCase();
-      const matchesFilter = selectedFilter === 'todos' ? true : itemGenre === String(selectedFilter).toLowerCase();
+    const items = mangas.filter((item) => {
+      const itemCategories = Array.isArray(item.categories) ? item.categories : [];
+      const itemDemographics = Array.isArray(item.demographic_categories)
+        ? item.demographic_categories
+        : [];
+      const matchesCategory =
+        !selectedCategory ||
+        itemCategories.some((category) => category.toLowerCase() === selectedCategory.toLowerCase());
+      const matchesDemographic =
+        !selectedDemographic ||
+        itemDemographics.some(
+          (demographic) => demographic.toLowerCase() === selectedDemographic.toLowerCase(),
+        );
       const matchesSearch =
         !normalizedSearch ||
-        String(item.title || '').toLowerCase().includes(normalizedSearch) ||
-        String(item.series || '').toLowerCase().includes(normalizedSearch) ||
-        String(item.genre || '').toLowerCase().includes(normalizedSearch) ||
-        String(item.author || '').toLowerCase().includes(normalizedSearch);
+        [
+          item.name,
+          item.author,
+          ...itemCategories,
+          ...itemDemographics,
+        ].some((value) => String(value || '').toLowerCase().includes(normalizedSearch));
 
-      return matchesFilter && matchesSearch;
+      return matchesCategory && matchesDemographic && matchesSearch;
     });
 
     if (sortBy === 'precio-asc') {
-      return [...items].sort((a, b) => Number(a.price.replace(/[^\d.]/g, '')) - Number(b.price.replace(/[^\d.]/g, '')));
+      return [...items].sort((a, b) => Number(a.price) - Number(b.price));
     }
 
     if (sortBy === 'precio-desc') {
-      return [...items].sort((a, b) => Number(b.price.replace(/[^\d.]/g, '')) - Number(a.price.replace(/[^\d.]/g, '')));
+      return [...items].sort((a, b) => Number(b.price) - Number(a.price));
     }
 
     if (sortBy === 'titulo') {
-      return [...items].sort((a, b) => a.title.localeCompare(b.title));
+      return [...items].sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
     }
 
     return items;
-  }, [search, selectedFilter, sortBy]);
+  }, [mangas, search, selectedCategory, selectedDemographic, sortBy]);
+
+  const categoryFilterOptions = [
+    { id: 'all-categories', name: 'Todas' },
+    ...categories,
+  ];
+  const demographicFilterOptions = [
+    { id: 'all-demographics', name: 'Todas' },
+    ...demographicCategories,
+  ];
 
   return (
     <main className="catalog-page" aria-labelledby="catalog-title">
@@ -98,15 +116,39 @@ const Catalog = () => {
           </div>
 
           <div className="catalog-filters__controls">
-            <div className="catalog-filters__group">
-              {filterOptions.map((option) => (
+            <div className="catalog-filters__group" role="group" aria-label="Filtrar por categoría">
+              <span className="catalog-filters__group-label">Categorías</span>
+              {categoryFilterOptions.map((option) => (
                 <button
                   key={option.id}
                   type="button"
-                  onClick={() => updateQueryParam('genre', option.id === 'todos' ? '' : option.id)}
+                  onClick={() => updateQueryParam('category', option.id === 'all-categories' ? '' : option.name)}
                   className={[
                     'catalog-filter',
-                    selectedFilter === option.id ? 'catalog-filter--active' : '',
+                    (selectedCategory === '' && option.id === 'all-categories') ||
+                    selectedCategory.toLowerCase() === option.name.toLowerCase()
+                      ? 'catalog-filter--active'
+                      : '',
+                  ].join(' ')}
+                >
+                  {option.name}
+                </button>
+              ))}
+            </div>
+
+            <div className="catalog-filters__group" role="group" aria-label="Filtrar por demografía">
+              <span className="catalog-filters__group-label">Demografía</span>
+              {demographicFilterOptions.map((option) => (
+                <button
+                  key={option.id}
+                  type="button"
+                  onClick={() => updateQueryParam('demographic', option.id === 'all-demographics' ? '' : option.name)}
+                  className={[
+                    'catalog-filter',
+                    (selectedDemographic === '' && option.id === 'all-demographics') ||
+                    selectedDemographic.toLowerCase() === option.name.toLowerCase()
+                      ? 'catalog-filter--active'
+                      : '',
                   ].join(' ')}
                 >
                   {option.name}

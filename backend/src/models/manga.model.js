@@ -1,7 +1,5 @@
 import pool from '../database/connection.js';
 
-// Consulta base para devolver cada manga junto con sus categorías y demografías.
-// Las subconsultas evitan duplicar el manga cuando tiene varias categorías.
 const mangaQuery = `
     SELECT
         mangas.id,
@@ -40,19 +38,38 @@ const mangaQuery = `
 `;
 
 class Manga {
-    // Devuelve todos los mangas ordenados por nombre.
     static async findAll() {
         const result = await pool.query(`${mangaQuery} ORDER BY mangas.name`);
         return result.rows;
     }
 
-    // Busca por UUID; $1 mantiene el valor separado del SQL.
+    static async findAllCategories() {
+        try {
+            const result = await pool.query('SELECT * FROM categories ORDER BY categories.name');
+            return result.rows;
+        } catch {
+            const error = new Error('Error. Categories not found');
+            error.status = 404;
+            throw error;
+        }
+    }
+
+    static async findAllDemographicCategories() {
+        try {
+            const result = await pool.query('SELECT * FROM demographic_categories ORDER BY demographic_categories.name');
+            return result.rows;
+        } catch {
+            const error = new Error('Error. Demographic Categories not found');
+            error.status = 404;
+            throw error;
+        }
+    }
+
     static async findById(id) {
         const result = await pool.query(`${mangaQuery} WHERE mangas.id = $1`, [id]);
         return result.rows[0];
     }
 
-    // Inserta los campos recibidos y devuelve la fila creada.
     static async create(data) {
         const { name, slug, description, volume, author, editorial, image_link, sku, origin, release_date, price, stock } = data;
         const query = `
@@ -65,7 +82,6 @@ class Manga {
         return result.rows[0];
     }
 
-    // Actualiza el manga identificado por id y devuelve la fila actualizada.
     static async update(id, data) {
         const { name, slug, description, volume, author, editorial, image_link, sku, origin, release_date, price, stock } = data;
         const query = `
@@ -80,7 +96,6 @@ class Manga {
         return result.rows[0];
     }
 
-    // Elimina por UUID; devuelve el id eliminado o undefined si no existía.
     static async delete(id) {
         const query = `DELETE FROM mangas WHERE id = $1 RETURNING id;`;
         const result = await pool.query(query, [id]);

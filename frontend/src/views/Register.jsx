@@ -18,8 +18,9 @@ const RegisterView = () => {
       const response = await register(userData);
       alert(response);
       navigate('/login');
-    } catch {
-      setApiError('No se pudo completar el registro. Inténtalo nuevamente.');
+    } catch (error) {
+      const message = error.message || 'No se pudo completar el registro. Inténtalo nuevamente.'
+      setApiError(message);
     } finally {
       setIsLoading(false);
     }
@@ -28,10 +29,10 @@ const RegisterView = () => {
   return (
     <main className="auth-page" aria-label="Registro de cuenta">
       <div className="auth-page__shell">
-        {apiError && <div className="auth-page__error" role="alert">{apiError}</div>}
         <RegisterForm
           onSubmitSuccess={handleRegisterSubmit}
           onFormChange={() => setApiError('')}
+          apiError={apiError}
           isLoading={isLoading}
         />
       </div>

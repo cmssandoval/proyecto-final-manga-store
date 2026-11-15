@@ -1,13 +1,23 @@
 import { Router } from 'express';
-import { getMangas, getMangaById, createManga, updateManga, deleteManga } from '../controllers/manga.controller.js';
+import {
+    getMangas,
+    getCategories,
+    getDemographicCategories,
+    getMangaById,
+    createManga,
+    updateManga,
+    deleteManga,
+} from '../controllers/manga.controller.js';
+import asyncHandler from '../middlewares/async-handler.middleware.js';
 
 const router = Router();
 
-// app.js monta este router en /api/mangas; estas rutas completan la URL.
-router.get('/', getMangas);
-router.get('/:id', getMangaById);
-router.post('/', createManga); 
-router.put('/:id', updateManga);
-router.delete('/:id', deleteManga);
+router.get('/', asyncHandler(getMangas));
+router.get('/categories', asyncHandler(getCategories));
+router.get('/demographic-categories', asyncHandler(getDemographicCategories));
+router.get('/:id', asyncHandler(getMangaById));
+router.post('/', asyncHandler(createManga)); 
+router.put('/:id', asyncHandler(updateManga));
+router.delete('/:id', asyncHandler(deleteManga));
 
 export default router;

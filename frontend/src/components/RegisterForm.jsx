@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 
 import '../styles/auth-form.css';
 
-const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
+const RegisterForm = ({ onSubmitSuccess, apiError, onFormChange, isLoading }) => {
 
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', confirmPassword: '',
@@ -41,8 +41,11 @@ const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
         <div>
           <h1 className="title">Regístrate</h1>
         </div>
+        <div>
+          {(!error && apiError) && <div className="auth-page__error" role="alert">{apiError}</div>}
+          {(!apiError && error) && <div className="auth-page__error">{error}</div>}
+        </div>
         <div className='auth-form-shell'>
-          {error && <p className="auth-form-error">{error}</p>}
           <form onSubmit={handleRegister} className="auth-form">
             <div className="field-group">
               <label htmlFor='register-name' className="field-label">Nombre</label>
@@ -50,6 +53,7 @@ const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='register-name'
                 type="text"
                 name="name"
+                autoComplete='name'
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Tu nombre"
@@ -63,6 +67,7 @@ const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='register-email'
                 type="email"
                 name="email"
+                autoComplete='email'
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="tucorreo@email.com"
@@ -76,6 +81,7 @@ const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='register-password'
                 type="password"
                 name="password"
+                autoComplete='new-password'
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Crea una contraseña"
@@ -89,6 +95,7 @@ const RegisterForm = ({ onSubmitSuccess, onFormChange, isLoading }) => {
                 id='register-confirm-password'
                 type="password"
                 name="confirmPassword"
+                autoComplete='new-password'
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="Confirme su contraseña"
