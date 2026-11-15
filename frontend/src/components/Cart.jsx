@@ -94,6 +94,7 @@ const Cart = ({
                       className="cart-quantity__button"
                       onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
                       aria-label={`Aumentar cantidad de ${item.name}`}
+                      disabled={item.quantity >= item.stock}
                     >
                       +
                     </button>
