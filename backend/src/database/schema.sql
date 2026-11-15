@@ -10,6 +10,8 @@ DROP TABLE IF EXISTS manga_category;
 DROP TABLE IF EXISTS mangas;
 DROP TABLE IF EXISTS demographic_categories;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS user_role;
+DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -19,7 +21,21 @@ CREATE TABLE users (
     display_name VARCHAR(50) NOT NULL,
     password VARCHAR(255) NOT NULL,
     image_link VARCHAR(2048),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT users_email_unique UNIQUE (email)
+);
+
+CREATE TABLE roles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(50) NOT NULL,
+    CONSTRAINT roles_name_unique UNIQUE (name)
+);
+
+CREATE TABLE user_role (
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role_id UUID NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, role_id)
 );
 
 CREATE TABLE mangas (
@@ -37,6 +53,7 @@ CREATE TABLE mangas (
     price NUMERIC(12, 2) NOT NULL,
     stock INTEGER NOT NULL,
     user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT mangas_slug_unique UNIQUE (slug),
     CONSTRAINT mangas_sku_unique UNIQUE (sku),
     CONSTRAINT mangas_price_nonnegative CHECK (price >= 0),
@@ -152,6 +169,7 @@ CREATE TABLE presales_items (
     )
 );
 
+CREATE INDEX user_role_role_id_idx ON user_role(role_id);
 CREATE INDEX wishlist_manga_id_idx ON wishlist (manga_id);
 CREATE INDEX manga_category_category_id_idx ON manga_category (category_id);
 CREATE INDEX manga_demographic_category_demographic_category_id_idx
