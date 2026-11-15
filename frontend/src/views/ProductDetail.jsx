@@ -14,7 +14,12 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { mangas, isMangasLoading } = useDataContext();
   const { addToCart } = useCartContext();
-  const { isWishlisted, isAddingToWishlist, addToWishlist } = useUserContext();
+  const {
+    isWishlisted,
+    isUpdatingWishlist,
+    addToWishlist,
+    removeFromWishlist,
+  } = useUserContext();
 
   const product = mangas.find((manga) => manga.slug === slug);
 
@@ -36,9 +41,13 @@ const ProductDetail = () => {
     window.alert(`${product.name} añadido al carrito`);
   };
 
-  const handleAddToWishlist = async () => {
+  const handleToggleWishlist = async () => {
     try {
-      await addToWishlist(product);
+      if (isWishlisted(product.id)) {
+        await removeFromWishlist(product.id);
+      } else {
+        await addToWishlist(product);
+      }
     } catch (error) {
       window.alert(error.message);
     }
@@ -144,15 +153,16 @@ const ProductDetail = () => {
                 type="button"
                 className="product-detail-card__cta product-detail-card__cta--secondary"
                 aria-pressed={isWishlisted(product.id)}
-                disabled={isWishlisted(product.id) || isAddingToWishlist(product.id)}
-                onClick={handleAddToWishlist}
+                aria-label={isWishlisted(product.id)
+                  ? `Quitar ${product.name} de wishlist`
+                  : `Añadir ${product.name} a wishlist`}
+                disabled={isUpdatingWishlist(product.id)}
+                onClick={handleToggleWishlist}
               >
                 <FontAwesomeIcon icon={faHeart} />
                 {isWishlisted(product.id)
-                  ? 'En Wishlist'
-                  : isAddingToWishlist(product.id)
-                    ? 'Agregando...'
-                    : 'Añadir a Wishlist'}
+                  ? isUpdatingWishlist(product.id) ? 'Quitando...' : 'Quitar de Wishlist'
+                  : isUpdatingWishlist(product.id) ? 'Agregando...' : 'Añadir a Wishlist'}
               </button>
             </div>
           </div>

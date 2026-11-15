@@ -6,17 +6,26 @@ import formatClp from '../utils/formatClp.js';
 
 const ProductCard = ({ product, onAddToCart }) => {
   const location = useLocation();
-  const { isWishlisted, isAddingToWishlist, addToWishlist } = useUserContext();
+  const {
+    isWishlisted,
+    isUpdatingWishlist,
+    addToWishlist,
+    removeFromWishlist,
+  } = useUserContext();
   const wishlisted = isWishlisted(product.id);
-  const isAdding = isAddingToWishlist(product.id);
+  const isUpdating = isUpdatingWishlist(product.id);
   const inStock = Number(product.stock) > 0;
   const cardStyle = {background: '#f7dfe7'};
   const demographicCategories = Array.isArray(product.demographic_categories)
     ? product.demographic_categories
     : [];
-  const handleAddToWishlist = async () => {
+  const handleToggleWishlist = async () => {
     try {
-      await addToWishlist(product);
+      if (wishlisted) {
+        await removeFromWishlist(product.id);
+      } else {
+        await addToWishlist(product);
+      }
     } catch (error) {
       window.alert(error.message);
     }
@@ -78,13 +87,15 @@ const ProductCard = ({ product, onAddToCart }) => {
         <button
           type="button"
           className="product-card__wishlist-button"
-          aria-label={wishlisted ? `${product.name} está en wishlist` : `Añadir ${product.name} a wishlist`}
+          aria-label={wishlisted ? `Quitar ${product.name} de wishlist` : `Añadir ${product.name} a wishlist`}
           aria-pressed={wishlisted}
-          disabled={wishlisted || isAdding}
-          onClick={handleAddToWishlist}
+          disabled={isUpdating}
+          onClick={handleToggleWishlist}
         >
           <FontAwesomeIcon icon={faHeart} className="product-card__wish-icon" />
-          {wishlisted ? 'En Wishlist' : isAdding ? 'Agregando...' : 'Añadir a Wishlist'}
+          {isUpdating
+            ? wishlisted ? 'Quitando...' : 'Agregando...'
+            : wishlisted ? 'Quitar de Wishlist' : 'Añadir a Wishlist'}
         </button>
       </div>
     </article>

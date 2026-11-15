@@ -44,3 +44,15 @@ export const addUserWishlist = async (req, res) => {
 
     return res.status(added ? 201 : 200).json({ message: 'Manga added to wishlist' });
 };
+
+/** @type {import('express').RequestHandler} */
+export const removeUserWishlist = async (req, res) => {
+    const { mangaId } = req.params;
+
+    if (typeof mangaId !== 'string' || mangaId.length === 0) {
+        return res.status(400).json({ message: 'mangaId is required' });
+    }
+
+    await User.removeFromWishlist(req.user.id, mangaId);
+    return res.status(204).end();
+};

@@ -135,6 +135,57 @@ const UserProvider = ({ children }) => {
     }
   };
 
+  const removeFromWishlist = async (productId) => {
+    if (!user) {
+      throw new Error('Inicia sesión para quitar mangas de tu wishlist.');
+    }
+
+    if (!productId) {
+      throw new Error('No se puede quitar un manga sin identificador de la wishlist.');
+    }
+
+    const sessionVersion = wishlistSessionVersionRef.current;
+    const pendingKey = JSON.stringify([sessionVersion, productId]);
+
+    if (
+      !wishlistProductIds.includes(productId)
+      || pendingWishlistIdsRef.current.has(pendingKey)
+    ) {
+      return false;
+    }
+
+    pendingWishlistIdsRef.current.add(pendingKey);
+    setPendingWishlistIds((currentItems) => [
+      ...currentItems,
+      { id: productId, sessionVersion, pendingKey },
+    ]);
+
+    try {
+      await axiosClient.delete(`/users/me/wishlist/${encodeURIComponent(productId)}`);
+      if (sessionVersion !== wishlistSessionVersionRef.current) {
+        return false;
+      }
+
+      setWishlistItems((currentItems) => (
+        currentItems.filter((item) => item.id !== productId)
+      ));
+      setWishlistError(null);
+      return true;
+    } catch (removeError) {
+      if (sessionVersion !== wishlistSessionVersionRef.current) {
+        return false;
+      }
+
+      setWishlistError(removeError.response?.data?.message || removeError.message);
+      throw removeError;
+    } finally {
+      pendingWishlistIdsRef.current.delete(pendingKey);
+      setPendingWishlistIds((currentItems) => (
+        currentItems.filter((item) => item.pendingKey !== pendingKey)
+      ));
+    }
+  };
+
   useEffect(() => {
     const id = axiosClient.interceptors.response.use(
       (response) => response,
@@ -226,13 +277,14 @@ const UserProvider = ({ children }) => {
       wishlistItems,
       wishlistProductIds,
       isWishlisted: (productId) => wishlistProductIds.includes(productId),
-      isAddingToWishlist: (productId) => pendingWishlistIds.some(
+      isUpdatingWishlist: (productId) => pendingWishlistIds.some(
         (item) => (
           item.id === productId
           && item.sessionVersion === wishlistSessionVersionRef.current
         ),
       ),
       addToWishlist,
+      removeFromWishlist,
       wishlistLoading,
       wishlistError,
     }}>

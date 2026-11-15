@@ -256,7 +256,7 @@ Un token inválido o expirado produce `401 Unauthorized`.
 ## Wishlist
 
 La wishlist relaciona usuarios y mangas con la clave compuesta
-`(user_id, manga_id)`. Ambas rutas requieren autenticación.
+`(user_id, manga_id)`. Todas sus rutas requieren autenticación.
 
 ### `GET /api/users/me/wishlist`
 
@@ -315,4 +315,16 @@ idempotente: repetirla para el mismo manga no crea otra relación.
   tiene formato UUID inválido.
 - `404 Not Found` con `{ "message": "Manga not found" }` si el UUID no
   corresponde a un manga.
+- `401 Unauthorized` si falta el token o es inválido.
+
+### `DELETE /api/users/me/wishlist/:mangaId`
+
+Quita el manga indicado de la wishlist del usuario autenticado. La operación
+es idempotente: devuelve `204 No Content` aunque el manga no estuviera en la
+wishlist.
+
+**Errores:**
+
+- `400 Bad Request` con `{ "message": "Invalid params value" }` si `mangaId`
+  tiene formato UUID inválido.
 - `401 Unauthorized` si falta el token o es inválido.

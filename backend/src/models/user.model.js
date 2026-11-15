@@ -101,6 +101,15 @@ class User {
         return result.rows[0].added;
     }
 
+    static async removeFromWishlist(userId, mangaId) {
+        const query = `
+            DELETE FROM wishlist
+            WHERE user_id = $1 AND manga_id = $2
+        `;
+        const result = await pool.query(query, [userId, mangaId]);
+        return result.rowCount > 0;
+    }
+
     static async createUser(userData) {
         const { full_name, display_name, email, password } = userData;
         const passwordHash = await argon2.hash(password);
