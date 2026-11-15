@@ -7,6 +7,7 @@ jest.unstable_mockModule('../src/models/user.model.js', () => ({
     default: {
         findAllWishlist: jest.fn(),
         addToWishlist: jest.fn(),
+        removeFromWishlist: jest.fn(),
     },
 }));
 
@@ -74,6 +75,27 @@ describe('Wishlist API', () => {
         expect(response.body).toEqual({ message: 'Manga not found' });
     });
 
+    it('removes a manga from the authenticated user wishlist', async () => {
+        User.removeFromWishlist.mockResolvedValue(true);
+
+        const response = await request(app)
+            .delete('/api/users/me/wishlist/manga-id')
+            .set('Authorization', 'Bearer valid-token');
+
+        expect(response.statusCode).toBe(204);
+        expect(User.removeFromWishlist).toHaveBeenCalledWith('user-id', 'manga-id');
+    });
+
+    it('succeeds when the manga is already absent from the wishlist', async () => {
+        User.removeFromWishlist.mockResolvedValue(false);
+
+        const response = await request(app)
+            .delete('/api/users/me/wishlist/manga-id')
+            .set('Authorization', 'Bearer valid-token');
+
+        expect(response.statusCode).toBe(204);
+    });
+
     it('rejects adding a manga without an id', async () => {
         const response = await request(app)
             .post('/api/users/me/wishlist')
@@ -99,5 +121,14 @@ describe('Wishlist API', () => {
 
         expect(response.statusCode).toBe(401);
         expect(User.addToWishlist).not.toHaveBeenCalled();
+    });
+
+    it('requires authentication to remove from wishlist', async () => {
+        const response = await request(app)
+            .delete('/api/users/me/wishlist/manga-id');
+
+        expect(response.statusCode).toBe(401);
+        expect(response.body).toEqual({ message: 'Authentication required' });
+        expect(User.removeFromWishlist).not.toHaveBeenCalled();
     });
 });

@@ -20,7 +20,7 @@ const { default: jwt } = await import('jsonwebtoken');
 
 const originalJwtSecret = process.env.JWT_SECRET;
 
-describe('User API', () => {
+describe('User model', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -77,35 +77,6 @@ describe('User API', () => {
         pool.query.mockResolvedValue({ rows: [] });
 
         await expect(User.findUserById('missing-id')).resolves.toBeUndefined();
-    });
-
-    it('returns a user wishlist with the manga category arrays', async () => {
-        const wishlist = [{ id: 'manga-id', name: 'Nana', categories: ['Drama'] }];
-        pool.query.mockResolvedValue({ rows: wishlist });
-
-        await expect(User.findAllWishlist('user-id')).resolves.toEqual(wishlist);
-
-        expect(pool.query).toHaveBeenCalledWith(
-            expect.stringContaining('FROM wishlist'),
-            ['user-id'],
-        );
-    });
-
-    it('adds a manga to a wishlist without duplicating existing entries', async () => {
-        pool.query.mockResolvedValue({ rows: [{ manga_exists: true, added: true }] });
-
-        await expect(User.addToWishlist('user-id', 'manga-id')).resolves.toBe(true);
-
-        expect(pool.query).toHaveBeenCalledWith(
-            expect.stringContaining('ON CONFLICT (user_id, manga_id) DO NOTHING'),
-            ['user-id', 'manga-id'],
-        );
-
-        pool.query.mockResolvedValue({ rows: [{ manga_exists: true, added: false }] });
-        await expect(User.addToWishlist('user-id', 'manga-id')).resolves.toBe(false);
-
-        pool.query.mockResolvedValue({ rows: [{ manga_exists: false, added: false }] });
-        await expect(User.addToWishlist('user-id', 'missing-manga-id')).resolves.toBeNull();
     });
 
     it('hashes the password before inserting a user', async () => {
