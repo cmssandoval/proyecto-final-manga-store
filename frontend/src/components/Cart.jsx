@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import formatClp from '../utils/formatClp';
 
 const Cart = ({
   items = [],
@@ -71,7 +72,7 @@ const Cart = ({
               <div className="cart-item-details">
                 <div>
                   <h3>{item.name}</h3>
-                  <p className="cart-item-price">${item.price.toFixed(2)}</p>
+                  <p className="cart-item-price">{formatClp(item.price)}</p>
                 </div>
                 {item.description && (
                   <p className="cart-item-description">{item.description}</p>
@@ -114,7 +115,7 @@ const Cart = ({
 
         <div className="cart-summary">
           <h2>Resumen del pedido</h2>
-          <p className="cart-summary__total">Total <strong>${total.toFixed(2)}</strong></p>
+          <p className="cart-summary__total">Total <strong>{formatClp(total)}</strong></p>
           {shippingAddress && (
             <p className="cart-summary__address">
               Dirección predeterminada: <strong>{shippingAddress}</strong>
