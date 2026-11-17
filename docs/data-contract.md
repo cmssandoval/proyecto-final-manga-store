@@ -328,3 +328,239 @@ wishlist.
 - `400 Bad Request` con `{ "message": "Invalid params value" }` si `mangaId`
   tiene formato UUID inválido.
 - `401 Unauthorized` si falta el token o es inválido.
+
+## Carrito
+
+Todas las rutas de `/api/cart` requieren autenticación. Cada usuario tiene un
+carrito persistido. Sus elementos incluyen `cart_item_id` (identificador de la
+fila del carrito), `id` (identificador del manga), los datos del manga y
+`quantity`.
+
+### `GET /api/cart`
+
+**Respuesta `200 OK`:**
+
+```json
+{
+  "cart": {
+    "id": "uuid",
+    "items": [
+      {
+        "cart_item_id": "uuid",
+        "id": "uuid",
+        "name": "Jujutsu Kaisen",
+        "price": "18400.00",
+        "stock": 19,
+        "quantity": 1
+      }
+    ]
+  }
+}
+```
+
+Si el usuario todavía no tiene un carrito, se devuelve
+`{ "cart": { "id": null, "items": [] } }`.
+
+### `POST /api/cart`
+
+Agrega unidades al carrito. Si el manga ya existe, suma la cantidad solicitada.
+
+**Solicitud:** `{ "mangaId": "uuid", "quantity": 1 }`; `quantity` es opcional
+y por defecto vale `1`.
+
+**Respuesta `201 Created`:** `{ "cart": { "id": "uuid", "items": [] } }`,
+con el carrito actualizado.
+
+**Errores `400 Bad Request`:** `mangaId` debe ser un UUID válido y `quantity`,
+si se envía, debe ser un entero positivo.
+
+### `POST /api/cart/sync`
+
+Fusiona los elementos de un carrito invitado en el carrito del usuario
+autenticado. Si un manga ya estaba guardado, suma sus cantidades. La operación
+es atómica: si algún elemento no puede agregarse, no se aplica ninguno.
+
+**Solicitud:**
+
+```json
+{
+  "items": [
+    { "mangaId": "uuid", "quantity": 2 }
+  ]
+}
+```
+
+**Respuesta `200 OK`:** `{ "cart": { "id": "uuid", "items": [] } }`,
+con el carrito fusionado.
+
+**Error `400 Bad Request`:** `items` debe ser un arreglo de elementos con
+`mangaId` UUID y `quantity` entero positivo.
+
+### `PUT /api/cart/:id`
+
+Actualiza la cantidad de un elemento. `:id` corresponde a `cart_item_id`.
+
+**Solicitud:** `{ "quantity": 2 }`.
+
+**Respuesta `200 OK`:** `{ "cart": { "id": "uuid", "items": [] } }`.
+
+**Errores:** `404 Not Found` si el elemento no pertenece al usuario o no
+existe; `400 Bad Request` si el `id` no es UUID válido, `quantity` no es un
+entero positivo o la cantidad es superior al stock.
+
+### `DELETE /api/cart/:id`
+
+Elimina el elemento identificado por `cart_item_id`.
+
+**Respuesta `204 No Content`** si se eliminó.
+
+**Respuesta `404 Not Found`** si el elemento no pertenece al usuario o no
+existe.
+
+**Error `400 Bad Request`** si `:id` no es un UUID válido.
+
+### `DELETE /api/cart`
+
+Elimina el carrito del usuario autenticado. La fila de `carts` se elimina y
+PostgreSQL elimina en cascada sus elementos de `cart_items`. La operación es
+idempotente.
+
+**Respuesta `204 No Content`**, incluso si el usuario no tenía un carrito.
+
+Las operaciones que agregarían una cantidad superior al stock disponible
+responden `400 Bad Request`; un manga inexistente responde `404 Not Found`.
+Los errores de UUID inválido responden `400 Bad Request`.
+
+## Órdenes
+
+Todas las rutas requieren autenticación y solo exponen órdenes del usuario
+autenticado. Los importes se calculan con los precios de `mangas`; no se
+aceptan importes enviados por el cliente. Crear una orden descuenta el stock,
+guarda la orden y sus ítems, y elimina el carrito autenticado en una misma
+transacción. Se aplica el 19 % de impuesto configurado en
+`purchase_order_items`, redondeado por ítem.
+
+### `GET /api/orders`
+
+Devuelve las órdenes del usuario, de más reciente a más antigua, junto con sus
+ítems.
+
+**Respuesta `200 OK`:** `{ "orders": [ ... ] }`.
+
+### `GET /api/orders/:id`
+
+Devuelve una orden perteneciente al usuario autenticado.
+
+**Respuesta `200 OK`:** `{ "order": { ... } }`. Si no existe o pertenece a
+otro usuario, responde `404 Not Found`.
+
+### `POST /api/orders`
+
+Crea una orden pendiente con moneda `CLP`. El número se genera en el backend.
+
+**Solicitud:**
+
+```json
+{
+  "shippingAddress": "Av. Libertador 1234, Santiago, Chile",
+  "notes": "Entrega estándar",
+  "items": [
+    { "mangaId": "uuid", "quantity": 1 }
+  ]
+}
+```
+
+`notes` es opcional; `items` debe contener al menos un manga y una
+cantidad entera positiva por manga. El precio y los datos descriptivos se
+obtienen de la base de datos.
+
+**Respuesta `201 Created`:** `{ "order": { ... } }`.
+
+**Errores:** `400 Bad Request` para solicitudes inválidas; `404 Not Found` si
+algún manga no existe; `409 Conflict` si no hay stock suficiente. Si falla la
+operación, no se guarda la orden ni se descuentan unidades.
+
+### `POST /api/orders/sync`
+
+Importa de forma atómica las órdenes que un invitado guardó en `localStorage`
+al historial del usuario autenticado. Cada `guestOrderId` se conserva como
+`orderNumber`, lo que permite reintentar la solicitud sin crear órdenes ni
+descontar stock nuevamente. Los precios se recalculan con los valores actuales
+de `mangas`; no se aceptan importes ni descripciones del cliente.
+
+**Solicitud:**
+
+```json
+{
+  "orders": [
+    {
+      "guestOrderId": "GUEST-1731842034123-a1b2c3",
+      "shippingAddress": "Av. Libertador 1234, Santiago, Chile",
+      "items": [
+        { "mangaId": "uuid", "quantity": 1 }
+      ]
+    }
+  ]
+}
+```
+
+Cada orden debe tener un identificador `GUEST-*` generado localmente y al
+menos un ítem. Si el mismo identificador ya pertenece al usuario autenticado,
+se considera sincronizado. Si pertenece a otra cuenta, la solicitud falla con
+`409 Conflict`.
+
+**Respuesta `200 OK`:** `{ "orders": [ ... ] }`, con el historial actualizado
+del usuario. El cliente debe eliminar sus órdenes locales solo después de
+recibir una respuesta exitosa.
+
+**Errores:** `400 Bad Request` para solicitudes inválidas; `404 Not Found` si
+algún manga no existe; `409 Conflict` si no hay stock suficiente o si el
+identificador ya pertenece a otra cuenta. El lote completo se revierte ante
+cualquier error, por lo que las órdenes locales pueden conservarse y
+reenviarse.
+
+## Preventas
+
+Todas las rutas requieren autenticación y se limitan a las preventas del
+usuario autenticado. Cada ítem debe referenciar un manga existente; sus datos
+descriptivos, SKU y precio se toman de la base de datos. El total es la suma de
+los subtotales (sin impuesto), la moneda es `CLP` y la preventa vence en 30
+días. Solo se admiten mangas cuya `release_date` sea posterior a la fecha
+actual de la base de datos.
+
+### `GET /api/presales`
+
+Devuelve las preventas del usuario, de más reciente a más antigua, con sus
+ítems.
+
+**Respuesta `200 OK`:** `{ "presales": [ ... ] }`.
+
+### `GET /api/presales/:id`
+
+Devuelve una preventa perteneciente al usuario autenticado. Si no existe o
+pertenece a otro usuario, responde `404 Not Found`.
+
+**Respuesta `200 OK`:** `{ "presale": { ... } }`.
+
+### `POST /api/presales`
+
+Crea una preventa pendiente. Su encabezado y sus ítems se guardan en una
+transacción.
+
+**Solicitud:**
+
+```json
+{
+  "items": [
+    { "mangaId": "uuid", "quantity": 1 }
+  ]
+}
+```
+
+`items` debe contener al menos un manga y una cantidad entera
+positiva por manga.
+
+**Respuesta `201 Created`:** `{ "presale": { ... } }`.
+
+**Errores:** `400 Bad Request` para solicitudes inválidas; `404 Not Found` si
+algún manga no existe; `409 Conflict` si algún manga ya fue lanzado.

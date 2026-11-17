@@ -1,5 +1,7 @@
 SET client_encoding = 'UTF8';
 
+DROP TABLE IF EXISTS cart_items;
+DROP TABLE IF EXISTS carts;
 DROP TABLE IF EXISTS purchase_order_items;
 DROP TABLE IF EXISTS presales_items;
 DROP TABLE IF EXISTS presales;
@@ -93,7 +95,7 @@ CREATE TABLE manga_demographic_category (
 CREATE TABLE purchase_orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_number VARCHAR(50) NOT NULL,
-    buyer_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    buyer_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     status VARCHAR(30) NOT NULL,
     currency VARCHAR(3) NOT NULL,
     net_amount NUMERIC(12, 2) NOT NULL,
@@ -138,7 +140,7 @@ CREATE TABLE purchase_order_items (
 CREATE TABLE presales (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     presale_number VARCHAR(50) NOT NULL,
-    customer_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    customer_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     status VARCHAR(30) NOT NULL,
     currency VARCHAR(3) NOT NULL,
     total_amount NUMERIC(12, 2) NOT NULL,
@@ -156,6 +158,7 @@ CREATE TABLE presales_items (
     presale_id UUID NOT NULL REFERENCES presales(id) ON DELETE CASCADE,
     manga_id UUID REFERENCES mangas(id) ON DELETE SET NULL,
     sku VARCHAR(64) NOT NULL,
+    description VARCHAR NOT NULL,
     quantity INTEGER NOT NULL,
     unit_price NUMERIC(12, 2) NOT NULL,
     subtotal NUMERIC(12, 2) NOT NULL,
@@ -167,6 +170,23 @@ CREATE TABLE presales_items (
     CONSTRAINT presales_items_subtotal_matches_quantity CHECK (
         subtotal = quantity * unit_price
     )
+);
+
+CREATE TABLE carts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT carts_user_id_unique UNIQUE (user_id)
+);
+
+CREATE TABLE cart_items (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    cart_id UUID NOT NULL REFERENCES carts(id) ON DELETE CASCADE,
+    manga_id UUID NOT NULL REFERENCES mangas(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL,
+    CONSTRAINT cart_items_quantity_positive CHECK (quantity > 0),
+    CONSTRAINT cart_items_cart_manga_unique UNIQUE (cart_id, manga_id)
 );
 
 CREATE INDEX user_role_role_id_idx ON user_role(role_id);
@@ -197,5 +217,10 @@ EXECUTE FUNCTION actualizar_updated_at();
 
 CREATE TRIGGER trigger_actualizar_updated_at
 BEFORE UPDATE ON presales
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_updated_at();
+
+CREATE TRIGGER trigger_actualizar_updated_at
+BEFORE UPDATE ON carts
 FOR EACH ROW
 EXECUTE FUNCTION actualizar_updated_at();

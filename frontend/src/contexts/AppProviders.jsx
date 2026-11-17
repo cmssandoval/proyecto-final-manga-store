@@ -1,15 +1,18 @@
 import CartProvider from './CartProvider.jsx';
 import DataProvider from './DataProvider.jsx';
+import OrdersProvider from './OrdersProvider.jsx';
 import UserProvider from './UserProvider.jsx';
 
 const AppProviders = ({ children }) => {
   return (
     <DataProvider>
-      <CartProvider>
-        <UserProvider>
-          {children}
-        </UserProvider>
-      </CartProvider>
+      <UserProvider>
+        <OrdersProvider>
+          <CartProvider>
+            {children}
+          </CartProvider>
+        </OrdersProvider>
+      </UserProvider>
     </DataProvider>
   )
 };

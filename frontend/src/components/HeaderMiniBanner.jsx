@@ -157,9 +157,11 @@ const HeaderMiniBanner = () => {
       <nav className="header-nav">
         <Link to="/" className="nav-link">Inicio</Link>
         <Link to="/catalogo" className="nav-link">Catálogo</Link>
+        <Link to="/ordenes" className="nav-link">
+          {user ? 'Mis Órdenes' : 'Órdenes'}
+        </Link>
         {user ? (
           <>
-            <Link to="/ordenes" className="nav-link">Mis Órdenes</Link>
             <Link to="/perfil" className="nav-link">Mi Cuenta</Link>
             <button
               type="button"
@@ -170,7 +172,10 @@ const HeaderMiniBanner = () => {
             </button>
           </>
         ) : (
-          <Link to="/login" className="nav-link">Iniciar Sesión</Link>
+          <>
+            <Link to="/login" className="nav-link">Iniciar Sesión</Link>
+            <Link to="/register" className="nav-link">Registrarse</Link>
+          </>
         )}
         
         { //? Colecciones personales del usuario? Corregir enlace y crear vista.

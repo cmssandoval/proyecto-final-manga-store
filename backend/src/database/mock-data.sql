@@ -191,11 +191,12 @@ INSERT INTO presales (
 
 -- Presales items
 INSERT INTO presales_items (
-    presale_id, manga_id, sku, quantity, unit_price, subtotal
+    presale_id, manga_id, sku, description, quantity, unit_price, subtotal
 ) VALUES (
     (SELECT id FROM presales WHERE presale_number = 'PRE-2026-001'),
     (SELECT id FROM mangas WHERE sku = 'SKU54327'),
     'SKU54327',
+    'Dorohedoro - Vol. 7',
     1,
     12500,
     12500
