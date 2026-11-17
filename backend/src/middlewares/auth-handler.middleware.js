@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import User from '../models/user.model.js';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -24,4 +25,18 @@ export const authHandler = (req, res, next) => {
 export const authGuard = (req, res, next) => {
   if (!req.user) return res.status(401).json({ message: 'Authentication required' });
   next();
-}
+};
+
+export const requireAdmin = async (req, res, next) => {
+  const userId = req.user?.id;
+  if (!userId) {
+    return res.status(401).json({ message: 'Authentication required' });
+  }
+
+  const isAdmin = await User.hasRole(userId, 'admin');
+  if (!isAdmin) {
+    return res.status(403).json({ message: 'Administrator access required' });
+  }
+
+  return next();
+};
