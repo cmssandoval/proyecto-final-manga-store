@@ -158,12 +158,13 @@ const OrdersProvider = ({ children }) => {
     let isCurrent = true;
     const sessionVersion = ++sessionVersionRef.current;
     ordersRef.current = [];
-    setOrders([]);
-    setIsOrdersLoading(true);
-    setOrdersError('');
-    setHasPendingGuestOrders(false);
 
     const loadOrders = async () => {
+      setOrders([]);
+      setIsOrdersLoading(true);
+      setOrdersError('');
+      setHasPendingGuestOrders(false);
+
       let guestOrders = [];
       try {
         let nextOrders;
