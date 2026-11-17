@@ -211,6 +211,26 @@
   text-decoration: none;
 }
 
+.orders-sync-retry {
+  display: inline-flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  border: 1px solid #a45b7e;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  padding: 0.65rem 0.9rem;
+  color: #7e4865;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.orders-sync-retry:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
 @media (max-width: 700px) {
   .orders-page {
     width: min(100% - 1.25rem, 76rem);

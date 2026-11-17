@@ -203,6 +203,19 @@
   color: #5c5060;
 }
 
+.cart-summary__amount {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  color: #776a7b;
+  font-size: 0.9rem;
+}
+
+.cart-summary__amount strong {
+  color: #4a3b4e;
+  font-weight: 700;
+}
+
 .cart-summary__total strong {
   color: #2d2433;
   font-size: 1.15rem;

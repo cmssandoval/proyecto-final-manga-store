@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Cart from '../components/Cart.jsx';
 import useCartContext from '../hooks/useCartContext.js';
+import useOrdersContext from '../hooks/useOrdersContext.js';
 import useUserContext from '../hooks/useUserContext.js';
 import '../styles/cart.css';
 
@@ -11,14 +12,15 @@ const CartView = () => {
     removeFromCart,
     updateQuantity,
     clearCart,
-    createOrder,
     isCartLoading,
     cartError,
   } = useCartContext();
-  const { shippingAddress } = useUserContext();
+  const { createOrder } = useOrdersContext();
+  const { shippingAddress, token } = useUserContext();
 
   const handleCheckout = async (selectedAddress) => {
-    await createOrder(selectedAddress);
+    await createOrder({ shippingAddress: selectedAddress, items: cartItems });
+    await clearCart({ remoteAlreadyCleared: Boolean(token) });
     navigate('/ordenes');
   };
 

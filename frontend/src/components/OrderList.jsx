@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
+import formatClp from '../utils/formatClp.js';
 
-const dateFormatter = new Intl.DateTimeFormat('es-AR', {
+const dateFormatter = new Intl.DateTimeFormat('es-CL', {
   dateStyle: 'medium',
   timeStyle: 'short',
 });
@@ -23,7 +24,7 @@ const OrderList = ({ orders }) => {
           <header className="order-card__header">
             <div>
               <p className="order-card__eyebrow">Orden de compra</p>
-              <h2 className="order-card__id">{order.id}</h2>
+              <h2 className="order-card__id">{order.orderNumber || order.id}</h2>
             </div>
             <span className="order-card__status">{order.status}</span>
           </header>
@@ -48,7 +49,7 @@ const OrderList = ({ orders }) => {
                     <span className="order-item__quantity">Cantidad: {item.quantity}</span>
                   </div>
                   <strong className="order-item__price">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    {formatClp(item.price * item.quantity)}
                   </strong>
                 </li>
               ))}
@@ -57,7 +58,7 @@ const OrderList = ({ orders }) => {
 
           <footer className="order-card__total">
             <span>Total de la orden</span>
-            <strong>${order.total.toFixed(2)}</strong>
+            <strong>{formatClp(order.total)}</strong>
           </footer>
         </article>
       ))}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import formatClp from '../utils/formatClp';
+import calculateOrderTotals from '../utils/calculateOrderTotals.js';
 
 const Cart = ({
   items = [],
@@ -16,6 +17,7 @@ const Cart = ({
   const [addressOption, setAddressOption] = useState(shippingAddress ? 'default' : 'other');
   const [alternateAddress, setAlternateAddress] = useState('');
   const [checkoutError, setCheckoutError] = useState('');
+  const [isSubmittingOrder, setIsSubmittingOrder] = useState(false);
   const [cartActionError, setCartActionError] = useState('');
   const [isClearingCart, setIsClearingCart] = useState(false);
 
@@ -34,7 +36,7 @@ const Cart = ({
     );
   }
 
-  const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const { netAmount, taxAmount, total } = calculateOrderTotals(items);
 
   const handleRemoveItem = async (productId) => {
     setCartActionError('');
@@ -87,6 +89,7 @@ const Cart = ({
 
   const handleConfirmCheckout = async (event) => {
     event.preventDefault();
+    if (isSubmittingOrder) return;
     const address = addressOption === 'default' ? shippingAddress : alternateAddress.trim();
 
     if (!address) {
@@ -98,12 +101,15 @@ const Cart = ({
       return;
     }
 
+    setIsSubmittingOrder(true);
     try {
       await onCheckout(address);
       closeCheckout();
-      window.alert('¡Pedido confirmado!');
+      window.alert('¡Orden registrada!');
     } catch (error) {
       setCheckoutError(error.message || 'No se pudo completar la compra. Inténtalo nuevamente.');
+    } finally {
+      setIsSubmittingOrder(false);
     }
   };
 
@@ -174,6 +180,14 @@ const Cart = ({
               {isClearingCart ? 'Vaciando...' : 'Vaciar carrito'}
             </button>
           </div>
+          <p className="cart-summary__amount">
+            <span>Subtotal</span>
+            <strong>{formatClp(netAmount)}</strong>
+          </p>
+          <p className="cart-summary__amount">
+            <span>IVA (19%)</span>
+            <strong>{formatClp(taxAmount)}</strong>
+          </p>
           <p className="cart-summary__total">Total <strong>{formatClp(total)}</strong></p>
           {shippingAddress && (
             <p className="cart-summary__address">
@@ -282,11 +296,12 @@ const Cart = ({
                   type="button"
                   className="checkout-modal__cancel"
                   onClick={closeCheckout}
+                  disabled={isSubmittingOrder}
                 >
                   Cancelar
                 </button>
-                <button type="submit" className="cart-checkout-button">
-                  Confirmar pedido
+                <button type="submit" className="cart-checkout-button" disabled={isSubmittingOrder}>
+                  {isSubmittingOrder ? 'Procesando...' : 'Confirmar pedido'}
                 </button>
               </div>
             </form>

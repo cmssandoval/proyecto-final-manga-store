@@ -40,7 +40,6 @@ const getErrorMessage = (error) => (
 const CartProvider = ({ children }) => {
   const { token } = useUserContext();
   const [cartItems, setCartItems] = useState([]);
-  const [orders, setOrders] = useState([]);
   const [isCartLoading, setIsCartLoading] = useState(true);
   const [cartError, setCartError] = useState('');
   const cartItemsRef = useRef([]);
@@ -284,11 +283,12 @@ const CartProvider = ({ children }) => {
     return true;
   };
 
-  const clearCart = async () => {
+  const clearCart = async ({ remoteAlreadyCleared = false } = {}) => {
     try {
-      if (token) {
+      if (token && !remoteAlreadyCleared) {
         await axiosClient.delete('/cart');
-      } else {
+      }
+      if (!token || remoteAlreadyCleared) {
         localStorage.removeItem(GUEST_CART_STORAGE_KEY);
       }
     } catch (error) {
@@ -304,53 +304,16 @@ const CartProvider = ({ children }) => {
     setIsCartLoading(false);
   };
 
-  const createOrder = async (shippingAddress) => {
-    const currentItems = cartItemsRef.current;
-
-    if (typeof shippingAddress !== 'string' || !shippingAddress.trim()) {
-      throw new Error('Agrega una dirección de envío antes de confirmar la compra.');
-    }
-
-    const address = shippingAddress.trim();
-
-    if (currentItems.length === 0) {
-      throw new Error('No puedes crear una orden con el carrito vacío.');
-    }
-
-    // Llamada a la API, descomentar una implementado /orders.
-    // const response = await axiosClient.post('/orders', {
-    //   shippingAddress: address,
-    //   items: currentItems,
-    //   total: currentItems.reduce((total, item) => total + item.price * item.quantity, 0),
-    // });
-
-    const order = {
-      id: `ORD-${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      shippingAddress: address,
-      items: currentItems.map((item) => ({ ...item })),
-      total: currentItems.reduce((total, item) => total + item.price * item.quantity, 0),
-      status: 'Confirmada',
-    };
-
-    setOrders((currentOrders) => [order, ...currentOrders]);
-    commitCartItems([]);
-
-    return order;
-  };
-
   return (
     <CartContext.Provider value={{
       cartItems,
       cartCount,
-      orders,
       isCartLoading,
       cartError,
       addToCart,
       removeFromCart,
       updateQuantity,
       clearCart,
-      createOrder,
     }}>
       {children}
     </CartContext.Provider>
