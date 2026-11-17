@@ -1,5 +1,7 @@
 SET client_encoding = 'UTF8';
 
+DROP TABLE IF EXISTS carts;
+DROP TABLE IF EXISTS cart_items;
 DROP TABLE IF EXISTS purchase_order_items;
 DROP TABLE IF EXISTS presales_items;
 DROP TABLE IF EXISTS presales;
@@ -169,6 +171,23 @@ CREATE TABLE presales_items (
     )
 );
 
+CREATE TABLE carts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT carts_user_id_unique UNIQUE (user_id)
+);
+
+CREATE TABLE cart_items (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    cart_id UUID NOT NULL REFERENCES carts(id) ON DELETE CASCADE,
+    manga_id UUID NOT NULL REFERENCES mangas(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL,
+    CONSTRAINT cart_items_quantity_positive CHECK (quantity > 0),
+    CONSTRAINT cart_items_cart_manga_unique UNIQUE (cart_id, manga_id)
+);
+
 CREATE INDEX user_role_role_id_idx ON user_role(role_id);
 CREATE INDEX wishlist_manga_id_idx ON wishlist (manga_id);
 CREATE INDEX manga_category_category_id_idx ON manga_category (category_id);
@@ -197,5 +216,10 @@ EXECUTE FUNCTION actualizar_updated_at();
 
 CREATE TRIGGER trigger_actualizar_updated_at
 BEFORE UPDATE ON presales
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_updated_at();
+
+CREATE TRIGGER trigger_actualizar_updated_at
+BEFORE UPDATE ON carts
 FOR EACH ROW
 EXECUTE FUNCTION actualizar_updated_at();

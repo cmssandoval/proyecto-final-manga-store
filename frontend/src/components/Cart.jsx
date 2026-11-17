@@ -6,17 +6,27 @@ const Cart = ({
   items = [],
   onRemoveItem,
   onUpdateQuantity,
+  onClearCart,
   onCheckout,
   shippingAddress,
+  isLoading = false,
+  error = '',
 }) => {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [addressOption, setAddressOption] = useState(shippingAddress ? 'default' : 'other');
   const [alternateAddress, setAlternateAddress] = useState('');
   const [checkoutError, setCheckoutError] = useState('');
+  const [cartActionError, setCartActionError] = useState('');
+  const [isClearingCart, setIsClearingCart] = useState(false);
+
+  if (isLoading) {
+    return <p role="status">Cargando carrito...</p>;
+  }
 
   if (items.length === 0) {
     return (
       <div className="cart-empty">
+        {error && <p role="alert">{error}</p>}
         <h2>Tu carrito está vacío</h2>
         <p>Descubre tu próxima lectura y añádela aquí.</p>
         <Link to="/catalogo" className="cart-empty__link">Explorar catálogo</Link>
@@ -25,6 +35,41 @@ const Cart = ({
   }
 
   const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+  const handleRemoveItem = async (productId) => {
+    setCartActionError('');
+    try {
+      await onRemoveItem(productId);
+    } catch (actionError) {
+      setCartActionError(actionError.message || 'No se pudo quitar el manga del carrito.');
+    }
+  };
+
+  const handleUpdateQuantity = async (productId, quantity) => {
+    setCartActionError('');
+    try {
+      await onUpdateQuantity(productId, quantity);
+    } catch (actionError) {
+      setCartActionError(actionError.message || 'No se pudo actualizar la cantidad.');
+    }
+  };
+
+  const handleClearCart = async () => {
+    const confirmed = window.confirm(
+      '¿Estás seguro de que quieres vaciar el carrito? Esta acción no se puede deshacer.',
+    );
+    if (!confirmed) return;
+
+    setCartActionError('');
+    setIsClearingCart(true);
+    try {
+      await onClearCart();
+    } catch (actionError) {
+      setCartActionError(actionError.message || 'No se pudo vaciar el carrito.');
+    } finally {
+      setIsClearingCart(false);
+    }
+  };
 
   const openCheckout = () => {
     setAddressOption(shippingAddress ? 'default' : 'other');
@@ -65,6 +110,9 @@ const Cart = ({
   return (
     <>
       <div className="cart-container">
+        {(error || cartActionError) && (
+          <p role="alert">{cartActionError || error}</p>
+        )}
         <div className="cart-items">
           {items.map((item) => (
             <div key={item.id} className="cart-item">
@@ -84,7 +132,7 @@ const Cart = ({
                     <button
                       type="button"
                       className="cart-quantity__button"
-                      onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}
+                      onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                       aria-label={`Reducir cantidad de ${item.name}`}
                     >
                       −
@@ -93,7 +141,7 @@ const Cart = ({
                     <button
                       type="button"
                       className="cart-quantity__button"
-                      onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
+                      onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
                       aria-label={`Aumentar cantidad de ${item.name}`}
                       disabled={item.quantity >= item.stock}
                     >
@@ -103,7 +151,7 @@ const Cart = ({
                   <button
                     type="button"
                     className="cart-remove-button"
-                    onClick={() => onRemoveItem(item.id)}
+                    onClick={() => handleRemoveItem(item.id)}
                   >
                     Eliminar
                   </button>
@@ -114,7 +162,18 @@ const Cart = ({
         </div>
 
         <div className="cart-summary">
-          <h2>Resumen del pedido</h2>
+          <div className="cart-summary__header">
+            <h2>Resumen del pedido</h2>
+            <button
+              type="button"
+              className="cart-clear-button"
+              onClick={handleClearCart}
+              disabled={isClearingCart}
+              aria-label="Vaciar carrito"
+            >
+              {isClearingCart ? 'Vaciando...' : 'Vaciar carrito'}
+            </button>
+          </div>
           <p className="cart-summary__total">Total <strong>{formatClp(total)}</strong></p>
           {shippingAddress && (
             <p className="cart-summary__address">

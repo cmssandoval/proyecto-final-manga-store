@@ -7,13 +7,17 @@ const WishlistTab = () => {
   const { wishlistItems, wishlistLoading, wishlistError } = useUserContext();
   const { addToCart } = useCartContext();
 
-  const handleAddToCart = (product) => {
-    if (!addToCart(product)) {
-      window.alert(`No hay más stock disponible de ${product.name}`);
-      return;
-    }
+  const handleAddToCart = async (product) => {
+    try {
+      if (!await addToCart(product)) {
+        window.alert(`No hay más stock disponible de ${product.name}`);
+        return;
+      }
 
-    window.alert(`${product.name} añadido al carrito`);
+      window.alert(`${product.name} añadido al carrito`);
+    } catch (error) {
+      window.alert(error.message);
+    }
   };
 
   return (

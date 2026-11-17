@@ -32,13 +32,17 @@ const ProductDetail = () => {
     navigate(-1);
   };
 
-  const handleAddToCart = () => {
-    if (!addToCart(product)) {
-      window.alert(`No hay más stock disponible de ${product.name}`);
-      return;
-    }
+  const handleAddToCart = async () => {
+    try {
+      if (!await addToCart(product)) {
+        window.alert(`No hay más stock disponible de ${product.name}`);
+        return;
+      }
 
-    window.alert(`${product.name} añadido al carrito`);
+      window.alert(`${product.name} añadido al carrito`);
+    } catch (error) {
+      window.alert(error.message);
+    }
   };
 
   const handleToggleWishlist = async () => {

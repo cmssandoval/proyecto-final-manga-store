@@ -328,3 +328,105 @@ wishlist.
 - `400 Bad Request` con `{ "message": "Invalid params value" }` si `mangaId`
   tiene formato UUID inválido.
 - `401 Unauthorized` si falta el token o es inválido.
+
+## Carrito
+
+Todas las rutas de `/api/cart` requieren autenticación. Cada usuario tiene un
+carrito persistido. Sus elementos incluyen `cart_item_id` (identificador de la
+fila del carrito), `id` (identificador del manga), los datos del manga y
+`quantity`.
+
+### `GET /api/cart`
+
+**Respuesta `200 OK`:**
+
+```json
+{
+  "cart": {
+    "id": "uuid",
+    "items": [
+      {
+        "cart_item_id": "uuid",
+        "id": "uuid",
+        "name": "Jujutsu Kaisen",
+        "price": "18400.00",
+        "stock": 19,
+        "quantity": 1
+      }
+    ]
+  }
+}
+```
+
+Si el usuario todavía no tiene un carrito, se devuelve
+`{ "cart": { "id": null, "items": [] } }`.
+
+### `POST /api/cart`
+
+Agrega unidades al carrito. Si el manga ya existe, suma la cantidad solicitada.
+
+**Solicitud:** `{ "mangaId": "uuid", "quantity": 1 }`; `quantity` es opcional
+y por defecto vale `1`.
+
+**Respuesta `201 Created`:** `{ "cart": { "id": "uuid", "items": [] } }`,
+con el carrito actualizado.
+
+**Errores `400 Bad Request`:** `mangaId` debe ser un UUID válido y `quantity`,
+si se envía, debe ser un entero positivo.
+
+### `POST /api/cart/sync`
+
+Fusiona los elementos de un carrito invitado en el carrito del usuario
+autenticado. Si un manga ya estaba guardado, suma sus cantidades. La operación
+es atómica: si algún elemento no puede agregarse, no se aplica ninguno.
+
+**Solicitud:**
+
+```json
+{
+  "items": [
+    { "mangaId": "uuid", "quantity": 2 }
+  ]
+}
+```
+
+**Respuesta `200 OK`:** `{ "cart": { "id": "uuid", "items": [] } }`,
+con el carrito fusionado.
+
+**Error `400 Bad Request`:** `items` debe ser un arreglo de elementos con
+`mangaId` UUID y `quantity` entero positivo.
+
+### `PUT /api/cart/:id`
+
+Actualiza la cantidad de un elemento. `:id` corresponde a `cart_item_id`.
+
+**Solicitud:** `{ "quantity": 2 }`.
+
+**Respuesta `200 OK`:** `{ "cart": { "id": "uuid", "items": [] } }`.
+
+**Errores:** `404 Not Found` si el elemento no pertenece al usuario o no
+existe; `400 Bad Request` si el `id` no es UUID válido, `quantity` no es un
+entero positivo o la cantidad es superior al stock.
+
+### `DELETE /api/cart/:id`
+
+Elimina el elemento identificado por `cart_item_id`.
+
+**Respuesta `204 No Content`** si se eliminó.
+
+**Respuesta `404 Not Found`** si el elemento no pertenece al usuario o no
+existe.
+
+**Error `400 Bad Request`** si `:id` no es un UUID válido.
+
+### `DELETE /api/cart`
+
+Elimina el carrito del usuario autenticado. La fila de `carts` se elimina y
+PostgreSQL elimina en cascada sus elementos de `cart_items`. La operación es
+idempotente.
+
+**Respuesta `204 No Content`**, incluso si el usuario no tenía un carrito.
+
+Las operaciones que agregarían una cantidad superior al stock disponible
+responden `400 Bad Request`; un manga inexistente responde `404 Not Found`.
+Los errores de UUID inválido responden `400 Bad Request`.

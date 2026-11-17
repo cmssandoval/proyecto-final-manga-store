@@ -7,6 +7,7 @@ import morganHandler from './middlewares/morgan-handler.middleware.js'
 
 import mangaRoutes from './routes/manga.routes.js';
 import userRoutes from './routes/user.routes.js';
+import cartRoutes from './routes/cart.routes.js';
 
 import getBaseUrl from './utils/getRequestBaseUrl.js';
 
@@ -18,6 +19,7 @@ app.use(corsHandler);
 app.use(express.json());
 app.use('/api/mangas', mangaRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/cart', cartRoutes);
 
 app.get('/', (req, res) => {
     return res.json({

@@ -5,11 +5,11 @@ import UserProvider from './UserProvider.jsx';
 const AppProviders = ({ children }) => {
   return (
     <DataProvider>
-      <CartProvider>
-        <UserProvider>
+      <UserProvider>
+        <CartProvider>
           {children}
-        </UserProvider>
-      </CartProvider>
+        </CartProvider>
+      </UserProvider>
     </DataProvider>
   )
 };

@@ -6,7 +6,15 @@ import '../styles/cart.css';
 
 const CartView = () => {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, updateQuantity, createOrder } = useCartContext();
+  const {
+    cartItems,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    createOrder,
+    isCartLoading,
+    cartError,
+  } = useCartContext();
   const { shippingAddress } = useUserContext();
 
   const handleCheckout = async (selectedAddress) => {
@@ -28,8 +36,11 @@ const CartView = () => {
           items={cartItems}
           onRemoveItem={removeFromCart}
           onUpdateQuantity={updateQuantity}
+          onClearCart={clearCart}
           onCheckout={handleCheckout}
           shippingAddress={shippingAddress}
+          isLoading={isCartLoading}
+          error={cartError}
         />
         {cartItems.length > 0 && (
           <Link to="/catalogo" className="cart-continue-link">
