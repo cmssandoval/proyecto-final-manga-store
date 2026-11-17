@@ -11,8 +11,20 @@ jest.unstable_mockModule('../src/models/manga.model.js', () => ({
     },
 }));
 
+jest.unstable_mockModule('../src/models/user.model.js', () => ({
+    default: {
+        hasRole: jest.fn(),
+    },
+}));
+
+jest.unstable_mockModule('jsonwebtoken', () => ({
+    default: { verify: jest.fn() },
+}));
+
 const { default: app } = await import('../src/app.js');
 const { default: Manga } = await import('../src/models/manga.model.js');
+const { default: User } = await import('../src/models/user.model.js');
+const { default: jwt } = await import('jsonwebtoken');
 
 describe('Manga API', () => {
     const manga = {
@@ -25,6 +37,8 @@ describe('Manga API', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        jwt.verify.mockReturnValue({ id: 'admin-id' });
+        User.hasRole.mockResolvedValue(false);
     });
 
     it('returns the list of mangas', async () => {
@@ -58,9 +72,11 @@ describe('Manga API', () => {
 
     it('creates a manga', async () => {
         Manga.create.mockResolvedValue(manga);
+        User.hasRole.mockResolvedValue(true);
 
         const response = await request(app)
             .post('/api/mangas')
+            .set('Authorization', 'Bearer valid-token')
             .send({ name: manga.name, slug: manga.slug });
 
         expect(response.statusCode).toBe(201);
@@ -70,9 +86,11 @@ describe('Manga API', () => {
 
     it('updates a manga', async () => {
         Manga.update.mockResolvedValue(manga);
+        User.hasRole.mockResolvedValue(true);
 
         const response = await request(app)
             .put('/api/mangas/manga-id')
+            .set('Authorization', 'Bearer valid-token')
             .send({ name: manga.name });
 
         expect(response.statusCode).toBe(200);
@@ -82,9 +100,11 @@ describe('Manga API', () => {
 
     it('returns 404 when updating a manga that does not exist', async () => {
         Manga.update.mockResolvedValue(undefined);
+        User.hasRole.mockResolvedValue(true);
 
         const response = await request(app)
             .put('/api/mangas/missing-id')
+            .set('Authorization', 'Bearer valid-token')
             .send({ name: manga.name });
 
         expect(response.statusCode).toBe(404);
@@ -93,8 +113,11 @@ describe('Manga API', () => {
 
     it('deletes a manga', async () => {
         Manga.delete.mockResolvedValue({ id: 'manga-id' });
+        User.hasRole.mockResolvedValue(true);
 
-        const response = await request(app).delete('/api/mangas/manga-id');
+        const response = await request(app)
+            .delete('/api/mangas/manga-id')
+            .set('Authorization', 'Bearer valid-token');
 
         expect(response.statusCode).toBe(200);
         expect(response.body).toEqual({ message: 'Manga deleted successfully' });
@@ -103,10 +126,45 @@ describe('Manga API', () => {
 
     it('returns 404 when deleting a manga that does not exist', async () => {
         Manga.delete.mockResolvedValue(undefined);
+        User.hasRole.mockResolvedValue(true);
 
-        const response = await request(app).delete('/api/mangas/missing-id');
+        const response = await request(app)
+            .delete('/api/mangas/missing-id')
+            .set('Authorization', 'Bearer valid-token');
 
         expect(response.statusCode).toBe(404);
         expect(response.body).toEqual({ message: 'Manga not found' });
+    });
+
+    it.each([
+        ['creating', 'post', '/api/mangas', { name: manga.name }],
+        ['updating', 'put', '/api/mangas/manga-id', { name: manga.name }],
+        ['deleting', 'delete', '/api/mangas/manga-id', undefined],
+    ])('requires authentication when %s a manga', async (_operation, method, path, body) => {
+        let apiRequest = request(app)[method](path);
+        if (body) apiRequest = apiRequest.send(body);
+
+        const response = await apiRequest;
+
+        expect(response.statusCode).toBe(401);
+        expect(User.hasRole).not.toHaveBeenCalled();
+    });
+
+    it.each([
+        ['creating', 'post', '/api/mangas', { name: manga.name }, 'create'],
+        ['updating', 'put', '/api/mangas/manga-id', { name: manga.name }, 'update'],
+        ['deleting', 'delete', '/api/mangas/manga-id', undefined, 'delete'],
+    ])('rejects a non-admin user when %s a manga', async (_operation, method, path, body, operation) => {
+        jwt.verify.mockReturnValue({ id: 'user-id', role: 'admin' });
+        let apiRequest = request(app)[method](path)
+            .set('Authorization', 'Bearer valid-token');
+        if (body) apiRequest = apiRequest.send(body);
+
+        const response = await apiRequest;
+
+        expect(response.statusCode).toBe(403);
+        expect(response.body).toEqual({ message: 'Administrator access required' });
+        expect(User.hasRole).toHaveBeenCalledWith('user-id', 'admin');
+        expect(Manga[operation]).not.toHaveBeenCalled();
     });
 });

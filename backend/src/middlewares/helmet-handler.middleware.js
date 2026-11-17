@@ -11,7 +11,7 @@ const helmetHandler = helmet({
       formAction: ["'none'"],
     },
   },
-  crossOriginResourcePolicy: { policy: 'same-origin' },
+  crossOriginResourcePolicy: { policy: 'cross-origin' },
 });
 
 export default helmetHandler;

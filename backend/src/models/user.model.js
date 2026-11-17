@@ -3,6 +3,19 @@ import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
 class User {
+    static async hasRole(userId, roleName) {
+        const query = `
+            SELECT EXISTS (
+                SELECT 1
+                FROM user_role
+                INNER JOIN roles ON roles.id = user_role.role_id
+                WHERE user_role.user_id = $1 AND roles.name = $2
+            ) AS has_role
+        `;
+        const result = await pool.query(query, [userId, roleName]);
+        return result.rows[0].has_role;
+    }
+
     static async signToken(user) {
         const { id } = user;
         return jwt.sign({ id }, process.env.JWT_SECRET, {
