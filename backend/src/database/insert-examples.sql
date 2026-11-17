@@ -1,9 +1,6 @@
 SET client_encoding = 'UTF8';
 
 -- Ejemplos de consulta para insertar datos
---* Cada dato en duro debe ser reemplazado por un parámetro en el modelo.
---* Usar consultas parametrizadas para mayor seguridad.
-
 -- User
 INSERT INTO users (email, full_name, display_name, password) VALUES
 ('fjimenez@email.com', 'Fernando Jiménez', 'jojostanduser', 'password hash');
@@ -91,11 +88,12 @@ INSERT INTO presales (
 
 -- Presale item
 INSERT INTO presales_items (
-    presale_id, manga_id, sku, quantity, unit_price, subtotal
+    presale_id, manga_id, sku, description, quantity, unit_price, subtotal
 ) VALUES (
     (SELECT id FROM presales WHERE presale_number = 'PRE-2026-002'),
     (SELECT id FROM mangas WHERE sku = 'SKU52745'),
     'SKU52745',
+    'Black Clover - Vol. 12',
     1,
     14900,
     14900

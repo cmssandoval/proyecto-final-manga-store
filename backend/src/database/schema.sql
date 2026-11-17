@@ -1,7 +1,7 @@
 SET client_encoding = 'UTF8';
 
-DROP TABLE IF EXISTS carts;
 DROP TABLE IF EXISTS cart_items;
+DROP TABLE IF EXISTS carts;
 DROP TABLE IF EXISTS purchase_order_items;
 DROP TABLE IF EXISTS presales_items;
 DROP TABLE IF EXISTS presales;
@@ -95,7 +95,7 @@ CREATE TABLE manga_demographic_category (
 CREATE TABLE purchase_orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_number VARCHAR(50) NOT NULL,
-    buyer_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    buyer_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     status VARCHAR(30) NOT NULL,
     currency VARCHAR(3) NOT NULL,
     net_amount NUMERIC(12, 2) NOT NULL,
@@ -140,7 +140,7 @@ CREATE TABLE purchase_order_items (
 CREATE TABLE presales (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     presale_number VARCHAR(50) NOT NULL,
-    customer_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    customer_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     status VARCHAR(30) NOT NULL,
     currency VARCHAR(3) NOT NULL,
     total_amount NUMERIC(12, 2) NOT NULL,
@@ -158,6 +158,7 @@ CREATE TABLE presales_items (
     presale_id UUID NOT NULL REFERENCES presales(id) ON DELETE CASCADE,
     manga_id UUID REFERENCES mangas(id) ON DELETE SET NULL,
     sku VARCHAR(64) NOT NULL,
+    description VARCHAR NOT NULL,
     quantity INTEGER NOT NULL,
     unit_price NUMERIC(12, 2) NOT NULL,
     subtotal NUMERIC(12, 2) NOT NULL,
