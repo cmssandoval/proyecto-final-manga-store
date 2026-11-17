@@ -13,6 +13,7 @@ import NotFound from './views/NotFound.jsx';
 
 import AppProviders from './contexts/AppProviders.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import GuestRoute from './components/GuestRoute.jsx';
 
 const App = () => {
   return (
@@ -20,15 +21,18 @@ const App = () => {
       <AppProviders>
         <Routes>
           <Route element={<MainLayout />}>
-
             <Route path="/" element={<Home />} />
             <Route path="/catalogo" element={<Catalog />} />
-            <Route path="/catalogo/:id" element={<ProductDetail />} />
-            <Route path="/login" element={<LoginView />} />
-            <Route path="/register" element={<RegisterView />} />
-            <Route path="/ordenes" element={<PurchaseOrders />} />
+            <Route path="/catalogo/:slug" element={<ProductDetail />} />
             <Route path="/cart" element={<Cart />} />
-            
+
+            <Route element={<GuestRoute />}>
+              <Route path="/login" element={<LoginView />} />
+              <Route path="/register" element={<RegisterView />} />
+            </Route>
+
+            <Route path="/ordenes" element={<PurchaseOrders />} />
+
             <Route element={<ProtectedRoute />}>
               <Route path="/perfil" element={<ProfileView />} />
             </Route>

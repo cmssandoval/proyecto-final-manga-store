@@ -1,28 +1,60 @@
 import { useEffect, useState } from 'react';
 import DataContext from './DataContext.jsx';
-
-import featuredProducts from '../data/featuredProducts';
+import axiosClient from '../api/axiosClient.js';
 
 const DataProvider = ({ children }) => {
-  const [ homeData, setHomeData] = useState([]);
+  const [ mangas, setMangas] = useState([]);
+  const [ isMangasLoading, setIsMangasLoading ] = useState(true);
+  const [ categories, setCategories ] = useState([]);
+  const [ demographicCategories, setDemographicCategories ] = useState([]);
 
   useEffect(() => {
-    const fetchHomeData = async () => {
+    const fetchMangas = async () => {
       try {
-        //* Simulación con data local, luego reemplazar por axios fetch
-        const response = await featuredProducts;
-        setHomeData(response);
+        const response = await axiosClient.get('/mangas');
+        setMangas(response.data?.mangas);
       } catch {
-        throw new Error('Error al obtener el catálogo de Home');
+        throw new Error('Error al obtener el catálogo');
+      } finally {
+        setIsMangasLoading(false);
       }
     };
 
-    fetchHomeData();    
+    fetchMangas();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axiosClient.get('/mangas/categories');
+        setCategories(response.data?.categories);
+      } catch {
+        throw new Error('Error al obtener las categorías');
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchDemographicCategories = async () => {
+      try {
+        const response = await axiosClient.get('/mangas/demographic-categories');
+        setDemographicCategories(response.data?.categories);
+      } catch {
+        throw new Error('Error al obtener las categorías demográficas');
+      }
+    };
+
+    fetchDemographicCategories();
   }, []);
 
   return (
     <DataContext.Provider value={{
-        homeData
+        mangas,
+        isMangasLoading,
+        categories,
+        demographicCategories
     }}>
       {children}
     </DataContext.Provider>

@@ -1,5 +1,7 @@
 SET client_encoding = 'UTF8';
 
+DROP TABLE IF EXISTS cart_items;
+DROP TABLE IF EXISTS carts;
 DROP TABLE IF EXISTS purchase_order_items;
 DROP TABLE IF EXISTS presales_items;
 DROP TABLE IF EXISTS presales;
@@ -10,6 +12,8 @@ DROP TABLE IF EXISTS manga_category;
 DROP TABLE IF EXISTS mangas;
 DROP TABLE IF EXISTS demographic_categories;
 DROP TABLE IF EXISTS categories;
+DROP TABLE IF EXISTS user_role;
+DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -19,7 +23,21 @@ CREATE TABLE users (
     display_name VARCHAR(50) NOT NULL,
     password VARCHAR(255) NOT NULL,
     image_link VARCHAR(2048),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT users_email_unique UNIQUE (email)
+);
+
+CREATE TABLE roles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(50) NOT NULL,
+    CONSTRAINT roles_name_unique UNIQUE (name)
+);
+
+CREATE TABLE user_role (
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    role_id UUID NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, role_id)
 );
 
 CREATE TABLE mangas (
@@ -37,6 +55,7 @@ CREATE TABLE mangas (
     price NUMERIC(12, 2) NOT NULL,
     stock INTEGER NOT NULL,
     user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT mangas_slug_unique UNIQUE (slug),
     CONSTRAINT mangas_sku_unique UNIQUE (sku),
     CONSTRAINT mangas_price_nonnegative CHECK (price >= 0),
@@ -76,7 +95,7 @@ CREATE TABLE manga_demographic_category (
 CREATE TABLE purchase_orders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     order_number VARCHAR(50) NOT NULL,
-    buyer_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    buyer_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     status VARCHAR(30) NOT NULL,
     currency VARCHAR(3) NOT NULL,
     net_amount NUMERIC(12, 2) NOT NULL,
@@ -121,7 +140,7 @@ CREATE TABLE purchase_order_items (
 CREATE TABLE presales (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     presale_number VARCHAR(50) NOT NULL,
-    customer_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    customer_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
     status VARCHAR(30) NOT NULL,
     currency VARCHAR(3) NOT NULL,
     total_amount NUMERIC(12, 2) NOT NULL,
@@ -139,6 +158,7 @@ CREATE TABLE presales_items (
     presale_id UUID NOT NULL REFERENCES presales(id) ON DELETE CASCADE,
     manga_id UUID REFERENCES mangas(id) ON DELETE SET NULL,
     sku VARCHAR(64) NOT NULL,
+    description VARCHAR NOT NULL,
     quantity INTEGER NOT NULL,
     unit_price NUMERIC(12, 2) NOT NULL,
     subtotal NUMERIC(12, 2) NOT NULL,
@@ -152,6 +172,24 @@ CREATE TABLE presales_items (
     )
 );
 
+CREATE TABLE carts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT carts_user_id_unique UNIQUE (user_id)
+);
+
+CREATE TABLE cart_items (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    cart_id UUID NOT NULL REFERENCES carts(id) ON DELETE CASCADE,
+    manga_id UUID NOT NULL REFERENCES mangas(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL,
+    CONSTRAINT cart_items_quantity_positive CHECK (quantity > 0),
+    CONSTRAINT cart_items_cart_manga_unique UNIQUE (cart_id, manga_id)
+);
+
+CREATE INDEX user_role_role_id_idx ON user_role(role_id);
 CREATE INDEX wishlist_manga_id_idx ON wishlist (manga_id);
 CREATE INDEX manga_category_category_id_idx ON manga_category (category_id);
 CREATE INDEX manga_demographic_category_demographic_category_id_idx
@@ -179,5 +217,10 @@ EXECUTE FUNCTION actualizar_updated_at();
 
 CREATE TRIGGER trigger_actualizar_updated_at
 BEFORE UPDATE ON presales
+FOR EACH ROW
+EXECUTE FUNCTION actualizar_updated_at();
+
+CREATE TRIGGER trigger_actualizar_updated_at
+BEFORE UPDATE ON carts
 FOR EACH ROW
 EXECUTE FUNCTION actualizar_updated_at();

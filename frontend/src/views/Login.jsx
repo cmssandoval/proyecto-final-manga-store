@@ -22,7 +22,8 @@ const LoginView = () => {
     } catch (error) {
       setApiError(
         error.response?.data?.message
-          || 'No se pudo iniciar sesión. Revisa tus credenciales e inténtalo nuevamente.',
+          || error.message
+          || 'No se pudo iniciar sesión. Revisa tus credenciales e inténtalo nuevamente.'
       );
     } finally {
       setIsLoading(false);
@@ -32,10 +33,10 @@ const LoginView = () => {
   return (
     <main className="auth-page" aria-label="Inicio de sesión">
       <div className="auth-page__shell">
-        {apiError && <div className="auth-page__error" role="alert">{apiError}</div>}
         <LoginForm
           onSubmitSuccess={handleLoginSubmit}
           onFormChange={() => setApiError('')}
+          apiError={apiError}
           isLoading={isLoading}
         />
       </div>

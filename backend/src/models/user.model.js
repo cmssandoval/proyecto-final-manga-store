@@ -1,14 +1,146 @@
 import pool from '../database/connection.js';
 import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 
 class User {
-    static async create( userData ) {
-        const { full_name, display_name, email, password } = userData;
-        const passwordHash = await argon2.hash( password );
-        const query = 'INSERT INTO users (full_name, display_name, email, password) VALUES ($1, $2, $3) RETURNING *';
-        const values = [full_name, display_name, email, passwordHash];
-        const result = await pool.query( query, values );
+    static async signToken(user) {
+        const { id } = user;
+        return jwt.sign({ id }, process.env.JWT_SECRET, {
+            subject: String(id),
+            expiresIn: 60 * 60,
+            algorithm: 'HS256',
+        });
+    }
+
+    static async findUserByEmail(email) {
+        const query = 'SELECT * FROM users WHERE email = $1';
+        const result = await pool.query(query, [email]);
         return result.rows[0];
+    }
+
+    static async findUserById(id) {
+        const query = 'SELECT * FROM users WHERE id = $1';
+        const result = await pool.query(query, [id]);
+        const user = result.rows[0];
+
+        if (!user) {
+            return undefined;
+        }
+
+        const { full_name, display_name, email } = user;
+        return { full_name, display_name, email };
+    }
+
+    static async findAllWishlist(userId) {
+        const query = `
+            SELECT
+                mangas.id,
+                mangas.name,
+                mangas.slug,
+                mangas.description,
+                mangas.volume,
+                mangas.author,
+                mangas.editorial,
+                mangas.image_link,
+                mangas.sku,
+                mangas.origin,
+                mangas.release_date,
+                mangas.price,
+                mangas.stock,
+                COALESCE(
+                    (
+                        SELECT array_agg(categories.name ORDER BY categories.name)
+                        FROM manga_category
+                        INNER JOIN categories ON categories.id = manga_category.category_id
+                        WHERE manga_category.manga_id = mangas.id
+                    ),
+                    ARRAY[]::VARCHAR[]
+                ) AS categories,
+                COALESCE(
+                    (
+                        SELECT array_agg(demographic_categories.name ORDER BY demographic_categories.name)
+                        FROM manga_demographic_category
+                        INNER JOIN demographic_categories
+                            ON demographic_categories.id = manga_demographic_category.demographic_category_id
+                        WHERE manga_demographic_category.manga_id = mangas.id
+                    ),
+                    ARRAY[]::VARCHAR[]
+                ) AS demographic_categories
+            FROM wishlist
+            INNER JOIN mangas ON mangas.id = wishlist.manga_id
+            WHERE wishlist.user_id = $1
+            ORDER BY mangas.name
+        `;
+        const result = await pool.query(query, [userId]);
+        return result.rows;
+    }
+
+    static async addToWishlist(userId, mangaId) {
+        const query = `
+            WITH requested_manga AS (
+                SELECT id
+                FROM mangas
+                WHERE id = $2
+            ),
+            inserted AS (
+                INSERT INTO wishlist (user_id, manga_id)
+                SELECT $1, requested_manga.id
+                FROM requested_manga
+                ON CONFLICT (user_id, manga_id) DO NOTHING
+                RETURNING manga_id
+            )
+            SELECT
+                EXISTS (SELECT 1 FROM requested_manga) AS manga_exists,
+                EXISTS (SELECT 1 FROM inserted) AS added
+        `;
+        const result = await pool.query(query, [userId, mangaId]);
+        if (!result.rows[0].manga_exists) {
+            return null;
+        }
+
+        return result.rows[0].added;
+    }
+
+    static async removeFromWishlist(userId, mangaId) {
+        const query = `
+            DELETE FROM wishlist
+            WHERE user_id = $1 AND manga_id = $2
+        `;
+        const result = await pool.query(query, [userId, mangaId]);
+        return result.rowCount > 0;
+    }
+
+    static async createUser(userData) {
+        const { full_name, display_name, email, password } = userData;
+        const passwordHash = await argon2.hash(password);
+        const query = `
+        INSERT INTO users (full_name, display_name, email, password)
+        VALUES ($1, $2, $3, $4)
+        RETURNING id, email, full_name, display_name, image_link
+        `;
+        const values = [full_name, display_name, email, passwordHash];
+        const result = await pool.query(query, values);
+        return result.rows[0];
+    }
+
+    static async verifyUserCredentials({ email, password }) {
+        const user = await this.findUserByEmail(email);
+
+        if (!user) {
+            const error = new Error('Invalid credentials');
+            error.status = 401;
+            throw error;
+        }
+
+        const isPasswordValid = await argon2.verify(user.password, password);
+        if (!isPasswordValid) {
+            const error = new Error('Invalid credentials');
+            error.status = 401;
+            throw error;
+        }
+
+        const { password: _, ...cleanUser } = user;
+        return this.signToken(cleanUser);
     }
 }
 

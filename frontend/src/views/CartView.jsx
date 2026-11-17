@@ -1,16 +1,26 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Cart from '../components/Cart.jsx';
 import useCartContext from '../hooks/useCartContext.js';
+import useOrdersContext from '../hooks/useOrdersContext.js';
 import useUserContext from '../hooks/useUserContext.js';
 import '../styles/cart.css';
 
 const CartView = () => {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, updateQuantity, createOrder } = useCartContext();
-  const { shippingAddress } = useUserContext();
+  const {
+    cartItems,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    isCartLoading,
+    cartError,
+  } = useCartContext();
+  const { createOrder } = useOrdersContext();
+  const { shippingAddress, token } = useUserContext();
 
   const handleCheckout = async (selectedAddress) => {
-    await createOrder(selectedAddress);
+    await createOrder({ shippingAddress: selectedAddress, items: cartItems });
+    await clearCart({ remoteAlreadyCleared: Boolean(token) });
     navigate('/ordenes');
   };
 
@@ -28,8 +38,11 @@ const CartView = () => {
           items={cartItems}
           onRemoveItem={removeFromCart}
           onUpdateQuantity={updateQuantity}
+          onClearCart={clearCart}
           onCheckout={handleCheckout}
           shippingAddress={shippingAddress}
+          isLoading={isCartLoading}
+          error={cartError}
         />
         {cartItems.length > 0 && (
           <Link to="/catalogo" className="cart-continue-link">

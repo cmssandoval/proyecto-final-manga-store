@@ -89,18 +89,6 @@
     backdrop-filter: blur(10px);
 }
 
-.auth-form-error {
-    margin: auto;
-    margin-top: 2rem;
-    margin-bottom: 0;
-    padding: 0.5rem;
-    padding-bottom: 0;
-    max-width: 18rem;
-    font-weight: 500;
-    color: red;
-    text-align: center;
-}
-
 .auth-form {
     padding: 2rem;
     display: flex;
@@ -158,7 +146,7 @@
 
 .auth-page__error {
   margin: 0 auto 1rem;
-  max-width: 38rem;
+  max-width: 78rem;
   border: 1px solid #f1cbd8;
   border-radius: 1rem;
   background: #fff2f6;

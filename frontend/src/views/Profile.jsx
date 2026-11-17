@@ -1,6 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import PersonalDataTab from '../components/profile/PersonalDataTab.jsx';
-import OrdersTab from '../components/profile/OrdersTab.jsx';
 import TrackingTab from '../components/profile/TrackingTab.jsx';
 import WishlistTab from '../components/profile/WishlistTab.jsx';
 import useUserContext from '../hooks/useUserContext.js';
@@ -8,7 +8,6 @@ import '../styles/profile.css';
 
 const profileTabs = [
   { id: 'personal-data', label: 'Datos Personales', component: PersonalDataTab },
-  { id: 'orders', label: 'Mis Pedidos', component: OrdersTab },
   { id: 'wishlist', label: 'Wishlist', component: WishlistTab },
   { id: 'tracking', label: 'Seguimiento', component: TrackingTab },
 ];
@@ -44,6 +43,12 @@ const ProfileView = () => {
               <p className="profile-user__name">{userName}</p>
             </div>
           </div>
+
+          <nav className="profile-orders-nav" aria-label="Órdenes de compra">
+            <Link to="/ordenes" className="profile-tab profile-orders-link">
+              Ver mis órdenes
+            </Link>
+          </nav>
 
           <div className="profile-tabs" role="tablist" aria-label="Secciones de cuenta">
             {profileTabs.map(({ id, label }) => (
