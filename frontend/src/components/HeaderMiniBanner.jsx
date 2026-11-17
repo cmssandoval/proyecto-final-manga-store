@@ -172,7 +172,10 @@ const HeaderMiniBanner = () => {
             </button>
           </>
         ) : (
-          <Link to="/login" className="nav-link">Iniciar Sesión</Link>
+          <>
+            <Link to="/login" className="nav-link">Iniciar Sesión</Link>
+            <Link to="/register" className="nav-link">Registrarse</Link>
+          </>
         )}
         
         { //? Colecciones personales del usuario? Corregir enlace y crear vista.

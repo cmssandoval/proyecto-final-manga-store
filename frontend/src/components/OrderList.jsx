@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import formatClp from '../utils/formatClp.js';
+import capFirstLetter from '../utils/capFirstLetter.js';
 
 const dateFormatter = new Intl.DateTimeFormat('es-CL', {
   dateStyle: 'medium',
@@ -26,7 +27,7 @@ const OrderList = ({ orders }) => {
               <p className="order-card__eyebrow">Orden de compra</p>
               <h2 className="order-card__id">{order.orderNumber || order.id}</h2>
             </div>
-            <span className="order-card__status">{order.status}</span>
+            <span className="order-card__status">{capFirstLetter(order.status)}</span>
           </header>
 
           <p className="order-card__date">
