@@ -51,6 +51,17 @@ describe('User model', () => {
         await expect(User.findUserByEmail('missing@example.com')).resolves.toBeUndefined();
     });
 
+    it('checks a role by user id using a parameterized query', async () => {
+        pool.query.mockResolvedValue({ rows: [{ has_role: true }] });
+
+        await expect(User.hasRole('admin-id', 'admin')).resolves.toBe(true);
+
+        expect(pool.query).toHaveBeenCalledWith(
+            expect.stringContaining('WHERE user_role.user_id = $1 AND roles.name = $2'),
+            ['admin-id', 'admin'],
+        );
+    });
+
     it('returns the public profile fields for a user id', async () => {
         pool.query.mockResolvedValue({
             rows: [{
