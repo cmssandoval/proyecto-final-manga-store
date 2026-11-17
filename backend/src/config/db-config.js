@@ -1,3 +1,5 @@
+import fs from 'node:fs'
+
 const dbconfig = process.env.NODE_ENV === 'production'
     ? {
         connectionString: process.env.DATABASE_URL,
