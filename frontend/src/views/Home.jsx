@@ -11,6 +11,8 @@ import formatClp from '../utils/formatClp.js';
 import { trustItems, reviewItems } from '../data/homeViewItems.js';
 import '../styles/home.css';
 
+const HERO_MANGA_SEED = Math.random();
+
 const Home = () => {
   const navigate = useNavigate();
   const { mangas, categories, demographicCategories } = useDataContext();
@@ -49,8 +51,9 @@ const Home = () => {
     ))
     .slice(0, 5)
     .map(({ manga }) => manga), [mangas, popularCategories]);
-  const heroManga = featuredProducts[0];
-
+  const heroManga = useMemo(() => (
+    mangas.length ? mangas[Math.floor(HERO_MANGA_SEED * mangas.length)] : null
+  ), [mangas]);
   useEffect(() => {
     document.title = 'MoonShelf | Tienda de manga premium';
 
@@ -91,24 +94,21 @@ const Home = () => {
             <div className="home-hero__grid">
               <div className="home-hero__copy">
                 <p className="home-hero__eyebrow">Colección nueva</p>
-                <h1 id="home-hero-title" className="home-hero__title">Descubre tu próxima obsesión manga.</h1>
+                <h1 id="home-hero-title" className="home-hero__title">Más de 500 mangas disponibles!</h1>
                 <p className="home-hero__description">
-                  Encuentra ediciones premium, clásicos irresistibles y lanzamientos exclusivos para cada fan del manga.
+                  Encuentra ediciones premium, clásicos irresistibles y lanzamientos exclusivos importados directamente desde Japón y España!!!.
                 </p>
 
                 <div className="home-hero__actions">
                   <button type="button" className="home-hero__button home-hero__button--primary" onClick={() => navigate('/catalogo')}>
                     Ver catálogo
                   </button>
-                  <button type="button" className="home-hero__button home-hero__button--secondary" onClick={() => navigate('/catalogo')}>
-                    Colecciones
-                  </button>
                 </div>
               </div>
 
               <div className="home-hero__feature-panel">
                 {heroManga && (
-                  <div className="home-hero__feature-card">
+                  <div className="home-hero__feature-card" onClick={() => navigate(`/catalogo/${heroManga.slug}`)}>
                     <div className="home-hero__feature-header">
                       <span className="home-hero__pill">Del catálogo</span>
                       <span className="home-hero__price">{formatClp(heroManga.price)}</span>

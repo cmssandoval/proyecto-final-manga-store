@@ -1,7 +1,15 @@
+import logger from '../config/logger.js';
 import getDatabaseError from '../lib/errors/database.error.js';
 
 const errorHandler = ( err, req, res, next ) => {
-    console.log(err);
+    logger.error(err.message || 'Error no controlado', {
+        stack: err.stack,
+        method: req.method,
+        url: req.originalUrl,
+        clientIp: req.ip,
+        userId: req.user?.id || 'anonymous',
+        code: err.code
+    });
 
     if ( err.code ) {
         const { code, message } = getDatabaseError( err.code );
