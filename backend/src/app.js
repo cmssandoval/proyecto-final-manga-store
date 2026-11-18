@@ -10,7 +10,9 @@ import getBaseUrl from './utils/getRequestBaseUrl.js';
 
 const app = express();
 
-app.use(morganHandler)
+const env = process.env.NODE_ENV || 'development';
+if (env !== 'production') app.use(morganHandler);
+
 app.use(helmetHandler);
 app.use(corsHandler);
 app.use(express.json());
