@@ -103,15 +103,12 @@ const Home = () => {
                   <button type="button" className="home-hero__button home-hero__button--primary" onClick={() => navigate('/catalogo')}>
                     Ver catálogo
                   </button>
-                  <button type="button" className="home-hero__button home-hero__button--secondary" onClick={() => navigate('/catalogo')}>
-                    Colecciones
-                  </button>
                 </div>
               </div>
 
               <div className="home-hero__feature-panel">
                 {heroManga && (
-                  <div className="home-hero__feature-card">
+                  <div className="home-hero__feature-card" onClick={() => navigate(`/catalogo/${heroManga.slug}`)}>
                     <div className="home-hero__feature-header">
                       <span className="home-hero__pill">Del catálogo</span>
                       <span className="home-hero__price">{formatClp(heroManga.price)}</span>
