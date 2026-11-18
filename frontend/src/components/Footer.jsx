@@ -32,14 +32,14 @@ const Footer = () => {
 
             <div className="mt-5 flex gap-3">
               {socials.map((item) => (
-                <a
-                  key={item}
-                  href="#"
-                  aria-label={item}
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  aria-label={item.label}
                   className="flex h-9 w-9 items-center justify-center rounded-full border border-pink-200 bg-white text-xs font-bold text-slate-700 transition hover:border-pink-300 hover:bg-pink-50"
                 >
-                  {item.slice(0, 1)}
-                </a>
+                  {item.label.slice(0, 1)}
+                </Link>
               ))}
             </div>
           </div>
@@ -103,9 +103,9 @@ const Footer = () => {
         <div className="mt-8 flex flex-col gap-3 border-t border-pink-100 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
           <p>© 2026 MoonShelf. Todos los derechos reservados.</p>
           <div className="flex items-center gap-4">
-            <span>Privacidad</span>
-            <span>Terminos</span>
-            <span>Soporte</span>
+            <Link to="/privacidad">Privacidad</Link>
+            <Link to="/terminos">Términos</Link>
+            <Link to="/soporte">Soporte</Link>
           </div>
         </div>
       </div>

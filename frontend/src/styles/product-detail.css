@@ -224,3 +224,112 @@
     align-items: center;
   }
 }
+
+.product-detail-page {
+  background: var(--color-paper-muted);
+  color: var(--color-ink);
+}
+
+.product-detail__back-button {
+  border-color: var(--color-line);
+  border-radius: 0.25rem;
+  background: var(--color-paper);
+  color: #493b3f;
+}
+
+.product-detail__back-button:hover {
+  border-color: var(--color-pink);
+}
+
+.product-detail-card,
+.product-detail-empty {
+  border-color: var(--color-line);
+  border-radius: 0.45rem;
+  background: var(--color-paper);
+  box-shadow: 3px 4px 0 #eadeda;
+}
+
+.product-detail-card__gallery {
+  border-color: var(--color-line);
+  background: var(--color-paper-pink);
+}
+
+.product-detail-card__image {
+  border-radius: 0.25rem;
+  box-shadow: 4px 6px 0 rgba(52, 44, 47, 0.14);
+}
+
+.product-detail-card__badge {
+  border-radius: 0.2rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+}
+
+.product-detail-card__badge--primary {
+  background: var(--color-pink-soft);
+  color: var(--color-ink);
+}
+
+.product-detail-card__badge--secondary {
+  background: #eee8e8;
+  color: #5b5053;
+}
+
+.product-detail-card__series {
+  color: var(--color-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.product-detail-card__title,
+.product-detail-card__price,
+.product-detail-empty__title {
+  color: var(--color-ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.product-detail-card__meta-item {
+  border-color: var(--color-line);
+  border-radius: 0.25rem;
+  background: #fffdfa;
+}
+
+.product-detail-card__meta-label {
+  color: var(--color-muted);
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.product-detail-card__meta-value {
+  color: var(--color-ink);
+}
+
+.product-detail-card__description {
+  color: #574d50;
+}
+
+.product-detail-card__cta {
+  border-radius: 0.25rem;
+}
+
+.product-detail-card__cta--primary {
+  background: var(--color-pink-dark);
+  color: var(--color-ink);
+  box-shadow: 0 2px 0 var(--color-pink-300);
+}
+
+.product-detail-card__cta--secondary {
+  border-color: var(--color-line);
+  background: var(--color-paper-pink);
+  color: #493b3f;
+}
+
+.product-detail-empty__eyebrow {
+  color: var(--color-ink);
+  letter-spacing: 0.02em;
+  text-transform: none;
+}

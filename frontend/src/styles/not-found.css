@@ -85,3 +85,52 @@
     padding-top: 2.5rem;
   }
 }
+
+.not-found-page {
+  color: var(--color-ink);
+}
+
+.not-found-card {
+  border-color: var(--color-line);
+  border-radius: 0.55rem;
+  background: var(--color-paper);
+  box-shadow: 4px 5px 0 #e8d9d4;
+}
+
+.not-found-card__eyebrow {
+  border-color: var(--color-line);
+  border-radius: 0.2rem;
+  background: var(--color-paper-pink);
+  color: var(--color-ink);
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.not-found-card__title {
+  color: var(--color-ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.not-found-card__description {
+  color: var(--color-muted);
+}
+
+.not-found-card__link {
+  border-color: var(--color-pink-dark);
+  border-radius: 0.25rem;
+  background: var(--color-pink-dark);
+  color: var(--color-ink);
+  box-shadow: 0 2px 0 var(--color-pink-300);
+}
+
+.not-found-card__link:hover {
+  background: var(--color-pink-300);
+  box-shadow: 0 1px 0 var(--color-pink-300);
+}
+
+.not-found-card__link:focus-visible {
+  outline-color: var(--color-pink-400);
+}
