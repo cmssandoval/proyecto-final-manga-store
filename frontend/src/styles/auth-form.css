@@ -212,7 +212,7 @@
 
 .auth-page {
   background: var(--color-paper-muted);
-  color: var(--color-ink);
+  color: #2d2433;
 }
 
 .auth-page .glow {
@@ -229,21 +229,15 @@
 }
 
 .auth-page .title {
-  color: var(--color-ink);
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 500;
   letter-spacing: -0.035em;
-}
-
-.auth-page .field-label {
-  color: var(--color-ink);
 }
 
 .auth-page .field-input {
   border-color: var(--color-line);
   border-radius: 0.3rem;
   background: #fffdfa;
-  color: var(--color-ink);
 }
 
 .auth-page .field-input:focus {
@@ -254,7 +248,6 @@
 .auth-page .button.primary {
   border-radius: 0.3rem;
   background: var(--color-pink-dark);
-  color: var(--color-ink);
   box-shadow: 0 2px 0 var(--color-pink-300);
   letter-spacing: 0.02em;
   text-transform: none;

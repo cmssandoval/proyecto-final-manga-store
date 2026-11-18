@@ -238,10 +238,6 @@
   }
 }
 
-.orders-page {
-  color: var(--color-ink);
-}
-
 .orders-page__header {
   margin-bottom: 1.5rem;
   text-align: left;
@@ -251,14 +247,12 @@
 
 .orders-page__eyebrow,
 .order-card__eyebrow {
-  color: var(--color-ink);
   font-size: 0.78rem;
   letter-spacing: 0.02em;
   text-transform: none;
 }
 
 .orders-page__title {
-  color: var(--color-ink);
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 500;
   letter-spacing: -0.035em;
@@ -278,12 +272,6 @@
   border-radius: 0.4rem;
   background: var(--color-paper);
   box-shadow: 2px 3px 0 #eadeda;
-}
-
-.order-card__id,
-.order-card__total strong,
-.orders-empty h2 {
-  color: var(--color-ink);
 }
 
 .order-card__status {
@@ -311,14 +299,6 @@
   border-radius: 0.15rem;
 }
 
-.order-item__name {
-  color: var(--color-ink);
-}
-
-.order-item__price {
-  color: var(--color-ink);
-}
-
 .order-card__total {
   border-color: var(--color-line);
   color: #574b4e;
@@ -327,14 +307,12 @@
 .orders-empty__link {
   border-radius: 0.25rem;
   background: var(--color-pink-dark);
-  color: var(--color-ink);
 }
 
 .orders-sync-retry {
   border-color: var(--color-pink);
   border-radius: 0.25rem;
   background: var(--color-paper);
-  color: var(--color-ink);
 }
 
 @media (max-width: 700px) {
