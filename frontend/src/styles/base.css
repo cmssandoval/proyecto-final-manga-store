@@ -1,9 +1,23 @@
 :root {
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-family: 'Avenir Next', 'Segoe UI', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #2d2433;
-  background: #fffafc;
+  color: #342c2f;
+  background: #ffe5ec;
+  --color-pink-50: #ffe5ec;
+  --color-pink-100: #ffc2d1;
+  --color-pink-200: #ffb3c6;
+  --color-pink-300: #ff8fab;
+  --color-pink-400: #fb6f92;
+  --color-paper: #fffaf6;
+  --color-paper-muted: var(--color-pink-50);
+  --color-paper-pink: var(--color-pink-100);
+  --color-ink: #342c2f;
+  --color-muted: #75676a;
+  --color-line: var(--color-pink-200);
+  --color-pink: var(--color-pink-300);
+  --color-pink-dark: var(--color-pink-400);
+  --color-pink-soft: var(--color-pink-50);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,7 +32,69 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: linear-gradient(180deg, #fff9fb 0%, #eef8ff 100%);
+  background: var(--color-paper-muted);
+}
+
+footer.mt-12 {
+  border-color: var(--color-line);
+  background: var(--color-paper-pink);
+}
+
+footer.mt-12 .bg-linear-to-br {
+  border-radius: 0.25rem;
+  background: var(--color-pink-50);
+  color: var(--color-ink);
+  box-shadow: none;
+}
+
+footer.mt-12 .text-slate-800,
+footer.mt-12 .text-slate-700 {
+  color: #342c2f;
+}
+
+footer.mt-12 .text-slate-600,
+footer.mt-12 .text-slate-500,
+footer.mt-12 .text-slate-400 {
+  color: #75676a;
+}
+
+footer.mt-12 h3,
+footer.mt-12 p {
+  letter-spacing: normal;
+}
+
+footer.mt-12 h3,
+footer.mt-12 .uppercase {
+  text-transform: none;
+}
+
+footer.mt-12 .rounded-full {
+  border-radius: 0.2rem;
+}
+
+footer.mt-12 input {
+  border-color: var(--color-line);
+  background: #fffaf6;
+  color: #342c2f;
+}
+
+footer.mt-12 .border-pink-200,
+footer.mt-12 .border-pink-100 {
+  border-color: var(--color-line);
+}
+
+footer.mt-12 a:hover {
+  color: var(--color-ink);
+}
+
+footer.mt-12 button.bg-linear-to-r {
+  background: var(--color-pink-400);
+  color: var(--color-ink);
+  box-shadow: 0 2px 0 var(--color-pink-300);
+}
+
+footer.mt-12 button.bg-linear-to-r:hover {
+  background: var(--color-pink-300);
 }
 
 * {
@@ -53,11 +129,11 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible {
-  outline: 3px solid #65a9dc;
+  outline: 2px solid var(--color-pink-400);
   outline-offset: 2px;
 }
 
 ::selection {
-  background: rgba(244, 116, 168, 0.2);
-  color: #2d2433;
+  background: var(--color-pink-100);
+  color: #342c2f;
 }
