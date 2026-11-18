@@ -17,8 +17,11 @@ router.get('/', asyncHandler(getMangas));
 router.get('/categories', asyncHandler(getCategories));
 router.get('/demographic-categories', asyncHandler(getDemographicCategories));
 router.get('/:id', asyncHandler(getMangaById));
-router.post('/', authHandler, authGuard, asyncHandler(requireAdmin), asyncHandler(createManga));
-router.put('/:id', authHandler, authGuard, asyncHandler(requireAdmin), asyncHandler(updateManga));
-router.delete('/:id', authHandler, authGuard, asyncHandler(requireAdmin), asyncHandler(deleteManga));
+
+router.use(authHandler, authGuard, asyncHandler(requireAdmin));
+
+router.post('/', asyncHandler(createManga));
+router.put('/:id', asyncHandler(updateManga));
+router.delete('/:id', asyncHandler(deleteManga));
 
 export default router;
