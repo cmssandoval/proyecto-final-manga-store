@@ -146,7 +146,6 @@
 }
 
 .catalog-filters__title {
-  color: var(--color-ink);
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 500;
   letter-spacing: -0.035em;
@@ -195,17 +194,9 @@
   background: #fffaf6;
 }
 
-.catalog-sort__select {
-  color: var(--color-ink);
-}
 
 .catalog-results__summary {
   color: #55484b;
-}
-
-.catalog-sort__icon,
-.catalog-results__icon {
-  color: var(--color-ink);
 }
 
 @media (min-width: 900px) {
