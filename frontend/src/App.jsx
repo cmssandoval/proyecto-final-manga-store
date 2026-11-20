@@ -10,6 +10,7 @@ import ProductDetail from './views/ProductDetail.jsx';
 import Cart from './views/CartView.jsx';
 import PurchaseOrders from './views/PurchaseOrders.jsx';
 import NotFound from './views/NotFound.jsx';
+import AdminMangasView from './views/AdminMangasView.jsx';
 
 import AppProviders from './contexts/AppProviders.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
@@ -35,6 +36,11 @@ const App = () => {
 
             <Route element={<ProtectedRoute />}>
               <Route path="/perfil" element={<ProfileView />} />
+            </Route>
+
+            <Route path="/admin" element={<ProtectedRoute requiredRole="admin" />}>
+              <Route path="mangas" element={<AdminMangasView />} />
+              <Route path="*" element={<NotFound />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />
