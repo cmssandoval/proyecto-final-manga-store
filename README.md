@@ -1,4 +1,18 @@
 # MoonShelf — Tienda de mangas
+## Nota para el Corrector
+Las credenciales para probar funcionalidades son:
+
+1. Usuario default (también puede crear uno nuevo surtiendo el mismo efecto):
+    - email: test1@test.cl
+    - password: test1@test.clA
+
+2. Usuario ADMINISTRADOR:
+    - email: admin1@admin.com
+    - password: admin1@admin.comA
+  
+> El usuario administrador es el único que puede crear mangas y actualmente no hemos implementado formas cómodas de asignar admin a un usuario aparte de realizar una consulta directa a la base de datos, por eso esta nota, saludos!
+
+---
 
 Marketplace de mangas creado como proyecto final de Desafío Latam. Incluye una interfaz web para explorar:
 - Catálogo
