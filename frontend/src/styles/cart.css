@@ -3,7 +3,6 @@
   width: min(100% - 2rem, 76rem);
   margin: 0 auto;
   padding: 3.5rem 0 5rem;
-  color: var(--color-ink);
 }
 
 .cart-page__header {
@@ -13,7 +12,6 @@
 
 .cart-page__eyebrow {
   margin: 0 0 0.5rem;
-  color: var(--color-ink);
   font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -21,7 +19,6 @@
 
 .cart-page__title {
   margin: 0;
-  color: var(--color-ink);
   font-family: Georgia, 'Times New Roman', serif;
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 500;
@@ -90,13 +87,11 @@
 
 .cart-item__title {
   margin: 0;
-  color: var(--color-ink);
   font-size: 1.05rem;
 }
 
 .cart-item__price {
   margin: 0.25rem 0 0;
-  color: var(--color-ink);
   font-weight: 800;
 }
 
@@ -123,7 +118,6 @@
   display: inline-flex;
   align-items: center;
   gap: 0.8rem;
-  color: var(--color-ink);
   font-weight: 800;
 }
 
@@ -150,7 +144,6 @@
 .cart-page__continue-link {
   border: 0;
   background: transparent;
-  color: var(--color-ink);
   font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
@@ -189,7 +182,6 @@
 .cart-summary__total strong,
 .cart-empty__title {
   margin: 0;
-  color: var(--color-ink);
 }
 
 .cart-summary__title {
@@ -235,11 +227,6 @@
 .cart-summary__amount {
   color: var(--color-muted);
   font-size: 0.9rem;
-}
-
-.cart-summary__amount strong,
-.cart-summary__address strong {
-  color: var(--color-ink);
 }
 
 .cart-summary__amount strong {
@@ -345,14 +332,12 @@
   border: 0;
   border-radius: 0.2rem;
   background: var(--color-paper-pink);
-  color: var(--color-ink);
   font-size: 1.4rem;
   cursor: pointer;
 }
 
 .checkout-modal__eyebrow {
   margin: 0 0 0.4rem;
-  color: var(--color-ink);
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -361,7 +346,6 @@
 .checkout-modal__title {
   max-width: 90%;
   margin: 0;
-  color: var(--color-ink);
   font-family: Georgia, 'Times New Roman', serif;
   font-size: 1.45rem;
   font-weight: 500;
@@ -395,7 +379,6 @@
 
 .checkout-modal__address-options legend {
   margin-bottom: 0.55rem;
-  color: var(--color-ink);
   font-size: 0.85rem;
   font-weight: 800;
 }
@@ -426,7 +409,6 @@
 }
 
 .checkout-modal__address-option strong {
-  color: var(--color-ink);
   font-size: 0.86rem;
 }
 
@@ -440,7 +422,6 @@
   display: grid;
   gap: 0.45rem;
   margin-top: 0.9rem;
-  color: var(--color-ink);
   font-size: 0.84rem;
   font-weight: 800;
 }
@@ -452,7 +433,6 @@
   border-radius: 0.25rem;
   background: #fffdfa;
   padding: 0.75rem;
-  color: var(--color-ink);
   font: inherit;
   font-weight: 400;
 }

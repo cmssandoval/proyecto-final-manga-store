@@ -291,7 +291,6 @@
 
 .profile-page {
   background: var(--color-paper-muted);
-  color: var(--color-ink);
 }
 
 .profile-shell {
@@ -311,16 +310,9 @@
 
 .profile-eyebrow,
 .profile-detail__label {
-  color: var(--color-ink);
   font-size: 0.76rem;
   letter-spacing: 0.02em;
   text-transform: none;
-}
-
-.profile-title,
-.profile-section-title,
-.profile-user__name {
-  color: var(--color-ink);
 }
 
 .profile-title {
@@ -390,10 +382,6 @@
   background: #fffdfa;
 }
 
-.profile-detail__value {
-  color: var(--color-ink);
-}
-
 .profile-empty-state {
   min-height: 7rem;
   border-color: var(--color-line);
@@ -411,11 +399,6 @@
   border-color: var(--color-line);
   border-radius: 0.3rem;
   background: var(--color-paper);
-}
-
-.profile-address-form__label,
-.profile-address-form__input {
-  color: var(--color-ink);
 }
 
 .profile-address-form__input {
