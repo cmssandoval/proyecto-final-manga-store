@@ -63,23 +63,24 @@ describe('User model', () => {
     });
 
     it('returns the public profile fields for a user id', async () => {
-        pool.query.mockResolvedValue({
-            rows: [{
-                id: 'user-id',
-                full_name: 'Reader Name',
-                display_name: 'reader',
-                email: 'reader@example.com',
-                password: 'hashed-password',
-            }],
-        });
+        pool.query
+            .mockResolvedValueOnce({
+                rows: [{
+                    full_name: 'Reader Name',
+                    display_name: 'reader',
+                    email: 'reader@example.com',
+                }],
+            })
+            .mockResolvedValueOnce({ rows: [{ name: 'user' }] });
 
         await expect(User.findUserById('user-id')).resolves.toEqual({
             full_name: 'Reader Name',
             display_name: 'reader',
             email: 'reader@example.com',
+            roles: ['user'],
         });
         expect(pool.query).toHaveBeenCalledWith(
-            'SELECT * FROM users WHERE id = $1',
+            'SELECT full_name, display_name, email FROM users WHERE id = $1',
             ['user-id'],
         );
     });
@@ -103,6 +104,7 @@ describe('User model', () => {
             full_name: userData.full_name,
             display_name: userData.display_name,
             image_link: null,
+            roles: ['user'],
         };
         argon2.hash.mockResolvedValue('hashed-password');
         pool.query.mockResolvedValue({ rows: [createdUser] });
@@ -183,13 +185,15 @@ describe('User model', () => {
     });
 
     it('returns a signed token when credentials are valid', async () => {
-        pool.query.mockResolvedValue({
-            rows: [{
-                id: 'user-id',
-                email: 'reader@example.com',
-                password: 'hashed-password',
-            }],
-        });
+        pool.query
+            .mockResolvedValueOnce({
+                rows: [{
+                    id: 'user-id',
+                    email: 'reader@example.com',
+                    password: 'hashed-password',
+                }],
+            })
+            .mockResolvedValueOnce({ rows: [{ name: 'admin' }] });
         argon2.verify.mockResolvedValue(true);
         jwt.sign.mockReturnValue('signed-token');
         const jwtSecret = 'test-secret-with-more-than-thirty-two-characters';
@@ -202,7 +206,7 @@ describe('User model', () => {
 
         expect(argon2.verify).toHaveBeenCalledWith('hashed-password', 'plain-password');
         expect(jwt.sign).toHaveBeenCalledWith(
-            { id: 'user-id' },
+            { id: 'user-id', roles: ['admin'] },
             jwtSecret,
             {
                 subject: 'user-id',
@@ -215,12 +219,13 @@ describe('User model', () => {
     it('signs a token using the user id and configured secret', async () => {
         jwt.sign.mockReturnValue('signed-token');
         process.env.JWT_SECRET = 'configured-secret';
+        pool.query.mockResolvedValue({ rows: [{ name: 'admin' }] });
 
         await expect(User.signToken({ id: 42, email: 'reader@example.com' }))
             .resolves.toBe('signed-token');
 
         expect(jwt.sign).toHaveBeenCalledWith(
-            { id: 42 },
+            { id: 42, roles: ['admin'] },
             'configured-secret',
             {
                 subject: '42',

@@ -1,4 +1,6 @@
 import Manga from '../models/manga.model.js';
+import parseRequest from '../utils/parse-request.js';
+import { createMangaSchema } from '../schemas/manga.schema.js';
 
 /** @type {import('express').RequestHandler} */
 export const getMangas = async (_req, res) => {
@@ -27,7 +29,10 @@ export const getMangaById = async (req, res) => {
 
 /** @type {import('express').RequestHandler} */
 export const createManga = async (req, res) => {
-    const newManga = await Manga.create(req.body);
+    const mangaData = parseRequest(createMangaSchema, req.body, res);
+    if (!mangaData) return;
+
+    const newManga = await Manga.create(mangaData);
     return res.status(201).json({ manga: newManga });
 };
 

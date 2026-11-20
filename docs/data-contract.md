@@ -131,9 +131,9 @@ Un UUID con formato inválido produce `400 Bad Request` con
 
 ### `POST /api/mangas`
 
-Crea un manga. El controlador no requiere autenticación y el modelo no asocia
-automáticamente el manga con un usuario ni procesa asociaciones de categorías
-en esta operación.
+Crea un manga. Requiere un token de usuario con rol `admin`. Las asociaciones
+de categorías se guardan junto con el manga en una transacción; si falla una
+asociación, no queda creado el manga.
 
 **Solicitud:**
 
@@ -149,20 +149,26 @@ en esta operación.
   "sku": "SKU72548",
   "origin": "Japón",
   "release_date": "2026-11-01",
-  "price": "18400.00",
-  "stock": 19
+  "price": 18400,
+  "stock": 19,
+  "categoryIds": ["uuid-de-categoria"],
+  "demographicCategoryIds": ["uuid-de-demografia"]
 }
 ```
 
-El modelo inserta estos campos y PostgreSQL genera `id` y `created_at`; `user_id`
-queda `null`.
+`categoryIds` y `demographicCategoryIds` son arreglos opcionales de UUIDs
+existentes en `categories` y `demographic_categories`, respectivamente. Si se
+omiten, se guardan arreglos vacíos. Los UUIDs inválidos o inexistentes producen
+`400 Bad Request`. Un `slug` o `sku` duplicado produce `409 Conflict`.
 
-**Respuesta `201 Created`:** `{ "manga": { ... } }`, donde `manga` es la fila
-insertada e incluye los campos de la tabla `mangas`.
+**Respuesta `201 Created`:** `{ "manga": { ... } }`, con los campos del manga
+y sus categorías temáticas y demográficas como arreglos de nombres, igual que
+en las respuestas GET.
 
 ### `PUT /api/mangas/:id`
 
-Actualiza los campos de manga aceptados por `POST /api/mangas`.
+Actualiza los campos principales del manga. Actualmente no modifica sus
+asociaciones de categorías.
 
 **Respuesta `200 OK`:** `{ "manga": { ... } }`, donde `manga` es la fila
 actualizada.
@@ -208,13 +214,15 @@ por defecto.
     "email": "persona@email.com",
     "full_name": "Nombre Apellido",
     "display_name": "NombreVisible",
-    "image_link": null
+    "image_link": null,
+    "roles": ["user"]
   }
 }
 ```
 
 Una colisión con el correo único se convierte actualmente en `400 Bad Request`
-con `{ "message": "User already exists" }`.
+con `{ "message": "User already exists" }`. Los registros nuevos reciben el
+rol `user` dentro de la misma instrucción que crea la cuenta.
 
 ### `POST /api/users/login`
 
@@ -227,7 +235,8 @@ con `{ "message": "User already exists" }`.
 }
 ```
 
-**Respuesta `200 OK`:** `{ "token": "jwt" }`.
+**Respuesta `200 OK`:** `{ "token": "jwt" }`. El JWT incluye el identificador
+del usuario y el arreglo de roles vigentes al iniciar sesión.
 
 **Respuesta `401 Unauthorized`:** `{ "message": "Invalid credentials" }` si el
 correo no existe o la contraseña no coincide.
@@ -244,7 +253,8 @@ autenticación: sin token, responde con `user: null`.
   "user": {
     "full_name": "Nombre Apellido",
     "display_name": "NombreVisible",
-    "email": "persona@email.com"
+    "email": "persona@email.com",
+    "roles": ["user"]
   }
 }
 ```
@@ -252,6 +262,9 @@ autenticación: sin token, responde con `user: null`.
 **Respuesta `200 OK` sin token:** `{ "user": null }`.
 
 Un token inválido o expirado produce `401 Unauthorized`.
+Las operaciones administrativas requieren `admin` tanto en los roles del
+token como en la base de datos, para que una revocación de rol tenga efecto
+inmediato.
 
 ## Wishlist
 
