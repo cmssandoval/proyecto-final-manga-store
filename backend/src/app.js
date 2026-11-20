@@ -5,25 +5,18 @@ import corsHandler from '../src/middlewares/cors-handler.middleware.js';
 import errorHandler from './middlewares/error-handler.middleware.js';
 import morganHandler from './middlewares/morgan-handler.middleware.js'
 
-import mangaRoutes from './routes/manga.routes.js';
-import userRoutes from './routes/user.routes.js';
-import cartRoutes from './routes/cart.routes.js';
-import ordersRoutes from './routes/orders.routes.js';
-import presalesRoutes from './routes/presales.routes.js';
-
+import apiRoutes from './routes/api.routes.js';
 import getBaseUrl from './utils/getRequestBaseUrl.js';
 
 const app = express();
 
-app.use(morganHandler)
+const env = process.env.NODE_ENV || 'development';
+if (env !== 'production') app.use(morganHandler);
+
 app.use(helmetHandler);
 app.use(corsHandler);
 app.use(express.json());
-app.use('/api/mangas', mangaRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/cart', cartRoutes);
-app.use('/api/orders', ordersRoutes);
-app.use('/api/presales', presalesRoutes);
+app.use('/api', apiRoutes);
 
 app.get('/', (req, res) => {
     return res.json({

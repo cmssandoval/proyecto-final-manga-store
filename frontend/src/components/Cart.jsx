@@ -29,8 +29,8 @@ const Cart = ({
     return (
       <div className="cart-empty">
         {error && <p role="alert">{error}</p>}
-        <h2>Tu carrito está vacío</h2>
-        <p>Descubre tu próxima lectura y añádela aquí.</p>
+        <h2 className="cart-empty__title">Tu carrito está vacío</h2>
+        <p className="cart-empty__description">Descubre tu próxima lectura y añádela aquí.</p>
         <Link to="/catalogo" className="cart-empty__link">Explorar catálogo</Link>
       </div>
     );
@@ -115,29 +115,29 @@ const Cart = ({
 
   return (
     <>
-      <div className="cart-container">
+      <div className="cart-page__layout">
         {(error || cartActionError) && (
           <p role="alert">{cartActionError || error}</p>
         )}
-        <div className="cart-items">
+        <div className="cart-page__items">
           {items.map((item) => (
             <div key={item.id} className="cart-item">
-              <img src={item.image} alt={item.name} className="cart-item-img" />
-              <div className="cart-item-details">
+              <img src={item.image} alt={item.name} className="cart-item__image" />
+              <div className="cart-item__details">
                 <div>
-                  <h3>{item.name}</h3>
-                  <p className="cart-item-price">{formatClp(item.price)}</p>
+                  <h3 className="cart-item__title">{item.name}</h3>
+                  <p className="cart-item__price">{formatClp(item.price)}</p>
                 </div>
                 {item.description && (
-                  <p className="cart-item-description">{item.description}</p>
+                  <p className="cart-item__description">{item.description}</p>
                 )}
               </div>
-              <div className="cart-item-actions-container">
-                <div className="cart-item-buttons">
-                  <div className="cart-quantity">
+              <div className="cart-item__actions">
+                <div className="cart-item__controls">
+                  <div className="cart-item__quantity">
                     <button
                       type="button"
-                      className="cart-quantity__button"
+                      className="cart-item__quantity-button"
                       onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                       aria-label={`Reducir cantidad de ${item.name}`}
                     >
@@ -146,7 +146,7 @@ const Cart = ({
                     <span aria-label={`Cantidad: ${item.quantity}`}>{item.quantity}</span>
                     <button
                       type="button"
-                      className="cart-quantity__button"
+                      className="cart-item__quantity-button"
                       onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
                       aria-label={`Aumentar cantidad de ${item.name}`}
                       disabled={item.quantity >= item.stock}
@@ -156,7 +156,7 @@ const Cart = ({
                   </div>
                   <button
                     type="button"
-                    className="cart-remove-button"
+                    className="cart-item__remove-button"
                     onClick={() => handleRemoveItem(item.id)}
                   >
                     Eliminar
@@ -169,10 +169,10 @@ const Cart = ({
 
         <div className="cart-summary">
           <div className="cart-summary__header">
-            <h2>Resumen del pedido</h2>
+            <h2 className="cart-summary__title">Resumen del pedido</h2>
             <button
               type="button"
-              className="cart-clear-button"
+              className="cart-summary__clear-button"
               onClick={handleClearCart}
               disabled={isClearingCart}
               aria-label="Vaciar carrito"
@@ -205,7 +205,7 @@ const Cart = ({
       </div>
 
       {isCheckoutOpen && (
-        <div className="checkout-modal-backdrop">
+        <div className="checkout-modal__backdrop">
           <section
             className="checkout-modal"
             role="dialog"
@@ -233,9 +233,9 @@ const Cart = ({
             )}
 
             <form onSubmit={handleConfirmCheckout}>
-              <fieldset className="checkout-address-options">
+              <fieldset className="checkout-modal__address-options">
                 <legend>Dirección de envío</legend>
-                <label className={`checkout-address-option${shippingAddress ? '' : ' checkout-address-option--disabled'}`}>
+                <label className={`checkout-modal__address-option${shippingAddress ? '' : ' checkout-modal__address-option--disabled'}`}>
                   <input
                     type="radio"
                     name="checkout-address"
@@ -252,7 +252,7 @@ const Cart = ({
                     <span>{shippingAddress || 'No hay una dirección guardada en tu perfil.'}</span>
                   </span>
                 </label>
-                <label className="checkout-address-option">
+                <label className="checkout-modal__address-option">
                   <input
                     type="radio"
                     name="checkout-address"
@@ -271,7 +271,7 @@ const Cart = ({
               </fieldset>
 
               {addressOption === 'other' && (
-                <label className="checkout-address-input">
+                <label className="checkout-modal__address-input">
                   <span>Nueva dirección</span>
                   <textarea
                     value={alternateAddress}

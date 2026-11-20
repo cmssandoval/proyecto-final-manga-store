@@ -33,6 +33,10 @@ export const requireAdmin = async (req, res, next) => {
     return res.status(401).json({ message: 'Authentication required' });
   }
 
+  if (!Array.isArray(req.user.roles) || !req.user.roles.includes('admin')) {
+    return res.status(403).json({ message: 'Administrator access required' });
+  }
+
   const isAdmin = await User.hasRole(userId, 'admin');
   if (!isAdmin) {
     return res.status(403).json({ message: 'Administrator access required' });

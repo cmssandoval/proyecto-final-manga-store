@@ -3,6 +3,18 @@ import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
 class User {
+    static async findRoleNames(userId) {
+        const query = `
+            SELECT roles.name
+            FROM user_role
+            INNER JOIN roles ON roles.id = user_role.role_id
+            WHERE user_role.user_id = $1
+            ORDER BY roles.name
+        `;
+        const result = await pool.query(query, [userId]);
+        return result.rows.map((role) => role.name);
+    }
+
     static async hasRole(userId, roleName) {
         const query = `
             SELECT EXISTS (
@@ -18,7 +30,8 @@ class User {
 
     static async signToken(user) {
         const { id } = user;
-        return jwt.sign({ id }, process.env.JWT_SECRET, {
+        const roles = await this.findRoleNames(id);
+        return jwt.sign({ id, roles }, process.env.JWT_SECRET, {
             subject: String(id),
             expiresIn: 60 * 60,
             algorithm: 'HS256',
@@ -32,7 +45,7 @@ class User {
     }
 
     static async findUserById(id) {
-        const query = 'SELECT * FROM users WHERE id = $1';
+        const query = 'SELECT full_name, display_name, email FROM users WHERE id = $1';
         const result = await pool.query(query, [id]);
         const user = result.rows[0];
 
@@ -40,8 +53,8 @@ class User {
             return undefined;
         }
 
-        const { full_name, display_name, email } = user;
-        return { full_name, display_name, email };
+        const roles = await this.findRoleNames(id);
+        return { ...user, roles };
     }
 
     static async findAllWishlist(userId) {
@@ -127,9 +140,33 @@ class User {
         const { full_name, display_name, email, password } = userData;
         const passwordHash = await argon2.hash(password);
         const query = `
-        INSERT INTO users (full_name, display_name, email, password)
-        VALUES ($1, $2, $3, $4)
-        RETURNING id, email, full_name, display_name, image_link
+            WITH inserted_user AS (
+                INSERT INTO users (full_name, display_name, email, password)
+                VALUES ($1, $2, $3, $4)
+                RETURNING id, email, full_name, display_name, image_link
+            ),
+            resolved_role AS (
+                INSERT INTO roles (name)
+                VALUES ('user')
+                ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
+                RETURNING id
+            ),
+            assigned_role AS (
+                INSERT INTO user_role (user_id, role_id)
+                SELECT inserted_user.id, resolved_role.id
+                FROM inserted_user
+                CROSS JOIN resolved_role
+                RETURNING user_id
+            )
+            SELECT
+                inserted_user.id,
+                inserted_user.email,
+                inserted_user.full_name,
+                inserted_user.display_name,
+                inserted_user.image_link,
+                ARRAY['user']::VARCHAR[] AS roles
+            FROM inserted_user
+            INNER JOIN assigned_role ON assigned_role.user_id = inserted_user.id
         `;
         const values = [full_name, display_name, email, passwordHash];
         const result = await pool.query(query, values);

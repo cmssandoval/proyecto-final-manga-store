@@ -26,14 +26,14 @@ const CartView = () => {
 
   return (
     <main className="cart-page" aria-labelledby="cart-title">
-      <header className="cart-header">
-        <p className="cart-header__eyebrow">Tu selección</p>
-        <h1 className="cart-header__title" id="cart-title">Mi carrito</h1>
-        <p className="cart-header__description">
+      <header className="cart-page__header">
+        <p className="cart-page__eyebrow">Tu selección</p>
+        <h1 className="cart-page__title" id="cart-title">Mi carrito</h1>
+        <p className="cart-page__description">
           Revisa tus mangas y ajusta las cantidades antes de continuar.
         </p>
       </header>
-      <section className="cart-content">
+      <section className="cart-page__content">
         <Cart
           items={cartItems}
           onRemoveItem={removeFromCart}
@@ -45,7 +45,7 @@ const CartView = () => {
           error={cartError}
         />
         {cartItems.length > 0 && (
-          <Link to="/catalogo" className="cart-continue-link">
+          <Link to="/catalogo" className="cart-page__continue-link">
             Seguir explorando el catálogo
           </Link>
         )}

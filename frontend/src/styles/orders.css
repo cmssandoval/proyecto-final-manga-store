@@ -237,3 +237,86 @@
     padding-top: 2.5rem;
   }
 }
+
+.orders-page__header {
+  margin-bottom: 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 1rem;
+}
+
+.orders-page__eyebrow,
+.order-card__eyebrow {
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.orders-page__title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+.orders-page__description,
+.order-card__date,
+.order-card__section > p,
+.order-item__quantity,
+.orders-empty p {
+  color: var(--color-muted);
+}
+
+.order-card,
+.orders-empty {
+  border-color: var(--color-line);
+  border-radius: 0.4rem;
+  background: var(--color-paper);
+  box-shadow: 2px 3px 0 #eadeda;
+}
+
+.order-card__status {
+  border-color: #d9c7c9;
+  border-radius: 0.2rem;
+  background: var(--color-paper-pink);
+  color: #69464e;
+}
+
+.order-card__section {
+  border-color: var(--color-line);
+}
+
+.order-card__section h3 {
+  color: #493b3f;
+}
+
+.order-item {
+  border-color: var(--color-line);
+  border-radius: 0.25rem;
+  background: #fffdfa;
+}
+
+.order-item__image {
+  border-radius: 0.15rem;
+}
+
+.order-card__total {
+  border-color: var(--color-line);
+  color: #574b4e;
+}
+
+.orders-empty__link {
+  border-radius: 0.25rem;
+  background: var(--color-pink-dark);
+}
+
+.orders-sync-retry {
+  border-color: var(--color-pink);
+  border-radius: 0.25rem;
+  background: var(--color-paper);
+}
+
+@media (max-width: 700px) {
+  .orders-page {
+    padding-top: 1.75rem;
+  }
+}

@@ -34,10 +34,26 @@ describe('Manga API', () => {
         price: '14900.00',
         stock: 47,
     };
+    const mangaInput = {
+        name: 'Black Clover',
+        slug: 'black-clover',
+        description: 'Asta y Yuno luchan por convertirse en el Rey Mago.',
+        volume: 'Vol. 12',
+        author: 'Yūki Tabata',
+        editorial: 'Shueisha',
+        image_link: 'https://example.com/black-clover.jpg',
+        sku: 'SKU52745',
+        origin: 'Japón',
+        release_date: '2024-01-01',
+        price: 14900,
+        stock: 47,
+        categoryIds: [],
+        demographicCategoryIds: [],
+    };
 
     beforeEach(() => {
         jest.clearAllMocks();
-        jwt.verify.mockReturnValue({ id: 'admin-id' });
+        jwt.verify.mockReturnValue({ id: 'admin-id', roles: ['admin'] });
         User.hasRole.mockResolvedValue(false);
     });
 
@@ -77,11 +93,11 @@ describe('Manga API', () => {
         const response = await request(app)
             .post('/api/mangas')
             .set('Authorization', 'Bearer valid-token')
-            .send({ name: manga.name, slug: manga.slug });
+            .send(mangaInput);
 
         expect(response.statusCode).toBe(201);
         expect(response.body).toEqual({ manga });
-        expect(Manga.create).toHaveBeenCalledWith({ name: manga.name, slug: manga.slug });
+        expect(Manga.create).toHaveBeenCalledWith(mangaInput);
     });
 
     it('updates a manga', async () => {
@@ -155,7 +171,7 @@ describe('Manga API', () => {
         ['updating', 'put', '/api/mangas/manga-id', { name: manga.name }, 'update'],
         ['deleting', 'delete', '/api/mangas/manga-id', undefined, 'delete'],
     ])('rejects a non-admin user when %s a manga', async (_operation, method, path, body, operation) => {
-        jwt.verify.mockReturnValue({ id: 'user-id', role: 'admin' });
+        jwt.verify.mockReturnValue({ id: 'user-id', roles: ['admin'] });
         let apiRequest = request(app)[method](path)
             .set('Authorization', 'Bearer valid-token');
         if (body) apiRequest = apiRequest.send(body);

@@ -163,6 +163,9 @@ const HeaderMiniBanner = () => {
         {user ? (
           <>
             <Link to="/perfil" className="nav-link">Mi Cuenta</Link>
+            {Array.isArray(user.roles) && user.roles.includes('admin') && (
+              <Link to="/admin/mangas" className="nav-link">Admin mangas</Link>
+            )}
             <button
               type="button"
               className="nav-link header-nav__logout"

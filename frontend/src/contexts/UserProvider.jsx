@@ -220,7 +220,7 @@ const UserProvider = ({ children }) => {
   }, [clearSession]);
 
   const login = async (credentials) => {
-    const { data } = await axiosClient.post('/users/login', credentials);
+    const { data } = await axiosClient.post('/auth/login', credentials);
     localStorage.setItem('token', data.token);
     setToken(data.token)
   
@@ -236,7 +236,7 @@ const UserProvider = ({ children }) => {
 
   const register = async ({ name, email, password }) => {
     try {
-      await axiosClient.post('/users/register', {
+      await axiosClient.post('/auth/register', {
         email,
         full_name: name,
         display_name: name.trim(),
